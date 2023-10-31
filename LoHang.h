@@ -11,9 +11,10 @@ class LoHang
 		Date NN;
 		Date NSX;
 		Date HSD;
+		int Price;
 		int SL;
 	public:
-		LoHang(const String&, const Date&, const Date&, const Date&, const int&);
+		LoHang(const String&, const Date&, const Date&, const Date&, const int&, const int&);
 		~LoHang();
 };
 #endif
