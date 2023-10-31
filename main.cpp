@@ -43,11 +43,11 @@ void input(const String &name, DList<Product>& List)
 		Date nsx(temp);
 		temp.GetLine(inp);
 		Date hsd(temp);
-		int sl;
-		inp >> sl;
+		int price, sl;
+		inp >> price >> sl;
 		inp.ignore();
 		Product p(id_p, name, xs);
-		InsertProduct(List, p, LoHang(id_lo, nn, nsx, hsd, sl));
+		InsertProduct(List, p, LoHang(id_lo, nn, nsx, hsd, price, sl));
 	}
 }
 void Nhap(DList<Product> & List)
@@ -72,10 +72,11 @@ void Nhap(DList<Product> & List)
 int main()
 {
 	DList<Product> List;
-	while (true)
-	{
-		Nhap(List);
-		cout << List;
-	}
+	Nhap(List);
+	cout << List;
+	Nhap(List);
+	cout << List;
+	List.Release();
+	cout << List;
 	return 0;
 }
