@@ -47,7 +47,8 @@ void OutputTable(const DList<Product> & List, const int& num)
 {
 	if (num == 0)
 	{
-		cout << "Khogn tim thay";
+		mnu::LeftPrint("Khong tim thay"); cout << endl;
+		system("pause");
 		return;
 	}
 	const int w = 10;

@@ -37,6 +37,7 @@ namespace mnu
 			Product p(id_p, name, xs);
 			InsertProduct(List, p, LoHang(id_lo, nn, nsx, hsd, price, sl));
 		}
+		inp.close();
 	}
 	
 	//-----------------------------------MAIN MENU------------------------------------------------
@@ -44,12 +45,11 @@ namespace mnu
 	{
 		CenterPrint(TITLE, WIDTH);
 		std::cout << "\n\n" << '+'; DrawLine(WIDTH - 2, '='); std::cout << '+' << "\n\n";
-		int leftspace = floor((WIDTH - TITLE.GetLength()) / 2);
-		LeftPrint("1.Quan ly san pham", leftspace); std::cout << '\n';
-		LeftPrint("2.Quan ly khach hang", leftspace); std::cout << '\n';
-		LeftPrint("3.Quan ly hoa don", leftspace); std::cout << '\n';
-		LeftPrint("0.Ket thuc", leftspace); std::cout << '\n';
-		LeftPrint("Lua chon cua ban :", leftspace); std::cin >> choice; cin.ignore();
+		LeftPrint("1.Quan ly san pham"); std::cout << '\n';
+		LeftPrint("2.Quan ly khach hang"); std::cout << '\n';
+		LeftPrint("3.Quan ly hoa don"); std::cout << '\n';
+		LeftPrint("0.Ket thuc"); std::cout << '\n';
+		LeftPrint("Lua chon cua ban :"); std::cin >> choice; cin.ignore();
 		if (choice < 0 || choice>3)
 		{
 			throw Exception("INVALID VALUE");
@@ -60,11 +60,10 @@ namespace mnu
 	{
 		CenterPrint(TITLE, WIDTH);
 		std::cout << "\n\n" << '+'; DrawLine(WIDTH - 2, '='); std::cout << '+' << "\n\n";
-		int leftspace = floor((WIDTH - TITLE.GetLength()) / 2);
-		LeftPrint("1.Them san pham", leftspace); std::cout << '\n';
-		LeftPrint("2.Tim kiem san pham", leftspace); std::cout << '\n';
-		LeftPrint("0.Quay lai", leftspace); std::cout << '\n';
-		LeftPrint("Lua chon cua ban :", leftspace); std::cin >> choice; cin.ignore();
+		LeftPrint("1.Them san pham"); std::cout << '\n';
+		LeftPrint("2.Tim kiem san pham"); std::cout << '\n';
+		LeftPrint("0.Quay lai"); std::cout << '\n';
+		LeftPrint("Lua chon cua ban :"); std::cin >> choice; cin.ignore();
 		if (choice < 0 || choice>2)
 		{
 			throw Exception("INVALID VALUE");
@@ -75,11 +74,10 @@ namespace mnu
 	{
 		CenterPrint(TITLE, WIDTH);
 		std::cout << "\n\n" << '+'; DrawLine(WIDTH - 2, '='); std::cout << '+' << "\n\n";
-		int leftspace = floor((WIDTH - TITLE.GetLength()) / 2);
-		LeftPrint("1.Them bang file", leftspace); std::cout << '\n';
-		LeftPrint("2.Nhap tu ban phim", leftspace); std::cout << '\n';
-		LeftPrint("0.Quay lai", leftspace); std::cout << '\n';
-		LeftPrint("Lua chon cua ban :", leftspace); std::cin >> choice; cin.ignore();
+		LeftPrint("1.Them bang file"); std::cout << '\n';
+		LeftPrint("2.Nhap tu ban phim"); std::cout << '\n';
+		LeftPrint("0.Quay lai"); std::cout << '\n';
+		LeftPrint("Lua chon cua ban :"); std::cin >> choice; cin.ignore();
 		if (choice < 0 || choice>2)
 		{
 			throw Exception("INVALID VALUE");
@@ -91,8 +89,7 @@ namespace mnu
 	{
 		CenterPrint(TITLE, WIDTH);
 		std::cout << "\n\n" << '+'; DrawLine(WIDTH - 2, '='); std::cout << '+' << "\n\n";
-		int leftspace = floor((WIDTH - TITLE.GetLength()) / 2);
-		LeftPrint("Nhap ten file:", leftspace);
+		LeftPrint("Nhap ten file:");
 		String fname;
 		fname.GetLine(cin);
 		if (fname == String(""))
@@ -101,7 +98,7 @@ namespace mnu
 			return;
 		}
 		input(fname, List);
-		LeftPrint("Input thanh cong", leftspace); std::cout << "\n";
+		LeftPrint("Input thanh cong"); std::cout << "\n";
 		Sleep(TIME_WAIT);
 		choice = 1;
 	}
@@ -111,59 +108,67 @@ namespace mnu
 	{
 		CenterPrint(TITLE, WIDTH);
 		std::cout << "\n\n" << '+'; DrawLine(WIDTH - 2, '='); std::cout << '+' << "\n\n";
-		int leftspace = floor((WIDTH - TITLE.GetLength()) / 2);
-		LeftPrint("1.Tim kiem theo ma san pham", leftspace); cout << '\n';
-		LeftPrint("2.Tim kiem theo ten san pham", leftspace); cout << '\n';
-		LeftPrint("3.Tim kiem theo xuat xu", leftspace); cout << '\n';
-		LeftPrint("0.Quay lai", leftspace); cout << '\n';
-		LeftPrint("Lua chon cua ban :", leftspace); cin >> choice; cin.ignore();
+		LeftPrint("1.Tim kiem theo ma san pham"); cout << '\n';
+		LeftPrint("2.Tim kiem theo ten san pham"); cout << '\n';
+		LeftPrint("3.Tim kiem theo xuat xu"); cout << '\n';
+		LeftPrint("0.Quay lai"); cout << '\n';
+		LeftPrint("Lua chon cua ban :"); cin >> choice; cin.ignore();
 		if (choice < 0 || choice>3)
 		{
 			throw Exception("INVALID VALUE");
 		}
 	}
 	//---------------------------------Chuc nang TKSP-----------------------------------------------
-	DList<Product> * ptrAns_List_For_Search = NULL;
-	int cnt_Search = 0;
+	namespace search_mnu
+	{
+		DList<Product> * ptrAns_List_For_Search = NULL;
+		int cnt_Search = 0;
+	}
 	void Search(const DList<Product>& List, int &choice)
 	{
 		CenterPrint(TITLE, WIDTH);
 		std::cout << "\n\n" << '+'; DrawLine(WIDTH - 2, '='); std::cout << '+' << "\n\n";
-		int leftspace = floor((WIDTH - TITLE.GetLength()) / 2);
-		if (ptrAns_List_For_Search == NULL)
+		if (search_mnu::ptrAns_List_For_Search == NULL)
 		{
 			String data;
 			if (choice == 1)
 			{
-				LeftPrint("Nhap ma san phan can tim kiem :", leftspace); data.GetLine(cin);
-				ptrAns_List_For_Search = List.FindAll(data, &Product::GetID, cnt_Search);
+				LeftPrint("Nhap ma san phan can tim kiem :"); data.GetLine(cin);
+				search_mnu::ptrAns_List_For_Search = List.FindAll(data, &Product::GetID, search_mnu::cnt_Search);
 			}
 			else if (choice == 2)
 			{
-				LeftPrint("Nhap ten san phan can tim kiem :", leftspace); data.GetLine(cin);
-				ptrAns_List_For_Search = List.FindAll(data, &Product::GetName, cnt_Search);
+				LeftPrint("Nhap ten san phan can tim kiem :"); data.GetLine(cin);
+				search_mnu::ptrAns_List_For_Search = List.FindAll(data, &Product::GetName, search_mnu::cnt_Search);
 			}
 			else if (choice == 3)
 			{
-				LeftPrint("Nhap xuat xu san phan can tim kiem :", leftspace); data.GetLine(cin);
-				ptrAns_List_For_Search = List.FindAll(data, &Product::GetXS, cnt_Search);
+				LeftPrint("Nhap xuat xu san phan can tim kiem :"); data.GetLine(cin);
+				search_mnu::ptrAns_List_For_Search = List.FindAll(data, &Product::GetXS, search_mnu::cnt_Search);
 			}
 		}
-		OutputTable(*ptrAns_List_For_Search, cnt_Search);
-		LeftPrint("Nhap STT mat hang muon xem chi tiet (chon 0 de quay lai):", 0); cin >> choice;
-		if (choice<0 || choice>cnt_Search)
+		OutputTable(*search_mnu::ptrAns_List_For_Search, search_mnu::cnt_Search);
+		if (search_mnu::cnt_Search == 0)
+		{
+			search_mnu::ptrAns_List_For_Search = NULL;
+			search_mnu::cnt_Search = 0;
+			choice = 2;
+			return;
+		}
+		LeftPrint("Nhap STT mat hang muon xem chi tiet (chon 0 de quay lai):", 0); cin >> choice; cin.ignore();
+		if (choice<0 || choice>search_mnu::cnt_Search)
 		{
 			throw Exception("INVALID VALUE");
 		}
 		if (choice == 0)
 		{
-			ptrAns_List_For_Search = NULL;
-			cnt_Search = 0;
+			search_mnu::ptrAns_List_For_Search = NULL;
+			search_mnu::cnt_Search = 0;
 		}
 		else
 		{
 			system("cls");
-			OutputDetail(*ptrAns_List_For_Search, choice);
+			OutputDetail(*search_mnu::ptrAns_List_For_Search, choice);
 			system("pause");
 			choice = 1;
 		}
@@ -175,14 +180,13 @@ namespace mnu
 	{
 		CenterPrint(TITLE, WIDTH);
 		cout << "\n\n" << '+'; DrawLine(WIDTH - 2, '='); cout << '+' << "\n\n";
-		int leftspace = floor((WIDTH - TITLE.GetLength()) / 2);
-		LeftPrint("1.Them khach hang", leftspace); cout << '\n';
-		LeftPrint("2.Tim kiem khach hang", leftspace); cout << '\n';
-		LeftPrint("3.Chinh sua thong tin khach hang", leftspace); cout << '\n';
-		LeftPrint("4.Xoa khach hang khoi danh sach", leftspace); cout << '\n';
-		LeftPrint("5.Hien thi danh sach khach hang", leftspace); cout << '\n';
-		LeftPrint("0.Quay lai", leftspace);
-		LeftPrint("Lua chon cua ban :", leftspace); cin >> choice; cin.ignore();
+		LeftPrint("1.Them khach hang"); cout << '\n';
+		LeftPrint("2.Tim kiem khach hang"); cout << '\n';
+		LeftPrint("3.Chinh sua thong tin khach hang"); cout << '\n';
+		LeftPrint("4.Xoa khach hang khoi danh sach"); cout << '\n';
+		LeftPrint("5.Hien thi danh sach khach hang"); cout << '\n';
+		LeftPrint("0.Quay lai"); cout << '\n';
+		LeftPrint("Lua chon cua ban :"); cin >> choice; cin.ignore();
 		if (choice < 0 || choice>5)
 		{
 			throw Exception("INVALID VALUE");
@@ -193,17 +197,36 @@ namespace mnu
 	{
 		CenterPrint(TITLE, WIDTH);
 		std::cout << "\n\n" << '+'; DrawLine(WIDTH - 2, '='); std::cout << '+' << "\n\n";
-		int leftspace = floor((WIDTH - TITLE.GetLength()) / 2);
-		LeftPrint("Ban muon tiep tuc", leftspace); std::cout << '\n';
-		LeftPrint("1.Tiep tuc", leftspace); std::cout << '\n';
-		LeftPrint("0.Quay lai", leftspace); std::cout << '\n';
-		LeftPrint("Lua chon cua ban :", leftspace); std::cin >> choice; cin.ignore();
+		LeftPrint("Ban muon tiep tuc"); std::cout << '\n';
+		LeftPrint("1.Tiep tuc"); std::cout << '\n';
+		LeftPrint("0.Quay lai"); std::cout << '\n';
+		LeftPrint("Lua chon cua ban :"); std::cin >> choice; cin.ignore();
 		if (choice < 0 || choice>1)
 		{
 			throw Exception("INVALID VALUE");
 		}
 	}
-	// Create Menu Tree
+	//-------------------------------------MENU TT CHO TM KIEM ----------------------------------
+	void MenuTTTK(int &choice)
+	{
+		CenterPrint(TITLE, WIDTH);
+		std::cout << "\n\n" << '+'; DrawLine(WIDTH - 2, '='); std::cout << '+' << "\n\n";
+		LeftPrint("Ban muon tiep tuc"); std::cout << '\n';
+		LeftPrint("1.Tiep tuc voi truy xuat cu"); std::cout << '\n';
+		LeftPrint("2.Tiep tuc voi truy xuat moi"); std::cout << '\n';
+		LeftPrint("0.Quay lai"); std::cout << '\n';
+		LeftPrint("Lua chon cua ban :"); std::cin >> choice; cin.ignore();
+		if (choice < 0 || choice>2)
+		{
+			throw Exception("INVALID VALUE");
+		}
+		if (choice == 2 || choice == 0)
+		{
+			search_mnu::ptrAns_List_For_Search = NULL;
+			search_mnu::cnt_Search = 0;
+		}
+	}
+	//---------------------------Create Menu Tree----------------------------------------
 	struct Node
 	{
 		void(*ptr) (int&);
@@ -239,10 +262,16 @@ namespace mnu
 			(this->child)[index] = node;
 			(node->child)[0] = this;
 		}
-		void AddChild_TT(Node *node)
+		void AddChild_TT(Node *node, int index)
 		{
-			(this->child)[1] = node;
+			(this->child)[index] = node;
 			(node->child)[1] = this;
+			(node->child)[0] = (this->child)[0];
+		}
+		void AddChild_TTTK(Node *node, int index)
+		{
+			(this->child)[index] = node;
+			(node->child)[1] = (node->child)[2] = this;
 			(node->child)[0] = (this->child)[0];
 		}
 	};
@@ -250,7 +279,8 @@ namespace mnu
 	Node *TMenu1 = new Node(&Menu1, 3);
 	Node *TMenu1_1 = new Node(&Menu1_1, 3);
 	Node *TMenu1_2 = new Node(&Menu1_2, 4);
-	Node *TMenu1_2_all = new Node(&Search, 2);
+	Node *TMenu1_2_all = new Node(&Search, 3);
+	Node *TMenu1_2_all_TTTK = new Node(&MenuTTTK, 3);
 	Node *TMenu1_2_all_TT = new Node(&MenuTT, 2);
 	Node *TMenu1_1_1 = new Node(&Nhap, 2);
 	Node *TMenu1_1_1_TT = new Node(&MenuTT, 2);
@@ -259,17 +289,19 @@ namespace mnu
 		TMainMenu->AddChild(TMenu1, 1);
 		TMenu1->AddChild(TMenu1_1, 1);
 		TMenu1_1->AddChild(TMenu1_1_1, 1);
-		TMenu1_1_1->AddChild_TT(TMenu1_1_1_TT);
+		TMenu1_1_1->AddChild_TT(TMenu1_1_1_TT,1);
 		TMenu1->AddChild(TMenu1_2, 2);
 		for (int i = 1; i <= 3; i++)
 		{
 			TMenu1_2->AddChild(TMenu1_2_all, i);
 		}
-		TMenu1_2_all->AddChild_TT(TMenu1_2_all_TT);
+		TMenu1_2_all->AddChild_TTTK(TMenu1_2_all_TTTK, 1);
+		TMenu1_2_all->AddChild_TT(TMenu1_2_all_TT, 2);
 	}
 	void DeleteMenu()
 	{
 		delete TMenu1_1_1_TT;
+		delete TMenu1_2_all_TTTK;
 		delete TMenu1_2_all_TT;
 		delete TMenu1_1_1;
 		delete TMenu1_2_all;

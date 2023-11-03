@@ -15,8 +15,8 @@ void mnu::CenterPrint(const String &s, int len, char pad )
 	std::cout << s;
 	DrawLine(after, pad);
 }
-void mnu::LeftPrint(const String &s, int len, char pad )
+void mnu::LeftPrint(const String &s, int padlen, char pad )
 {
-	DrawLine(len, pad);
+	DrawLine(padlen, pad);
 	std::cout << s;
 }
