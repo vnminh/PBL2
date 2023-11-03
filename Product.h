@@ -6,6 +6,8 @@
 #include "DList.h"
 class Product
 {
+	friend void OutputTable(const DList<Product> &, const int &);
+	friend void OutputDetail(const DList<Product> &, const int &);
 	friend void InsertProduct(DList<Product> &, Product&, const LoHang&);
 	friend std::ostream& operator<<(std::ostream&, const Product&);
 	private:

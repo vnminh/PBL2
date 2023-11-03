@@ -12,9 +12,10 @@ Date::Date(const Date& date)
 {}
 Date::Date(const String & s)
 {
+	String temp = s;
 	char *token;
 	String d, m, y;
-	d=strtok_s(s, "/", &token);
+	d=strtok_s(temp, "/", &token);
 	m=strtok_s(NULL, "/", &token);
 	y=strtok_s(NULL, "/", &token);
 	d.ClearSpace();
@@ -108,6 +109,15 @@ const Date& Date::operator=(const Date& date)
 		SetDate(date.Day, date.Month, date.Year);
 	}
 	return *this;
+}
+String Date::show()
+{
+	String d = this->Day;
+	String m = this->Month;
+	String y = this->Year;
+	String ans = d + "/" + m + "/" + y;;
+	if (this->Day < 10) ans = String("0") + ans;
+	return ans;
 }
 ostream& operator<<(ostream &out, const Date& date)
 {

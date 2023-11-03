@@ -17,10 +17,13 @@ class DList
 		void Remove(const DNode<T> * const);
 		bool isEmpty() const;
 		void Release();
+		DNode<T> *GetFirstElement() const;
+		DNode<T> *GetLastElement() const;
+		DNode<T> * FindIndex(int) const;
 		template <typename K>
 		DNode<T> * FindFirstMatch(const K&, K (T::*)() const) const;
 		template <typename K>
-		DList<T> & FindAll(const K&, K (T::*)() const) const;
+		DList<T> * FindAll(const K&, K (T::*)() const, int&) const;
 	private:
 		DNode<T> *Head;
 		DNode<T> *Tail;

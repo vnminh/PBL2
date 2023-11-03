@@ -4,7 +4,7 @@ Exception::Exception(const String & mess)
 {}
 Exception::~Exception()
 {}
-const String Exception::What() const
+const String& Exception::What() const
 {
 	return this->Message;
 }

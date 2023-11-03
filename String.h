@@ -8,6 +8,7 @@ class String
     friend std::ostream& operator<<(std::ostream&, const String&);
     public:
         String();
+		String(int);
 		String(const char*);
         String(const String&);
         ~String();
@@ -17,10 +18,12 @@ class String
 		bool operator<(const String&) const;
 		bool operator==(const String&) const;
 		bool operator!=(const String&) const;
+		const String operator+(const String&) const;
         char& operator[](int);
         const char& operator[](int) const;
 		void ClearSpace();
 		void GetLine(std::istream&);
+		int GetLength() const;
 	private:
 		char *ptr;
 		int length;

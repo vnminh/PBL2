@@ -107,6 +107,28 @@ void DList<T>::Remove(const DNode<T> *ptr)
 		delete ptr;
 	}
 }
+template <class T> 
+DNode<T> * DList<T>::GetFirstElement() const
+{
+	return this->Head;
+}
+template <class T>
+DNode<T> * DList<T>::GetLastElement() const
+{
+	return this->Tail;
+}
+template<class T>
+DNode<T> * DList<T>::FindIndex(int index) const
+{
+	DNode<T> *curptr = this->Head;
+	int cnt = 1;
+	while (cnt != index)
+	{
+		curptr = curptr->next;
+		cnt++;
+	}
+	return curptr;
+}
 template<class T> 
 template<typename K>
 DNode<T> * DList<T>::FindFirstMatch(const K &data, K (T::*ptr)() const) const
@@ -120,7 +142,7 @@ DNode<T> * DList<T>::FindFirstMatch(const K &data, K (T::*ptr)() const) const
 }
 template<class T>
 template<typename K>
-DList<T>&  DList<T>::FindAll(const K &data, K (T::*ptr)() const) const
+DList<T>*  DList<T>::FindAll(const K &data, K (T::*ptr)() const, int& cnt) const
 {
 	static DList<T> AnsList;
 	DNode<T> *curptr = this->Head;
@@ -129,10 +151,11 @@ DList<T>&  DList<T>::FindAll(const K &data, K (T::*ptr)() const) const
 		if (((curptr->data).*ptr)() == data)
 		{
 			AnsList.InsertLast(curptr->data);
+			cnt++;
 		}
 		curptr = curptr->next;
 	}
-	return AnsList;
+	return &AnsList;
 }
 template<class K>
 ostream& operator<< (ostream& out, const DList<K> & l)

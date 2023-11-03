@@ -4,32 +4,9 @@
 #include <Windows.h>
 #include "String.h"
 #include "Exception.h"
+#include "Output.h"
 namespace mnu
 {
-	const int TIME_WAIT = 1000;
-	const int WIDTH = 100;
-	const String TITLE = "Minimart Management System";
-	void DrawLine(int len, char c = '-')
-	{
-		for (int i = 1; i <= len; i++)
-		{
-			std::cout << c;
-		}
-	}
-	void CenterPrint(const String& s, int len, char pad = ' ')
-	{
-		int temp = len - s.GetLength();
-		int before = floor(temp / 2);
-		int after = ceil(temp / 2);
-		DrawLine(before, pad);
-		std::cout << s;
-		DrawLine(after, pad);
-	}
-	void LeftPrint(const String& s, int len, char pad = ' ')
-	{
-		DrawLine(len, pad);
-		std::cout << s;
-	}
 	//---------------------------------INPUT PRODUCT--------------------------------------
 	void input(const String &fname, DList<Product>& List)
 	{
@@ -146,36 +123,52 @@ namespace mnu
 		}
 	}
 	//---------------------------------Chuc nang TKSP-----------------------------------------------
-	void Find(const DList<Product>& List,  int &choice)
+	DList<Product> * ptrAns_List_For_Search = NULL;
+	int cnt_Search = 0;
+	void Search(const DList<Product>& List, int &choice)
 	{
 		CenterPrint(TITLE, WIDTH);
 		std::cout << "\n\n" << '+'; DrawLine(WIDTH - 2, '='); std::cout << '+' << "\n\n";
 		int leftspace = floor((WIDTH - TITLE.GetLength()) / 2);
-		String data;
-		if (choice == 1)
+		if (ptrAns_List_For_Search == NULL)
 		{
-			LeftPrint("Nhap ma san phan can tim kiem :", leftspace); data.GetLine(cin);
-			DList<Product>& Ans = List.FindAll(data, &Product::GetID);
-			cout << Ans;
-			Ans.Release();
+			String data;
+			if (choice == 1)
+			{
+				LeftPrint("Nhap ma san phan can tim kiem :", leftspace); data.GetLine(cin);
+				ptrAns_List_For_Search = List.FindAll(data, &Product::GetID, cnt_Search);
+			}
+			else if (choice == 2)
+			{
+				LeftPrint("Nhap ten san phan can tim kiem :", leftspace); data.GetLine(cin);
+				ptrAns_List_For_Search = List.FindAll(data, &Product::GetName, cnt_Search);
+			}
+			else if (choice == 3)
+			{
+				LeftPrint("Nhap xuat xu san phan can tim kiem :", leftspace); data.GetLine(cin);
+				ptrAns_List_For_Search = List.FindAll(data, &Product::GetXS, cnt_Search);
+			}
 		}
-		else if (choice == 2)
+		OutputTable(*ptrAns_List_For_Search, cnt_Search);
+		LeftPrint("Nhap STT mat hang muon xem chi tiet (chon 0 de quay lai):", 0); cin >> choice;
+		if (choice<0 || choice>cnt_Search)
 		{
-			LeftPrint("Nhap ten san phan can tim kiem :", leftspace); data.GetLine(cin);
-			DList<Product>& Ans = List.FindAll(data, &Product::GetName);
-			cout << Ans;
-			Ans.Release();
+			throw Exception("INVALID VALUE");
 		}
-		else if (choice == 3)
+		if (choice == 0)
 		{
-			LeftPrint("Nhap xuat xu san phan can tim kiem :", leftspace); data.GetLine(cin);
-			DList<Product>& Ans = List.FindAll(data, &Product::GetXS);
-			cout << Ans;
-			Ans.Release();
+			ptrAns_List_For_Search = NULL;
+			cnt_Search = 0;
 		}
-		system("pause");
-		choice = 1;
+		else
+		{
+			system("cls");
+			OutputDetail(*ptrAns_List_For_Search, choice);
+			system("pause");
+			choice = 1;
+		}
 	}
+	
 	
 	//----------------------------------MENU 2 --------------------------------------------------------
 	void Menu2(int &choice)
@@ -257,7 +250,7 @@ namespace mnu
 	Node *TMenu1 = new Node(&Menu1, 3);
 	Node *TMenu1_1 = new Node(&Menu1_1, 3);
 	Node *TMenu1_2 = new Node(&Menu1_2, 4);
-	Node *TMenu1_2_all = new Node(&Find, 2);
+	Node *TMenu1_2_all = new Node(&Search, 2);
 	Node *TMenu1_2_all_TT = new Node(&MenuTT, 2);
 	Node *TMenu1_1_1 = new Node(&Nhap, 2);
 	Node *TMenu1_1_1_TT = new Node(&MenuTT, 2);

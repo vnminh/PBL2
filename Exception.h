@@ -6,7 +6,7 @@ class Exception
 	public:
 		Exception(const String &);
 		~Exception();
-		virtual const String What() const;
+		const String& What() const;
 	private:
 		const String Message;
 };

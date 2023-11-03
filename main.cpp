@@ -6,6 +6,7 @@
 #include "String.h"
 #include "Date.h"
 #include "InitTemplateClass.cpp"
+#include "Output.h"
 #include "Exception.h"
 #include "MenuManage.h"
 using namespace std;

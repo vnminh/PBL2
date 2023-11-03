@@ -16,5 +16,11 @@ class LoHang
 	public:
 		LoHang(const String&, const Date&, const Date&, const Date&, const int&, const int&);
 		~LoHang();
+		String GetID() const;
+		Date GetNN() const;
+		Date GetNSX() const;
+		Date GetHSD() const;
+		int GetPrice() const;
+		int GetSL() const;
 };
 #endif

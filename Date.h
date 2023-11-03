@@ -26,5 +26,6 @@ class Date
 		const Date& operator=(const Date&);
         Date& operator++();
         const Date operator++(int);
+		String show();
 };
 #endif

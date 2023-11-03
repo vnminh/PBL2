@@ -6,6 +6,26 @@ using namespace std;
 String::String()
     :length(0)
 {}
+String::String(int num)
+{
+	char temp[MAX]{};
+	int cnt = 0;
+	while (num != 0)
+	{
+		int t = num % 10;
+		temp[cnt++] = char(t + int('0'));
+		num = num / 10;
+	}
+	for (int i = 0; i <= (cnt-1) / 2; i++)
+	{
+		char t = temp[i];
+		temp[i] = temp[cnt - 1 - i];
+		temp[cnt - 1 - i] = t;
+	}
+	this->length = cnt;
+	this->ptr = new char[this->length + 1];
+	strcpy_s(this->ptr, this->length + 1, temp);
+}
 String::String(const char *ptr)
 	: length(strlen(ptr))
 {
@@ -33,6 +53,14 @@ const String& String::operator=(const String& s){
 		strcpy_s(this->ptr, this->length+1, s.ptr);
     }
     return *this;
+}
+const String String::operator+(const String & s) const
+{
+	char temp[MAX]{};
+	strcpy_s(temp, this->length + 1, this->ptr);
+	int len = this->length + s.length;
+	strcat_s(temp, len + 1, s.ptr);
+	return temp;
 }
 String::operator char *()
 {
@@ -106,6 +134,10 @@ void String::GetLine(istream& inp)
 	delete[] this->ptr;
 	this->ptr = new char[this->length + 1];
 	strcpy_s(this->ptr, this->length + 1, temp);
+}
+int String::GetLength() const
+{
+	return this->length;
 }
 istream& operator>>(istream& inp, String& s)
 {
