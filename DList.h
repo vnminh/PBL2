@@ -10,15 +10,17 @@ class DList
 	public:
 		DList();
 		~DList();
-		void InsertFirst(const T&);
-		void InsertLast(const T&);
+		void InsertFirst(const T);
+		void InsertLast(const T);
 		void RemoveFirst();
 		void RemoveLast();
 		void Remove(const DNode<T> * const);
 		bool isEmpty() const;
 		void Release();
 		template <typename K>
-		DNode<T> * Find(K, K (T::*)() const);
+		DNode<T> * FindFirstMatch(const K&, K (T::*)() const) const;
+		template <typename K>
+		DList<T> & FindAll(const K&, K (T::*)() const) const;
 	private:
 		DNode<T> *Head;
 		DNode<T> *Tail;

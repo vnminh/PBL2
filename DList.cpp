@@ -22,7 +22,7 @@ void DList<T>::Release()
 	}
 }
 template <class T>
-void DList<T>::InsertFirst(const T& data)
+void DList<T>::InsertFirst(const T data)
 {
 	DNode<T> *Newptr = new DNode<T>(data);
 	Newptr->next = this->Head;
@@ -37,7 +37,7 @@ void DList<T>::InsertFirst(const T& data)
 	this->Head = Newptr;
 }
 template <class T>
-void DList<T>::InsertLast(const T& data)
+void DList<T>::InsertLast(const T data)
 {
 	DNode<T> *Newptr = new DNode<T>(data);
 	Newptr->pre = this->Tail;
@@ -108,8 +108,8 @@ void DList<T>::Remove(const DNode<T> *ptr)
 	}
 }
 template<class T> 
-template<class K>
-DNode<T> * DList<T>::Find(K data, K (T::*ptr)() const)
+template<typename K>
+DNode<T> * DList<T>::FindFirstMatch(const K &data, K (T::*ptr)() const) const
 {
 	DNode<T> *curptr = this->Head;
 	while (curptr != NULL && ((curptr->data).*ptr)() != data)
@@ -117,6 +117,22 @@ DNode<T> * DList<T>::Find(K data, K (T::*ptr)() const)
 		curptr = curptr->next;
 	}
 	return curptr;
+}
+template<class T>
+template<typename K>
+DList<T>&  DList<T>::FindAll(const K &data, K (T::*ptr)() const) const
+{
+	static DList<T> AnsList;
+	DNode<T> *curptr = this->Head;
+	while (curptr != NULL)
+	{
+		if (((curptr->data).*ptr)() == data)
+		{
+			AnsList.InsertLast(curptr->data);
+		}
+		curptr = curptr->next;
+	}
+	return AnsList;
 }
 template<class K>
 ostream& operator<< (ostream& out, const DList<K> & l)
@@ -130,5 +146,6 @@ ostream& operator<< (ostream& out, const DList<K> & l)
 			curptr = curptr->next;
 		}
 	}
+	else out << "NULL LIST\n";
 	return out;
 }
