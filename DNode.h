@@ -1,6 +1,6 @@
 #ifndef DNODE_H
 #define DNODE_H
-template<class T>
+template<typename T>
 class DNode
 {
 	public:

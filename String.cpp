@@ -4,38 +4,18 @@
 #define MAX 1000
 using namespace std;
 String::String()
-    :length(0)
+	:length(0), ptr(nullptr)
 {}
-String::String(int num)
-{
-	char temp[MAX]{};
-	int cnt = 0;
-	while (num != 0)
-	{
-		int t = num % 10;
-		temp[cnt++] = char(t + int('0'));
-		num = num / 10;
-	}
-	for (int i = 0; i <= (cnt-1) / 2; i++)
-	{
-		char t = temp[i];
-		temp[i] = temp[cnt - 1 - i];
-		temp[cnt - 1 - i] = t;
-	}
-	this->length = cnt;
-	this->ptr = new char[this->length + 1];
-	strcpy_s(this->ptr, this->length + 1, temp);
-}
 String::String(const char *ptr)
 	: length(strlen(ptr))
 {
 	this->ptr = new char[(this->length) + 1];
-	strcpy_s(this->ptr, this->length+1, ptr);
+	strcpy_s(this->ptr, this->length + 1, ptr);
 }
 String::String(const String& s)
     :length(s.length)
 {
-    this->ptr=new char[this->length+1];
+	this->ptr = new char[this->length + 1];
 	strcpy_s(this->ptr, this->length+1, s.ptr);
 }
 String::~String()
@@ -57,7 +37,7 @@ const String& String::operator=(const String& s){
 const String String::operator+(const String & s) const
 {
 	char temp[MAX]{};
-	strcpy_s(temp, this->length + 1, this->ptr);
+	if (this->length != 0) strcpy_s(temp, this->length + 1, this->ptr);
 	int len = this->length + s.length;
 	strcat_s(temp, len + 1, s.ptr);
 	return temp;
@@ -109,27 +89,20 @@ char& String::operator[](int index)
 	}
 	else return *(this->ptr + index);
 }
-void String::ClearSpace()
+void String::Erase(int index)
 {
-	int l = -1, r = this->length;
-	do
-	{
-		l++;
-	} while ((*this)[l] == ' ');
-	do
-	{
-		r--;
-	} while ((*this)[r] == ' ');
-	char * ptr = new char[r-l + 1 + 1];
-	strncpy_s(ptr,r-l+1+1, this->ptr + l, r - l + 1 );
+	char temp[MAX];
+	if (index != 0) strncpy_s(temp, index + 1, this->ptr, index);
+	if (index != this->length - 1) strncpy_s(temp + index, this->length - index, this->ptr + index + 1, this->length - index - 1);
+	this->length--;
 	delete[] this->ptr;
-	this->length = strlen(ptr);
-	this->ptr = ptr;
+	this->ptr = new char[this->length + 1];
+	strcpy_s(this->ptr, this->length + 1, temp);
 }
-void String::GetLine(istream& inp)
+void String::GetLine(istream& inp, char delim)
 {
 	char temp[MAX]{};
-	inp.getline(temp,MAX,'\n');
+	inp.getline(temp,MAX,delim);
 	this->length = strlen(temp);
 	delete[] this->ptr;
 	this->ptr = new char[this->length + 1];
@@ -138,6 +111,20 @@ void String::GetLine(istream& inp)
 int String::GetLength() const
 {
 	return this->length;
+}
+void String::DeleteFirstSpace()
+{
+	while ((*this)[0] == ' ')
+	{
+		this->Erase(0);
+	}
+}
+void String::DeleteLastSpace()
+{
+	while ((*this)[this->length - 1] == ' ')
+	{
+		this->Erase(this->length - 1);
+	}
 }
 istream& operator>>(istream& inp, String& s)
 {
@@ -153,4 +140,22 @@ ostream& operator<<(ostream& out, const String& s)
 {
     out<<s.ptr;
     return out;
+}
+String String::to_string(int num)
+{
+	char temp[MAX]{};
+	int cnt = 0;
+	while (num != 0)
+	{
+		int t = num % 10;
+		temp[cnt++] = char(t + int('0'));
+		num = num / 10;
+	}
+	for (int i = 0; i <= (cnt - 1) / 2; i++)
+	{
+		char t = temp[i];
+		temp[i] = temp[cnt - 1 - i];
+		temp[cnt - 1 - i] = t;
+	}
+	return String(temp);
 }

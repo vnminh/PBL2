@@ -7,8 +7,8 @@ class String
 	friend std::istream& operator>>(std::istream&, String&);
     friend std::ostream& operator<<(std::ostream&, const String&);
     public:
+		static String to_string(int);
         String();
-		String(int);
 		String(const char*);
         String(const String&);
         ~String();
@@ -21,9 +21,11 @@ class String
 		const String operator+(const String&) const;
         char& operator[](int);
         const char& operator[](int) const;
-		void ClearSpace();
-		void GetLine(std::istream&);
+		void Erase(int);
+		void GetLine(std::istream&, char = '\n');
 		int GetLength() const;
+		void DeleteFirstSpace();
+		void DeleteLastSpace();
 	private:
 		char *ptr;
 		int length;

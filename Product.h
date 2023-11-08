@@ -2,23 +2,22 @@
 #define PRODUCT_H
 #include <iostream>
 #include "String.h"
-#include "LoHang.h"
+#include "DetailProduct.h"
 #include "DList.h"
 class Product
 {
-	friend void OutputTable(const DList<Product> &, const int &);
-	friend void OutputDetail(const DList<Product> &, const int &);
-	friend void InsertProduct(DList<Product> &, Product&, const LoHang&);
-	friend std::ostream& operator<<(std::ostream&, const Product&);
+	friend void OutputTable(const DList<DNode<Product>*> &, const int &);
+	friend void OutputDetail(const Product &);
+	friend void InsertProduct(DList<Product> &, const Product &, const DetailProduct &);
 	private:
 		String ID;
 		String Name;
 		String XS;
-		DList<LoHang> List;
+		DList<DetailProduct> List;
 	public:
 		Product(const String&, const String&, const String&);
 		~Product();
-		void AddLo(const LoHang&);
+		void AddDP(const DetailProduct&);
 		String GetID() const;
 		String GetName() const;
 		String GetXS() const;

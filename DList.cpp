@@ -3,30 +3,26 @@
 using namespace std;
 template<class T>
 DList<T>::DList()
-	:Head(NULL), Tail(NULL)
+	:Head(nullptr), Tail(nullptr)
 {}
 template<class T>
 DList<T>::~DList()
-{}
+{
+	while (!(this->isEmpty()))
+	{
+		this->RemoveLast();
+	}
+}
 template<class T>
 bool DList<T>::isEmpty() const
 {
-	return this->Head == NULL;
+	return this->Head == nullptr;
 }
 template <class T>
-void DList<T>::Release()
+void DList<T>::InsertFirst(DNode<T> * const Newptr)
 {
-	while (!isEmpty())
-	{
-		RemoveLast();
-	}
-}
-template <class T>
-void DList<T>::InsertFirst(const T data)
-{
-	DNode<T> *Newptr = new DNode<T>(data);
 	Newptr->next = this->Head;
-	if (this->Tail == NULL)
+	if (this->Tail == nullptr)
 	{
 		this->Tail = Newptr;
 	}
@@ -37,11 +33,10 @@ void DList<T>::InsertFirst(const T data)
 	this->Head = Newptr;
 }
 template <class T>
-void DList<T>::InsertLast(const T data)
+void DList<T>::InsertLast( DNode<T> * const Newptr)
 {
-	DNode<T> *Newptr = new DNode<T>(data);
 	Newptr->pre = this->Tail;
-	if (this->Head == NULL)
+	if (this->Head == nullptr)
 	{
 		this->Head = Newptr;
 	}
@@ -54,17 +49,17 @@ void DList<T>::InsertLast(const T data)
 template <class T>
 void DList<T>::RemoveFirst()
 {
-	if (this->Head != NULL)
+	if (this->Head != nullptr)
 	{
 		DNode<T>*tempptr = this->Head;
 		this->Head = tempptr->next;
-		if (this->Head == NULL)
+		if (this->Head == nullptr)
 		{
-			this->Tail = NULL;
+			this->Tail = nullptr;
 		}
 		else
 		{
-			(this->Head)->pre = NULL;
+			(this->Head)->pre = nullptr;
 		}
 		delete tempptr;
 	}
@@ -72,29 +67,29 @@ void DList<T>::RemoveFirst()
 template<class T>
 void DList<T>::RemoveLast()
 {
-	if (this->Head != NULL)
+	if (this->Head != nullptr)
 	{
 		DNode<T>*tempptr = this->Tail;
 		this->Tail = tempptr->pre;
-		if (this->Tail == NULL)
+		if (this->Tail == nullptr)
 		{
-			this->Head = NULL;
+			this->Head = nullptr;
 		}
 		else
 		{
-			(this->Tail)->next = NULL;
+			(this->Tail)->next = nullptr;
 		}
 		delete tempptr;
 	}
 }
 template<class T>
-void DList<T>::Remove(const DNode<T> *ptr)
+void DList<T>::Remove(const DNode<T> * const ptr)
 {
-	if (ptr->next == NULL)
+	if (ptr->next == nullptr)
 	{
 		RemoveLast();
 	}
-	else if (ptr->pre == NULL)
+	else if (ptr->pre == nullptr)
 	{
 		RemoveFirst();
 	}
@@ -107,7 +102,7 @@ void DList<T>::Remove(const DNode<T> *ptr)
 		delete ptr;
 	}
 }
-template <class T> 
+template <class T>
 DNode<T> * DList<T>::GetFirstElement() const
 {
 	return this->Head;
@@ -117,58 +112,41 @@ DNode<T> * DList<T>::GetLastElement() const
 {
 	return this->Tail;
 }
-template<class T>
-DNode<T> * DList<T>::FindIndex(int index) const
+template <class T>
+DNode<T>* DList<T>::FindIndex(int index) const
 {
-	DNode<T> *curptr = this->Head;
-	int cnt = 1;
-	while (cnt != index)
+	int i = 1;
+	DNode <T>* curptr = this->Head;
+	while (i != index)
 	{
-		curptr = curptr->next;
-		cnt++;
-	}
-	return curptr;
-}
-template<class T> 
-template<typename K>
-DNode<T> * DList<T>::FindFirstMatch(const K &data, K (T::*ptr)() const) const
-{
-	DNode<T> *curptr = this->Head;
-	while (curptr != NULL && ((curptr->data).*ptr)() != data)
-	{
+		i++;
 		curptr = curptr->next;
 	}
 	return curptr;
 }
-template<class T>
-template<typename K>
-DList<T>*  DList<T>::FindAll(const K &data, K (T::*ptr)() const, int& cnt) const
+template <class T, typename K>
+DNode<T>* FindFirstMatch(const DList <T> &list, const K &data_lookup, K(T::*ptr)() const)
 {
-	static DList<T> AnsList;
-	DNode<T> *curptr = this->Head;
-	while (curptr != NULL)
+	DNode<T> *curptr = list.Head;
+	while (curptr != nullptr && ((curptr->data).*ptr)() != data_lookup)
 	{
-		if (((curptr->data).*ptr)() == data)
+		curptr = curptr->next;
+	}
+	return curptr;
+}
+template <class T, typename K>
+DList< DNode<T> * >* FindAll(const DList <T> &list, const K &data_lookup, K(T::*ptr)() const, int& cnt)
+{
+	static DList<DNode<T>*> AnsList;
+	DNode<T> * curptr = list.Head;
+	while (curptr != nullptr)
+	{
+		if (((curptr->data).*ptr)() == data_lookup)
 		{
-			AnsList.InsertLast(curptr->data);
+			AnsList.InsertLast(new DNode<DNode<T>*> (curptr));
 			cnt++;
 		}
 		curptr = curptr->next;
 	}
 	return &AnsList;
-}
-template<class K>
-ostream& operator<< (ostream& out, const DList<K> & l)
-{
-	if (l.Head != NULL)
-	{
-		DNode<K> * curptr = l.Head;
-		while (curptr != NULL)
-		{
-			out << curptr->data << '\n';
-			curptr = curptr->next;
-		}
-	}
-	else out << "NULL LIST\n";
-	return out;
 }

@@ -16,26 +16,25 @@ namespace mnu
 		{
 			throw Exception("FILE NOT EXIST");
 		}
-		String id_lo = fname;
-		String temp;
-		temp.GetLine(inp);
-		Date nn(temp);
+		Date nn (fname,".");
 		while (!inp.eof()){
-			String id_p;
-			id_p.GetLine(inp);
-			String name;
-			name.GetLine(inp);
-			String xs;
-			xs.GetLine(inp);
+			String temp;
 			temp.GetLine(inp);
-			Date nsx(temp);
-			temp.GetLine(inp);
-			Date hsd(temp);
-			int price, sl;
-			inp >> price >> sl;
-			inp.ignore();
+			char *ptr;
+			String id_p = strtok_s(temp, ",", &ptr);
+			String name = strtok_s(nullptr, ",", &ptr);
+			String xs = strtok_s(nullptr, ",", &ptr);
+			String ID_dp = strtok_s(nullptr, ",", &ptr);
+			String nsx_str = strtok_s(nullptr, ",", &ptr);
+			Date nsx(nsx_str);
+			String hsd_str = strtok_s(nullptr, ",", &ptr);
+			Date hsd(hsd_str);
+			String price_str = strtok_s(nullptr, ",", &ptr); 
+			int price = atoi(price_str);
+			String sl_str = strtok_s(nullptr, ",", &ptr);
+			int sl = atoi(sl_str);
 			Product p(id_p, name, xs);
-			InsertProduct(List, p, LoHang(id_lo, nn, nsx, hsd, price, sl));
+			InsertProduct(List, p, DetailProduct(ID_dp, nn, nsx, hsd, price, sl));
 		}
 		inp.close();
 	}
@@ -43,8 +42,7 @@ namespace mnu
 	//-----------------------------------MAIN MENU------------------------------------------------
 	void MainMenu(int& choice)
 	{
-		CenterPrint(TITLE, WIDTH);
-		std::cout << "\n\n" << '+'; DrawLine(WIDTH - 2, '='); std::cout << '+' << "\n\n";
+		DrawTitle();
 		LeftPrint("1.Quan ly san pham"); std::cout << '\n';
 		LeftPrint("2.Quan ly khach hang"); std::cout << '\n';
 		LeftPrint("3.Quan ly hoa don"); std::cout << '\n';
@@ -58,8 +56,7 @@ namespace mnu
 	//------------------------------------MENU 1----------------------------------------------------
 	void Menu1(int &choice)
 	{
-		CenterPrint(TITLE, WIDTH);
-		std::cout << "\n\n" << '+'; DrawLine(WIDTH - 2, '='); std::cout << '+' << "\n\n";
+		DrawTitle();
 		LeftPrint("1.Them san pham"); std::cout << '\n';
 		LeftPrint("2.Tim kiem san pham"); std::cout << '\n';
 		LeftPrint("0.Quay lai"); std::cout << '\n';
@@ -72,8 +69,7 @@ namespace mnu
 	//----------------------------------MENU 1-1 ------------------------------------------------------
 	void Menu1_1(int &choice)
 	{
-		CenterPrint(TITLE, WIDTH);
-		std::cout << "\n\n" << '+'; DrawLine(WIDTH - 2, '='); std::cout << '+' << "\n\n";
+		DrawTitle();
 		LeftPrint("1.Them bang file"); std::cout << '\n';
 		LeftPrint("2.Nhap tu ban phim"); std::cout << '\n';
 		LeftPrint("0.Quay lai"); std::cout << '\n';
@@ -87,8 +83,7 @@ namespace mnu
 	template<class T>
 	void Nhap(DList<T> & List, int & choice)
 	{
-		CenterPrint(TITLE, WIDTH);
-		std::cout << "\n\n" << '+'; DrawLine(WIDTH - 2, '='); std::cout << '+' << "\n\n";
+		DrawTitle();
 		LeftPrint("Nhap ten file:");
 		String fname;
 		fname.GetLine(cin);
@@ -106,8 +101,7 @@ namespace mnu
 	//----------------------------------MENU 1-2 ------------------------------------------------------
 	void Menu1_2(int& choice)
 	{
-		CenterPrint(TITLE, WIDTH);
-		std::cout << "\n\n" << '+'; DrawLine(WIDTH - 2, '='); std::cout << '+' << "\n\n";
+		DrawTitle();
 		LeftPrint("1.Tim kiem theo ma san pham"); cout << '\n';
 		LeftPrint("2.Tim kiem theo ten san pham"); cout << '\n';
 		LeftPrint("3.Tim kiem theo xuat xu"); cout << '\n';
@@ -121,36 +115,40 @@ namespace mnu
 	//---------------------------------Chuc nang TKSP-----------------------------------------------
 	namespace search_mnu
 	{
-		DList<Product> * ptrAns_List_For_Search = NULL;
+		DList<DNode<Product>*> * ptrAns_List_For_Search = nullptr;
 		int cnt_Search = 0;
 	}
 	void Search(const DList<Product>& List, int &choice)
 	{
-		CenterPrint(TITLE, WIDTH);
-		std::cout << "\n\n" << '+'; DrawLine(WIDTH - 2, '='); std::cout << '+' << "\n\n";
-		if (search_mnu::ptrAns_List_For_Search == NULL)
+		DrawTitle();
+		if (search_mnu::ptrAns_List_For_Search == nullptr)
 		{
-			String data;
+			String data_lookup;
 			if (choice == 1)
 			{
-				LeftPrint("Nhap ma san phan can tim kiem :"); data.GetLine(cin);
-				search_mnu::ptrAns_List_For_Search = List.FindAll(data, &Product::GetID, search_mnu::cnt_Search);
+				LeftPrint("Nhap ma san phan can tim kiem :"); data_lookup.GetLine(cin);
+				DNode<Product> *ptr = FindFirstMatch(List,data_lookup, &Product::GetID);
+				OutputDetail(ptr->data);
+				choice = 2;
+				system("pause");
+				return;
 			}
 			else if (choice == 2)
 			{
-				LeftPrint("Nhap ten san phan can tim kiem :"); data.GetLine(cin);
-				search_mnu::ptrAns_List_For_Search = List.FindAll(data, &Product::GetName, search_mnu::cnt_Search);
+				LeftPrint("Nhap ten san phan can tim kiem :"); data_lookup.GetLine(cin);
+				search_mnu::ptrAns_List_For_Search = FindAll(List, data_lookup, &Product::GetName, search_mnu::cnt_Search);
 			}
 			else if (choice == 3)
 			{
-				LeftPrint("Nhap xuat xu san phan can tim kiem :"); data.GetLine(cin);
-				search_mnu::ptrAns_List_For_Search = List.FindAll(data, &Product::GetXS, search_mnu::cnt_Search);
+				LeftPrint("Nhap xuat xu san phan can tim kiem :"); data_lookup.GetLine(cin);
+				search_mnu::ptrAns_List_For_Search = FindAll(List, data_lookup, &Product::GetXS, search_mnu::cnt_Search);
 			}
 		}
 		OutputTable(*search_mnu::ptrAns_List_For_Search, search_mnu::cnt_Search);
+		system("pause");
 		if (search_mnu::cnt_Search == 0)
 		{
-			search_mnu::ptrAns_List_For_Search = NULL;
+			search_mnu::ptrAns_List_For_Search = nullptr;
 			search_mnu::cnt_Search = 0;
 			choice = 2;
 			return;
@@ -162,13 +160,14 @@ namespace mnu
 		}
 		if (choice == 0)
 		{
-			search_mnu::ptrAns_List_For_Search = NULL;
+			search_mnu::ptrAns_List_For_Search = nullptr;
 			search_mnu::cnt_Search = 0;
 		}
 		else
 		{
 			system("cls");
-			OutputDetail(*search_mnu::ptrAns_List_For_Search, choice);
+			DNode<DNode<Product>*>* ptr=(*search_mnu::ptrAns_List_For_Search).FindIndex(choice);
+			OutputDetail((ptr->data)->data);
 			system("pause");
 			choice = 1;
 		}
@@ -222,7 +221,7 @@ namespace mnu
 		}
 		if (choice == 2 || choice == 0)
 		{
-			search_mnu::ptrAns_List_For_Search = NULL;
+			search_mnu::ptrAns_List_For_Search = nullptr;
 			search_mnu::cnt_Search = 0;
 		}
 	}
@@ -235,23 +234,23 @@ namespace mnu
 		int num_child;
 		Node ** child;
 		Node(void(*ptr) (int&), int num)
-			:ptr(ptr), ptr1(NULL), ptr2(NULL), num_child(num)
+			:ptr(ptr), ptr1(nullptr), ptr2(nullptr), num_child(num)
 		{
-			this->child = new Node*[this->num_child]{NULL};
+			this->child = new Node*[this->num_child]{nullptr};
 		}
 		Node(void(*ptr1) (DList<Product>&, int&), int num)
-			:ptr(NULL), ptr1(ptr1), ptr2(NULL), num_child(num)
+			:ptr(nullptr), ptr1(ptr1), ptr2(nullptr), num_child(num)
 		{
 			if (this->num_child > 0)
-				this->child = new Node*[this->num_child]{NULL};
-			else this->child = NULL;
+				this->child = new Node*[this->num_child]{nullptr};
+			else this->child = nullptr;
 		}
 		Node(void(*ptr2) (const DList<Product>&, int&), int num)
-			:ptr(NULL), ptr1(NULL), ptr2(ptr2), num_child(num)
+			:ptr(nullptr), ptr1(nullptr), ptr2(ptr2), num_child(num)
 		{
 			if (this->num_child > 0)
-				this->child = new Node*[this->num_child]{NULL};
-			else this->child = NULL;
+				this->child = new Node*[this->num_child]{nullptr};
+			else this->child = nullptr;
 		}
 		~Node()
 		{

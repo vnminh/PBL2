@@ -1,4 +1,9 @@
 #include "Output.h"
+void mnu::DrawTitle(int w, const String t)
+{
+	CenterPrint(t, w);
+	std::cout << "\n\n" << '+'; DrawLine(w - 2, '='); std::cout << '+' << "\n\n";
+}
 void mnu::DrawLine(int len, char c )
 {
 	for (int i = 1; i <= len; i++)

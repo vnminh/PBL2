@@ -10,17 +10,20 @@ Date::Date(int d, int m, int y)
 Date::Date(const Date& date)
 	:Date(date.Day,date.Month,date.Year)
 {}
-Date::Date(const String & s)
+Date::Date(const String & s, const String &delim)
 {
 	String temp = s;
-	char *token;
+	char *ptr;
 	String d, m, y;
-	d=strtok_s(temp, "/", &token);
-	m=strtok_s(NULL, "/", &token);
-	y=strtok_s(NULL, "/", &token);
-	d.ClearSpace();
-	m.ClearSpace();
-	y.ClearSpace();
+	d = strtok_s(temp, delim, &ptr);
+	m = strtok_s(nullptr, delim, &ptr);
+	y = strtok_s(nullptr, delim, &ptr);
+	d.DeleteFirstSpace();
+	d.DeleteLastSpace();
+	m.DeleteFirstSpace();
+	m.DeleteLastSpace();
+	y.DeleteFirstSpace();
+	y.DeleteLastSpace();
 	SetDate(atoi(d), atoi(m), atoi(y));
 }
 Date::~Date()
@@ -110,13 +113,13 @@ const Date& Date::operator=(const Date& date)
 	}
 	return *this;
 }
-String Date::show()
+String Date::to_string() const
 {
-	String d = this->Day;
-	String m = this->Month;
-	String y = this->Year;
-	String ans = d + "/" + m + "/" + y;;
-	if (this->Day < 10) ans = String("0") + ans;
+	String ans;
+	if (this->Day < 10) ans = ans + "0";
+	ans = ans + String::to_string(this->Day) + "/";
+	if (this->Month < 10) ans = ans + String("0");
+	ans = ans + String::to_string(this->Month) + "/" + String::to_string(this->Year);
 	return ans;
 }
 ostream& operator<<(ostream &out, const Date& date)

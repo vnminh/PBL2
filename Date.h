@@ -12,7 +12,7 @@ class Date
 		void HelpIncrease();
     public:
 		Date(int = 1, int = 1, int = 1990);
-		Date(const String&);
+		Date(const String&, const String & ="/");
         Date(const Date&);
         ~Date();
         int GetDay() const;
@@ -26,6 +26,6 @@ class Date
 		const Date& operator=(const Date&);
         Date& operator++();
         const Date operator++(int);
-		String show();
+		String to_string() const;
 };
 #endif

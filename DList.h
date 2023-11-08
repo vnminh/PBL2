@@ -5,25 +5,22 @@
 template <class T>
 class DList
 {
-	template<class K>
-	friend std::ostream& operator<< (std::ostream& out, const DList<K> &l);
 	public:
 		DList();
 		~DList();
-		void InsertFirst(const T);
-		void InsertLast(const T);
+		void InsertFirst( DNode<T> * const);
+		void InsertLast( DNode<T> * const);
 		void RemoveFirst();
 		void RemoveLast();
 		void Remove(const DNode<T> * const);
 		bool isEmpty() const;
-		void Release();
-		DNode<T> *GetFirstElement() const;
-		DNode<T> *GetLastElement() const;
-		DNode<T> * FindIndex(int) const;
-		template <typename K>
-		DNode<T> * FindFirstMatch(const K&, K (T::*)() const) const;
-		template <typename K>
-		DList<T> * FindAll(const K&, K (T::*)() const, int&) const;
+		DNode<T>* GetFirstElement() const;
+		DNode<T>* GetLastElement() const;
+		DNode<T>* FindIndex(int) const;
+		template <class T, typename K>
+		friend DNode<T> * FindFirstMatch(const DList <T> &,const K&, K(T::*)() const);
+		template <class T, typename K>
+		friend DList< DNode<T>* > * FindAll(const DList <T> &, const K&, K(T::*)() const, int&);
 	private:
 		DNode<T> *Head;
 		DNode<T> *Tail;

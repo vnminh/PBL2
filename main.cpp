@@ -2,9 +2,9 @@
 #include <cmath>
 #include <fstream>
 #include <Windows.h>
-#include "LoHang.h"
 #include "String.h"
 #include "Date.h"
+#include "DetailProduct.h"
 #include "InitTemplateClass.cpp"
 #include "Output.h"
 #include "Exception.h"
@@ -19,15 +19,15 @@ int main()
 	do{
 		system("cls");
 		try{
-			if (Mptr->ptr != NULL)
+			if (Mptr->ptr != nullptr)
 			{
 				Mptr->ptr(choice);
 			}
-			else if (Mptr->ptr1 != NULL)
+			else if (Mptr->ptr1 != nullptr)
 			{
 				Mptr->ptr1(List, choice);
 			}
-			else if (Mptr->ptr2 != NULL)
+			else if (Mptr->ptr2 != nullptr)
 			{
 				Mptr->ptr2(List, choice);
 			}
@@ -38,8 +38,7 @@ int main()
 			mnu::LeftPrint(ex.What(),mnu::WIDTH);
 			system("cls");
 		}
-	} while (Mptr != NULL);
-	List.Release();
+	} while (Mptr != nullptr);
 	mnu::DeleteMenu();
 	return 0;
 }
