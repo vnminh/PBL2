@@ -127,3 +127,10 @@ ostream& operator<<(ostream &out, const Date& date)
 	out << setw(2) << setfill('0') << date.Day << '/' << setw(2) << setfill('0') << date.Month << '/' << date.Year;
 	return out;
 }
+istream& operator>>(istream &inp, Date& date)
+{
+	inp >> date.Day; inp.ignore();
+	inp >> date.Month; inp.ignore();
+	inp >> date.Year; inp.ignore();
+	return inp;
+}

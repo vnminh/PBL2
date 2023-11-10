@@ -103,6 +103,14 @@ void DList<T>::Remove(const DNode<T> * const ptr)
 	}
 }
 template <class T>
+void DList<T>::Clear()
+{
+	while (!(this->isEmpty()))
+	{
+		this->RemoveLast();
+	}
+}
+template <class T>
 DNode<T> * DList<T>::GetFirstElement() const
 {
 	return this->Head;
@@ -113,40 +121,41 @@ DNode<T> * DList<T>::GetLastElement() const
 	return this->Tail;
 }
 template <class T>
-DNode<T>* DList<T>::FindIndex(int index) const
+T* FindIndex(const DList<T*>&list, const int &index)
 {
 	int i = 1;
-	DNode <T>* curptr = this->Head;
+	DNode <T*>* curptr = list.Head;
 	while (i != index)
 	{
 		i++;
 		curptr = curptr->next;
 	}
-	return curptr;
+	return curptr->data;
 }
 template <class T, typename K>
-DNode<T>* FindFirstMatch(const DList <T> &list, const K &data_lookup, K(T::*ptr)() const)
+T* FindFirstMatch(const DList <T*> &list, const K &data_lookup, K(T::*ptr)() const)
 {
-	DNode<T> *curptr = list.Head;
-	while (curptr != nullptr && ((curptr->data).*ptr)() != data_lookup)
+	DNode<T*> *curptr = list.Head;
+	while (curptr != nullptr && ((curptr->data)->*ptr)() != data_lookup)
 	{
 		curptr = curptr->next;
 	}
-	return curptr;
+	if (curptr == nullptr) return nullptr;
+	else return curptr->data;
 }
 template <class T, typename K>
-DList< DNode<T> * >* FindAll(const DList <T> &list, const K &data_lookup, K(T::*ptr)() const, int& cnt)
+DList< T* >* FindAll(const DList <T*> &list, const K &data_lookup, K(T::*ptr)() const, int& cnt)
 {
-	static DList<DNode<T>*> AnsList;
-	DNode<T> * curptr = list.Head;
+	DList < T* >  *ptrAnsList = new DList < T* > ;
+	DNode < T* >  *curptr = list.Head;
 	while (curptr != nullptr)
 	{
-		if (((curptr->data).*ptr)() == data_lookup)
+		if (((curptr->data)->*ptr)() == data_lookup)
 		{
-			AnsList.InsertLast(new DNode<DNode<T>*> (curptr));
+			ptrAnsList->InsertLast(new DNode < T* >  (curptr->data));
 			cnt++;
 		}
 		curptr = curptr->next;
 	}
-	return &AnsList;
+	return ptrAnsList;
 }

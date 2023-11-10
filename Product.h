@@ -2,22 +2,23 @@
 #define PRODUCT_H
 #include <iostream>
 #include "String.h"
-#include "DetailProduct.h"
 #include "DList.h"
+class DetailProduct;
 class Product
 {
-	friend void OutputTable(const DList<DNode<Product>*> &, const int &);
-	friend void OutputDetail(const Product &);
-	friend void InsertProduct(DList<Product> &, const Product &, const DetailProduct &);
+	friend void OutputTable(const DList<Product *> &, const int &);
+	friend void OutputDetail(const Product *);
+	friend void InsertProduct(DList<Product *> &, const String &, const String &, const String&, DetailProduct *);
 	private:
 		String ID;
 		String Name;
 		String XS;
-		DList<DetailProduct> List;
+		DList<DetailProduct*> List;
 	public:
 		Product(const String&, const String&, const String&);
 		~Product();
-		void AddDP(const DetailProduct&);
+		void AddDetailProduct(DetailProduct*);
+		DetailProduct* FindDetailProduct(const String&) const;
 		String GetID() const;
 		String GetName() const;
 		String GetXS() const;

@@ -1,7 +1,7 @@
 #include "String.h"
 #include "Exception.h"
 #include <iostream>
-#define MAX 1000
+#define MAX 100
 using namespace std;
 String::String()
 	:length(0), ptr(nullptr)
@@ -89,6 +89,16 @@ char& String::operator[](int index)
 	}
 	else return *(this->ptr + index);
 }
+long long String::to_ll() const
+{
+	long long res = 0;
+	for (int i = this->length - 1; i >= 0; i++)
+	{
+		long long temp = (*this)[i] - '0';
+		res = res * 10 + temp;
+	}
+	return res;
+}
 void String::Erase(int index)
 {
 	char temp[MAX];
@@ -126,6 +136,15 @@ void String::DeleteLastSpace()
 		this->Erase(this->length - 1);
 	}
 }
+String String::SubStr(const int &pos, const int&len) const
+{
+	char temp[MAX]{};
+	for (int i = 0; i < len; i++)
+	{
+		temp[i] = (*this)[pos + i];
+	}
+	return String(temp);
+}
 istream& operator>>(istream& inp, String& s)
 {
 	char temp[MAX]{};
@@ -141,7 +160,7 @@ ostream& operator<<(ostream& out, const String& s)
     out<<s.ptr;
     return out;
 }
-String String::to_string(int num)
+String String::to_string(int num, int width)
 {
 	char temp[MAX]{};
 	int cnt = 0;
@@ -156,6 +175,18 @@ String String::to_string(int num)
 		char t = temp[i];
 		temp[i] = temp[cnt - 1 - i];
 		temp[cnt - 1 - i] = t;
+	}
+	if (width > cnt)
+	{
+		int pad = width - cnt;
+		for (int i = cnt-1; i >=0; i--)
+		{
+			temp[i + pad] = temp[i];
+		}
+		for (int i = 0; i < pad; i++)
+		{
+			temp[i] = '0';
+		}
 	}
 	return String(temp);
 }

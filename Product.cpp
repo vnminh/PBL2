@@ -1,7 +1,7 @@
-#include "DNode.cpp"
-#include "DList.cpp"
 #include "Product.h"
 #include "Output.h"
+#include "DList.h"
+#include "DetailProduct.h"
 #include <iostream>
 using namespace std;
 Product::Product(const String &id, const String &n, const String &xs)
@@ -9,12 +9,16 @@ Product::Product(const String &id, const String &n, const String &xs)
 {}
 Product::~Product()
 {}
-void Product::AddDP(const DetailProduct & dp)
+void Product::AddDetailProduct( DetailProduct * ptr)
 {
-	DNode<DetailProduct> * Newptr = new DNode<DetailProduct>(dp);
-	(Newptr->data).ptrP = this;
-	this->List.InsertLast(Newptr);
+	DNode<DetailProduct*> * newptr = new DNode<DetailProduct *> (ptr);
+	(this->List).InsertLast(newptr);
 }
+DetailProduct* Product::FindDetailProduct(const String&id) const
+{
+	DetailProduct* ptr = FindFirstMatch(this->List, id, &DetailProduct::GetID);
+	return ptr;
+} 
 String Product::GetID() const
 {
 	return this->ID;
@@ -27,24 +31,27 @@ String Product::GetXS() const
 {
 	return this->XS;
 }
-void InsertProduct(DList<Product> &List, const Product& p, const DetailProduct& dp)
+void InsertProduct(DList<Product *> &List, const String &id_p,const String &name,const String &xs,  DetailProduct *ptrDP )
 {
-	DNode<Product> * ptr = FindFirstMatch(List,p.ID, &Product::GetID);
-	if (ptr == nullptr){
-		DNode<Product> * Newptr = new DNode<Product>(p);
-		(Newptr->data).AddDP(dp);
+	Product *ptrP = FindFirstMatch(List, id_p, &Product::GetID);
+	if (ptrP == nullptr)
+	{
+		DNode<Product *> * Newptr = new DNode<Product *>(new Product(id_p, name, xs));
+		(Newptr->data)->AddDetailProduct(ptrDP);
+		ptrDP->ConnectProduct(Newptr->data);
 		List.InsertLast(Newptr);
 	}
 	else
 	{
-		(ptr->data).AddDP(dp);
+		ptrP->AddDetailProduct(ptrDP);
+		ptrDP->ConnectProduct(ptrP);
 	}
 }
-void OutputTable(const DList<DNode<Product>*> & List, const int& num)
+void OutputTable(const DList<Product*> & list, const int& num)
 {
 	if (num == 0)
 	{
-		mnu::LeftPrint("Khong tim thay"); cout << endl;
+		mnu::PadLeftPrint("Khong tim thay\n");
 		return;
 	}
 	const int w = 10;
@@ -54,22 +61,27 @@ void OutputTable(const DList<DNode<Product>*> & List, const int& num)
 	cout << '|'; mnu::CenterPrint("TEN SAN PHAM", mnu::WIDTH - 5 - 4 * w);
 	cout << '|'; mnu::CenterPrint("XUAT XU", 2 * w); cout << '|' << '\n';
 	cout << '+'; mnu::DrawLine(mnu::WIDTH - 2); cout << '+' << '\n';
-	const DNode<DNode<Product>*> *curPtr = List.GetFirstElement();
+	const DNode<Product*> *curPtr = list.GetFirstElement();
 	for (int i = 1; i <= num; i++)
 	{
 		cout << '|'; mnu::CenterPrint(String::to_string(i), w);
-		cout << '|'; mnu::CenterPrint(((curPtr->data)->data).ID, w);
-		cout << '|'; mnu::CenterPrint(((curPtr->data)->data).Name, mnu::WIDTH - 5 - 4 * w);
-		cout << '|'; mnu::CenterPrint(((curPtr->data)->data).XS, 2 * w); cout << '|' << '\n';
+		cout << '|'; mnu::CenterPrint((curPtr->data)->ID, w);
+		cout << '|'; mnu::CenterPrint((curPtr->data)->Name, mnu::WIDTH - 5 - 4 * w);
+		cout << '|'; mnu::CenterPrint((curPtr->data)->XS, 2 * w); cout << '|' << '\n';
 		cout << '+'; mnu::DrawLine(mnu::WIDTH - 2); cout << '+' << '\n';
 		curPtr = curPtr->next;
 	}
 }
-void OutputDetail(const Product & p)
+void OutputDetail(const Product * ptrP)
 {
-	cout << "ID           :" << p.ID << endl;
-	cout << "Ten san pham :" << p.Name << endl;
-	cout << "Xuat xu      :" << p.XS << endl;
+	if (ptrP == nullptr)
+	{
+		mnu::PadLeftPrint("Khong tim thay\n");
+		return;
+	}
+	cout << "ID           :" << ptrP->ID << endl;
+	cout << "Ten san pham :" << ptrP->Name << endl;
+	cout << "Xuat xu      :" << ptrP->XS << endl;
 	const int w1 = 10, w2 = (mnu::WIDTH - 8 - 4 * w1) / 3;
 	cout << '+'; mnu::DrawLine(mnu::WIDTH - 2); cout << '+' << '\n';
 	cout << '|'; mnu::CenterPrint("STT", w1);
@@ -80,17 +92,17 @@ void OutputDetail(const Product & p)
 	cout << '|'; mnu::CenterPrint("Gia", w1);
 	cout << '|'; mnu::CenterPrint("So luong", w1); cout << '|' << '\n';
 	cout << '+'; mnu::DrawLine(mnu::WIDTH - 2); cout << '+' << '\n';
-	const DNode<DetailProduct> *curPtr = p.List.GetFirstElement();
+	const DNode<DetailProduct *> *curPtr = (ptrP->List).GetFirstElement();
 	int cnt = 1;
 	while (curPtr != nullptr)
 	{
 		cout << '|'; mnu::CenterPrint(String::to_string(cnt), w1);
-		cout << '|'; mnu::CenterPrint((curPtr->data).GetID(), w1);
-		cout << '|'; mnu::CenterPrint((curPtr->data).GetNN().to_string(), w2 + 1);
-		cout << '|'; mnu::CenterPrint((curPtr->data).GetNSX().to_string(), w2);
-		cout << '|'; mnu::CenterPrint((curPtr->data).GetHSD().to_string(), w2);
-		cout << '|'; mnu::CenterPrint(String::to_string((curPtr->data).GetPrice()), w1);
-		cout << '|'; mnu::CenterPrint(String::to_string((curPtr->data).GetSL()), w1); cout << '|' << '\n';
+		cout << '|'; mnu::CenterPrint((curPtr->data)->GetID(), w1);
+		cout << '|'; mnu::CenterPrint((curPtr->data)->GetNN().to_string(), w2 + 1);
+		cout << '|'; mnu::CenterPrint((curPtr->data)->GetNSX().to_string(), w2);
+		cout << '|'; mnu::CenterPrint((curPtr->data)->GetHSD().to_string(), w2);
+		cout << '|'; mnu::CenterPrint(String::to_string((curPtr->data)->GetPrice()), w1);
+		cout << '|'; mnu::CenterPrint(String::to_string((curPtr->data)->GetSL()), w1); cout << '|' << '\n';
 		cout << '+'; mnu::DrawLine(mnu::WIDTH - 2); cout << '+' << '\n';
 		cnt++;
 		curPtr = curPtr->next;

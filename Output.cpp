@@ -14,13 +14,25 @@ void mnu::DrawLine(int len, char c )
 void mnu::CenterPrint(const String &s, int len, char pad )
 {
 	int temp = len - s.GetLength();
+	if (temp <= 0)
+	{
+		std::cout << s;
+		return;
+	}
 	int before = floor(temp * 1.0 / 2);
 	int after = ceil(temp * 1.0 / 2);
 	DrawLine(before, pad);
 	std::cout << s;
 	DrawLine(after, pad);
 }
-void mnu::LeftPrint(const String &s, int padlen, char pad )
+void mnu::LeftPrint(const String &s, int len, char pad)
+{
+	int remain = len - s.GetLength();
+	std::cout << s;
+	if (remain < 0) return;
+	DrawLine(remain, pad);
+}
+void mnu::PadLeftPrint(const String &s, int padlen, char pad )
 {
 	DrawLine(padlen, pad);
 	std::cout << s;

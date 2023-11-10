@@ -4,7 +4,8 @@
 #include "String.h"
 class Date
 {
-    friend std::ostream& operator<<(std::ostream&, const Date&);
+    friend std::istream& operator>>(std::istream&, Date&);
+	friend std::ostream& operator<<(std::ostream&, const Date&);
     private:
         int Day,Month,Year;
 		static const int DayOfMonth[13];
