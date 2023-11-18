@@ -4,6 +4,7 @@
 #include <Windows.h>
 #include "String.h"
 #include "Date.h"
+#include "Time.h"
 #include "Phone.h"
 #include "InitTemplateClass.cpp"
 #include "Output.h"

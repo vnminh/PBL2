@@ -2,6 +2,7 @@
 #define BILL_H
 #include "String.h"
 #include "Date.h"
+#include "Time.h"
 #include "Phone.h"
 #include "DList.h"
 class Product;
@@ -18,16 +19,18 @@ private:
 	String ID;
 	int Total;
 	Date BuyDate;
+	Time BuyTime;
 	int NumDetailBill;
 	DList < DetailBill *> List;
 	Customer * ptrC;
 	void ConnectCustomer(Customer *);
 public:
-	Bill(const Date&);
+	Bill(const Date&, const Time&);
 	void AddDetailBill(DetailBill*);
 	String GetID() const;
 	int GetTotal() const;
 	Date GetBuyDate() const;
+	Time GetBuyTime() const;
 	Phone GetCustomerPhone() const;
 	void SetNumDetailBill(const int&);
 	void SetTotal(const int&);

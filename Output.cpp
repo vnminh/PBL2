@@ -62,6 +62,7 @@ bool mnu::InputAndCheck(const String &mess, const int& width, void (*format)(con
 		(*format)(mess, width, ' ');
 		try
 		{
+			fflush(stdin);
 			std::cin.clear();
 			std::cin >> var;
 			ok = true;

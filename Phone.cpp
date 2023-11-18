@@ -18,11 +18,11 @@ void Phone::SetNumber(const String & num)
 }
 bool Phone::operator==(const Phone& p) const
 {
-	return this->number == p.number;
+	return (this->number == p.number);
 }
 bool Phone::operator!=(const Phone &p) const
 {
-	return this->number != p.number;
+	return (this->number != p.number);
 }
 String Phone::GetNumber()const
 {
@@ -40,7 +40,15 @@ ostream& operator<<(ostream& out, const Phone& p)
 istream& operator>>(istream& inp, Phone& p)
 {
 	String temp;
-	cin >> temp;
-	p.SetNumber(temp);
+	fflush(stdin);
+	temp.GetLine(inp);
+	if (temp == String(""))
+	{
+		p = Phone("0000000000");
+	}
+	else
+	{
+		p.SetNumber(temp);
+	}
 	return inp;
 }

@@ -5,8 +5,8 @@
 #include "Output.h"
 using namespace std;
 long long Bill::NumBill = 0;
-Bill::Bill(const Date& date)
-	:BuyDate(date),Total(0),NumDetailBill(0), ptrC(nullptr)
+Bill::Bill(const Date& date, const Time& time)
+	:BuyDate(date),BuyTime(time),Total(0),NumDetailBill(0), ptrC(nullptr)
 {
 	Bill::NumBill++;
 	this->ID = String("HD") + String::to_string(Bill::NumBill, 5);
@@ -31,6 +31,10 @@ int Bill::GetTotal() const
 Date Bill::GetBuyDate() const
 {
 	return this->BuyDate;
+}
+Time Bill::GetBuyTime() const
+{
+	return this->BuyTime;
 }
 Phone Bill::GetCustomerPhone() const
 {
@@ -62,7 +66,7 @@ void OutputDetail(const Bill * ptrB)
 		cout << (ptrB->ptrC)->GetName();
 	}
 	cout << endl;
-	cout << "Ngay mua       : " << ptrB->BuyDate << endl;
+	cout << "Ngay mua       : " << ptrB->BuyTime << ' ' << ptrB->BuyDate << endl;
 	const int w1 = 15;
 	cout << '+'; mnu::DrawLine(mnu::WIDTH - 2); cout << '+' << '\n';
 	cout << '|'; mnu::CenterPrint("STT", w1);

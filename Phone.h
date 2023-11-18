@@ -9,7 +9,7 @@ class Phone
 private:
 	String number;
 public:
-	Phone(const String ="");
+	Phone(const String ="0000000000");
 	~Phone();
 	void SetNumber(const String &);
 	bool operator==(const Phone&) const;

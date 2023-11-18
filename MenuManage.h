@@ -586,33 +586,33 @@ namespace mnu
 	{
 		DrawTitle();
 		int w = 30;
-		String c_name;
+		String c_name,address;
 		Phone phone;
-		Date buydate;
-		LeftPrintForInput("Nhap ten khach hang", w); fflush(stdin); c_name.GetLine(cin);
-		if (c_name == String(""))
+		Date buydate=Today();
+		Time buytime=Now();
+		LeftPrintForInput("Ngay", w); cout << buydate << endl;
+		LeftPrintForInput("Thoi gian", w); cout << buytime << endl;
+		InputAndCheck("Nhap SDT khach hang", w, &mnu::LeftPrintForInput, phone);
+		Customer* ptrC = nullptr; bool inserted=false;
+		if (phone != Phone("0000000000")) // Khach hang muon luu thong tin hay ko
 		{
-			choice = 1;
-			return;
-		}
-		if (c_name == String("*"))
-		{
-			phone = Phone("0000000000");
-		}
-		else
-		{
-			InputAndCheck("Nhap SDT khach hang", w, &mnu::LeftPrintForInput, phone);
-		}
-		InputAndCheck("Nhap ngay mua", w, &mnu::LeftPrintForInput, buydate);	
+			ptrC = InsertCustomer(CList, c_name, phone, address, inserted);
+			if (inserted)
+			{
+				LeftPrintForInput("Ten khach hang", w); fflush(stdin); c_name.GetLine(cin);
+				LeftPrintForInput("Dia chi khach hang", w); fflush(stdin); address.GetLine(cin);
+				ptrC->SetName(c_name);
+				ptrC->SetAddress(address);
+			}
+			else
+			{
+				LeftPrintForInput("Ten khach hang", w); cout << ptrC->GetName() << endl;
+				LeftPrintForInput("Dia chi khach hang", w); cout << ptrC->GetAddress() << endl;
+			}
+		}	
 		int cnt = 0;
 		int total = 0;
-		Bill *ptrB = new Bill(buydate);
-		Customer* ptrC = nullptr;
-		if (phone != Phone("0000000000")) // TH khach hang ko muon luu thong tin
-		{
-			bool check;
-			ptrC = InsertCustomer(CList, c_name, phone, "", check);
-		}
+		Bill *ptrB = new Bill(buydate,buytime);
 		do
 		{
 			std::cout << "\n\n" << '+'; DrawLine(mnu::WIDTH - 2, '='); std::cout << '+' << "\n\n";
@@ -641,6 +641,16 @@ namespace mnu
 			ptrDP->AddDetailBill(ptrDB);
 			ptrB->AddDetailBill(ptrDB);
 		} while (true);
+		if (cnt == 0)
+		{
+			delete ptrB;
+			if (inserted)
+			{
+				CList.RemoveLast();
+			}
+			choice = 1;
+			return;
+		}
 		ptrB->SetTotal(total);
 		ptrB->SetNumDetailBill(cnt);
 		if (ptrC != nullptr)
