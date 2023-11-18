@@ -136,6 +136,20 @@ void String::DeleteLastSpace()
 		this->Erase(this->length - 1);
 	}
 }
+void String::Insert(const int &pos, const char &c)
+{
+	char temp[MAX]{};
+	strcpy_s(temp, this->length + 1, this->ptr);
+	delete[] this->ptr;
+	for (int i = strlen(temp)-1; i >= pos; i--)
+	{
+		temp[i + 1] = temp[i];
+	}
+	temp[pos] = c;
+	this->length++;
+	this->ptr = new char[this->length + 1];
+	strcpy_s(this->ptr, this->length + 1, temp);
+}
 String String::SubStr(const int &pos, const int&len) const
 {
 	char temp[MAX]{};
@@ -189,4 +203,17 @@ String String::to_string(int num, int width)
 		}
 	}
 	return String(temp);
+}
+String MoneyFormat(const String &money)
+{
+	String res = money;
+	for (int i = money.length - 1; i >= 1; i--)
+	{
+		if ((money.length - i ) % 3 == 0)
+		{
+			res.Insert(i, ',');
+		}
+	}
+	res = res + "VND";
+	return res;
 }

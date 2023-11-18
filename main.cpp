@@ -4,6 +4,7 @@
 #include <Windows.h>
 #include "String.h"
 #include "Date.h"
+#include "Phone.h"
 #include "InitTemplateClass.cpp"
 #include "Output.h"
 #include "Exception.h"
@@ -32,10 +33,6 @@ int main()
 			{
 				Mptr->ptr2(PList, choice);
 			}
-			else if (Mptr->ptr2 != nullptr)
-			{
-				Mptr->ptr2(PList, choice);
-			}
 			else if (Mptr->ptr3 != nullptr)
 			{
 				Mptr->ptr3(CList, choice);
@@ -46,17 +43,30 @@ int main()
 			}
 			else if (Mptr->ptr5 != nullptr)
 			{
-				Mptr->ptr5(BList, PList, CList, choice);
+				Mptr->ptr5(BList, PList, CList ,choice);
+			}
+			else if (Mptr->ptr6 != nullptr)
+			{
+				Mptr->ptr6(BList, choice);
+			}
+			else if (Mptr->ptr7 != nullptr)
+			{
+				Mptr->ptr7(BList, choice);
 			}
 			Mptr = (Mptr->child)[choice];
 		}
 		catch (Exception ex)
 		{
 			mnu::LeftPrint(ex.What(),mnu::WIDTH);
-			system("pause");
+			Sleep(mnu::WAIT);
 			system("cls");
 		}
 	} while (Mptr != nullptr);
 	mnu::DeleteMenu();
+	OutputCustomerFile("OutputKhachhang.txt",CList);
+	OutputProductFile("OutputMathang.txt", PList);
+	ReleaseAll(PList);
+	ReleaseAll(CList);
+	ReleaseAll(BList);
 	return 0;
 }

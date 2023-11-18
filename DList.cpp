@@ -159,3 +159,25 @@ DList< T* >* FindAll(const DList <T*> &list, const K &data_lookup, K(T::*ptr)() 
 	}
 	return ptrAnsList;
 }
+template<class T>
+void ReleaseAll(DList<T*>&List)
+{
+	while (!List.isEmpty())
+	{
+		if (List.Head != nullptr)
+		{
+			DNode<T*>*tempptr = List.Tail;
+			List.Tail = tempptr->pre;
+			if (List.Tail == nullptr)
+			{
+				List.Head = nullptr;
+			}
+			else
+			{
+				(List.Tail)->next = nullptr;
+			}
+			delete tempptr->data;
+			delete tempptr;
+		}
+	}
+}

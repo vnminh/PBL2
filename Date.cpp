@@ -1,3 +1,4 @@
+#include <ctime>
 #include "Date.h"
 #include "Exception.h"
 #include <iomanip>
@@ -68,10 +69,12 @@ void Date::SetDay(int d)
 }
 void Date::SetMonth(int m)
 {
-	if (m >= 1 && m <= 12)
+	if (m < 1 || m>12)
 	{
-		this->Month = m;
+		throw Exception("INVALID VALUE FOR MONTH");
 	}
+	this->Month = m;
+	
 }
 void Date::SetYear(int y)
 {
@@ -84,15 +87,61 @@ bool Date::operator==(const Date& date) const
 {
 	return (this->Day == date.Day) && (this->Month == date.Month) && (this->Year == date.Year);
 }
+bool Date::operator!=(const Date& date) const
+{
+	return !(*this == date);
+}
+bool Date::operator<=(const Date& date) const
+{
+	if (this->Year < date.Year) return true;
+	else if (this->Year > date.Year) return false;
+	else // ==
+	{
+		if (this->Month < date.Month) return true;
+		else if (this->Month > date.Month) return false;
+		else // == 
+		{
+			if (this->Day <= date.Day) return true;
+			else return false;
+		}
+	}
+}
+bool Date::operator>=(const Date& date) const
+{
+	if (this->Year > date.Year) return true;
+	else if (this->Year < date.Year) return false;
+	else // ==
+	{
+		if (this->Month > date.Month) return true;
+		else if (this->Month < date.Month) return false;
+		else // == 
+		{
+			if (this->Day >= date.Day) return true;
+			else return false;
+		}
+	}
+}
 void Date::HelpIncrease()
 {
 	this->Day++;
-	if (this->Day > DayOfMonth[2]) this->Month++;
+	if (this->Day > DayOfMonth[this->Month])
+	{
+		this->Month++;
+		this->Day = 1;
+	}
 	if (this->Month == 2)
 	{
-		 if (this->Day == 29 && !isLeapYear(this->Year)) this->Month++;
+		if (this->Day == 29 && !isLeapYear(this->Year))
+		{
+			this->Month++;
+			this->Day = 1;
+		}
 	}
-	if (this->Month == 13) this->Year++;
+	if (this->Month == 13)
+	{
+		this->Year++;
+		this->Month = 1;
+	}
 }
 Date& Date::operator++()
 {
@@ -104,6 +153,15 @@ const Date Date::operator++(int)
 	Date temp = *this;
 	Date::HelpIncrease();
 	return temp;
+}
+const Date Date::operator+(const int& d)
+{
+	Date res = *this;
+	for (int i = 0; i < d; i++)
+	{
+		res.HelpIncrease();
+	}
+	return res;
 }
 const Date& Date::operator=(const Date& date)
 {
@@ -129,8 +187,21 @@ ostream& operator<<(ostream &out, const Date& date)
 }
 istream& operator>>(istream &inp, Date& date)
 {
-	inp >> date.Day; inp.ignore();
-	inp >> date.Month; inp.ignore();
-	inp >> date.Year; inp.ignore();
+	int d, m, y;
+	inp >> d; inp.ignore();
+	inp >> m; inp.ignore();
+	inp >> y;
+	date.SetDate(d, m, y);
 	return inp;
+}
+Date Today()
+{
+	Date res;
+	time_t ttime = time(nullptr);
+	tm t;
+	localtime_s(&t, &ttime);
+	res.Day = t.tm_mday;
+	res.Month = t.tm_mon + 1;
+	res.Year = t.tm_year + 1900;
+	return res;
 }

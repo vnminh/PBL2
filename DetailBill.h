@@ -9,12 +9,14 @@ private:
 	int SL;
 	DetailProduct * ptrDP;
 	Bill * ptrB;
+	void ConnectBill(Bill*);
 public:
 	DetailBill(DetailProduct *, const int &);
-	void ConnectBill(Bill*);
 	int GetSL() const;
 	String GetNameProduct() const;
 	String GetIDDetailProduct() const;
 	int GetPrice() const;
+	int Pay() const;
+	friend class Bill;
 };
 #endif

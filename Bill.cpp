@@ -32,7 +32,7 @@ Date Bill::GetBuyDate() const
 {
 	return this->BuyDate;
 }
-String Bill::GetCustomerPhone() const
+Phone Bill::GetCustomerPhone() const
 {
 	return (this->ptrC)->GetPhone();
 }
@@ -44,14 +44,24 @@ void Bill::SetTotal(const int & total)
 {
 	this->Total = total;
 }
-void InsertBill(DList<Bill*>BList, Bill * ptr)
+void InsertBill(DList<Bill*> &BList, Bill * ptr)
 {
 	BList.InsertLast(new DNode<Bill*>(ptr));
 }
 void OutputDetail(const Bill * ptrB)
 {
+	if (ptrB == nullptr)
+	{
+		mnu::PadLeftPrint("Khong tim thay\n");
+		return;
+	}
 	cout << "ID             : " << ptrB->ID << endl;
-	cout << "Ten khach hang : " << (ptrB->ptrC)->GetName() << endl;
+	cout << "Ten khach hang : ";
+	if (ptrB->ptrC != nullptr)
+	{
+		cout << (ptrB->ptrC)->GetName();
+	}
+	cout << endl;
 	cout << "Ngay mua       : " << ptrB->BuyDate << endl;
 	const int w1 = 15;
 	cout << '+'; mnu::DrawLine(mnu::WIDTH - 2); cout << '+' << '\n';
@@ -71,7 +81,7 @@ void OutputDetail(const Bill * ptrB)
 		cout << '|'; mnu::CenterPrint((curPtr->data)->GetNameProduct(), mnu::WIDTH - 5 * w1 - 7);
 		cout << '|'; mnu::CenterPrint(String::to_string((curPtr->data)->GetPrice()), w1);
 		cout << '|'; mnu::CenterPrint(String::to_string((curPtr->data)->GetSL()), w1);
-		cout << '|'; mnu::CenterPrint(String::to_string((curPtr->data)->GetPrice()*(curPtr->data)->GetSL()), w1); cout << '|' << '\n';
+		cout << '|'; mnu::CenterPrint(MoneyFormat(String::to_string((curPtr->data)->Pay())), w1); cout << '|' << '\n';
 		cout << '+'; mnu::DrawLine(mnu::WIDTH - 2); cout << '+' << '\n';
 		curPtr = curPtr->next;
 		cnt++;
@@ -81,17 +91,17 @@ void OutputDetail(const Bill * ptrB)
 	cout << '|'; mnu::DrawLine(mnu::WIDTH - 5 * w1 - 7, ' ');
 	cout << '|'; mnu::DrawLine(w1, ' ');
 	cout << '|'; mnu::DrawLine(w1, ' ');
-	cout << '|'; mnu::CenterPrint(String::to_string(ptrB->Total), w1); cout << '|' << '\n';
+	cout << '|'; mnu::CenterPrint(MoneyFormat(String::to_string(ptrB->Total)), w1); cout << '|' << '\n';
 	cout << '+'; mnu::DrawLine(mnu::WIDTH - 2); cout << '+' << '\n';
 }
-void OutputTable(const DList<Bill*>& list, const int & num)
+void OutputTable(const DList<Bill*>& list)
 {
-	if (num == 0)
+	if (list.GetFirstElement() == nullptr)
 	{
 		mnu::PadLeftPrint("Khong tim thay\n");
 		return;
 	}
-	const int w = 10;
+	const int w = 15;
 	cout << '+'; mnu::DrawLine(mnu::WIDTH - 2); cout << '+' << '\n';
 	cout << '|'; mnu::CenterPrint("STT", w);
 	cout << '|'; mnu::CenterPrint("ID HOA DON", w);
@@ -99,13 +109,38 @@ void OutputTable(const DList<Bill*>& list, const int & num)
 	cout << '|'; mnu::CenterPrint("TONG TIEN", 2 * w); cout << '|' << '\n';
 	cout << '+'; mnu::DrawLine(mnu::WIDTH - 2); cout << '+' << '\n';
 	const DNode<Bill*> *curPtr = list.GetFirstElement();
-	for (int i = 1; i <= num; i++)
+	int i = 1;
+	while (curPtr != nullptr)
 	{
 		cout << '|'; mnu::CenterPrint(String::to_string(i), w);
 		cout << '|'; mnu::CenterPrint((curPtr->data)->ID, w);
-		cout << '|'; mnu::CenterPrint(((curPtr->data)->ptrC)->GetName(), mnu::WIDTH - 5 - 4 * w);
+		cout << '|'; 
+		if ((curPtr->data)->ptrC != nullptr)
+		{
+			mnu::CenterPrint(((curPtr->data)->ptrC)->GetName(), mnu::WIDTH - 5 - 4 * w);
+		}
+		else
+		{
+			mnu::DrawLine(mnu::WIDTH - 5 - 4 * w, ' ');
+		}
 		cout << '|'; mnu::CenterPrint(String::to_string((curPtr->data)->Total), 2 * w); cout << '|' << '\n';
 		cout << '+'; mnu::DrawLine(mnu::WIDTH - 2); cout << '+' << '\n';
+		curPtr = curPtr->next; i++;
+	}
+}
+int CalRevenue(const DList<Bill*>& List, const Date &begin, const Date &end, DList<Bill*> &AnsList)
+{
+	int res = 0;
+	DNode<Bill *> *curPtr = List.GetFirstElement();
+	while (curPtr != nullptr)
+	{
+		Date d = (curPtr->data)->BuyDate;
+		if (begin <= d && d <= end)
+		{
+			res += (curPtr->data)->Total;
+			AnsList.InsertLast(new DNode<Bill *>(curPtr->data));
+		}
 		curPtr = curPtr->next;
 	}
+	return res;
 }

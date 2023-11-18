@@ -25,3 +25,7 @@ int DetailBill::GetPrice() const
 {
 	return (this->ptrDP)->GetPrice();
 }
+int DetailBill::Pay() const
+{
+	return (this->ptrDP)->Calculate(this->SL);
+}

@@ -2,6 +2,7 @@
 #include "DList.cpp"
 #include "Product.h"
 #include "DetailProduct.h"
+#include "DetailWeightProduct.h"
 #include "Customer.h"
 #include "Bill.h"
 #include "DetailBill.h"

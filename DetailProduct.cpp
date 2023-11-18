@@ -3,7 +3,7 @@
 #include <iostream>
 using namespace std;
 DetailProduct::DetailProduct(const String& id, const Date& nn, const Date& nsx, const Date& hsd, const int& price, const int& sl)
-	:ID(id), NN(nn), NSX(nsx), HSD(hsd), Price(price), SL(sl), ptrP(nullptr)
+	:ID(id), NN(nn), NSX(nsx), HSD(hsd), Price(price), SL(sl),isDeleted(false), ptrP(nullptr)
 {}
 DetailProduct::~DetailProduct()
 {}
@@ -15,9 +15,14 @@ void DetailProduct::AddDetailBill(DetailBill *ptr)
 {
 	(this->List).InsertLast(new DNode<DetailBill*>(ptr));
 }
-void DetailProduct::Deduct(const int & num)
+void DetailProduct::Deduct(const int num)
 {
 	(this->SL) -= num;
+	if (this->SL <= 0)
+	{
+		isDeleted = true;
+	}
+	(this->ptrP)->Deduct(num);
 }
 bool DetailProduct::SoldOut() const
 {
@@ -47,6 +52,10 @@ int DetailProduct::GetSL() const
 {
 	return this->SL;
 }
+bool DetailProduct::Deleted() const
+{
+	return this->isDeleted;
+}
 String DetailProduct::GetProductName() const
 {
 	return (this->ptrP)->GetName();
@@ -54,4 +63,12 @@ String DetailProduct::GetProductName() const
 String DetailProduct::GetProductID() const
 {
 	return (this->ptrP)->GetID();
+}
+void DetailProduct::Delete()
+{
+	this->Deduct(this->SL);
+}
+int DetailProduct::Calculate(const int & num) const
+{
+	return num*(this->Price);
 }

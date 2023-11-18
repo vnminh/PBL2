@@ -4,6 +4,7 @@
 #include <iostream>
 class String
 {
+	friend String MoneyFormat(const String &);
 	friend std::istream& operator>>(std::istream&, String&);
     friend std::ostream& operator<<(std::ostream&, const String&);
     public:
@@ -27,6 +28,7 @@ class String
 		int GetLength() const;
 		void DeleteFirstSpace();
 		void DeleteLastSpace();
+		void Insert(const int &, const char&);
 		String SubStr(const int&, const int &) const;
 	private:
 		char *ptr;

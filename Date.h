@@ -4,6 +4,7 @@
 #include "String.h"
 class Date
 {
+	friend Date Today();
     friend std::istream& operator>>(std::istream&, Date&);
 	friend std::ostream& operator<<(std::ostream&, const Date&);
     private:
@@ -24,9 +25,13 @@ class Date
         void SetYear(int);
 		void SetDate(int, int, int);
         bool operator==(const Date&) const;
+		bool operator!=(const Date&) const;
+		bool operator<=(const Date&) const;
+		bool operator>=(const Date&) const;
 		const Date& operator=(const Date&);
         Date& operator++();
         const Date operator++(int);
+		const Date operator+ (const int&);
 		String to_string() const;
 };
 #endif
