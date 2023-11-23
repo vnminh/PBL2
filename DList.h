@@ -20,7 +20,7 @@ class DList
 		template <typename T>
 		friend T* FindIndex(const DList<T*> &, const int&);
 		template <class T, typename K>
-		friend T* FindFirstMatch(const DList <T*> &,const K&, K(T::*)() const);
+		friend T* FindFirstMatch(const DList <T*> &, const K&, K(T::*)() const);
 		template <class T, typename K>
 		friend DList< T* > * FindAll(const DList <T*> &, const K&, K(T::*)() const, int&);
 		template<class T>

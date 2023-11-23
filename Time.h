@@ -3,6 +3,7 @@
 #include <iostream>
 class Time
 {
+	friend std::istream& operator>>(std::istream&, Time&);
 private:
 	int Sec;
 	int Min;

@@ -53,3 +53,12 @@ Time Now()
 	res.Hour = t.tm_hour;
 	return res;
 }
+istream& operator>>(istream& inp, Time& t)
+{
+	int s, m, h;
+	inp >> h; inp.ignore();
+	inp >> m; inp.ignore();
+	inp >> s;
+	t.SetTime(s, m, h);
+	return inp;
+}

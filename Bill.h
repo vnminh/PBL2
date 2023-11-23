@@ -11,9 +11,10 @@ class Customer;
 class Bill
 {
 	friend int CalRevenue(const DList<Bill*>&, const Date&, const Date&, DList<Bill*> &);
-	friend void OutputTable(const DList<Bill*>&);
-	friend void OutputDetail(const Bill *);
+	friend void OutputTable(const DList<Bill*>&, std::ostream&);
+	friend void OutputDetail(const Bill *, std::ostream&);
 	friend void InsertBill(DList<Bill*>&, Bill *);
+	friend void OutputBillFile(const String &fname, const Bill*);
 private:
 	static long long NumBill;
 	String ID;
@@ -21,6 +22,7 @@ private:
 	Date BuyDate;
 	Time BuyTime;
 	int NumDetailBill;
+	bool isDeleted;
 	DList < DetailBill *> List;
 	Customer * ptrC;
 	void ConnectCustomer(Customer *);
@@ -32,8 +34,10 @@ public:
 	Date GetBuyDate() const;
 	Time GetBuyTime() const;
 	Phone GetCustomerPhone() const;
+	bool Deleted() const;
 	void SetNumDetailBill(const int&);
 	void SetTotal(const int&);
+	void Delete();
 	friend class Customer;
 };
 #endif

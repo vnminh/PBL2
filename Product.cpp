@@ -3,6 +3,7 @@
 #include "DList.h"
 #include "DetailProduct.h"
 #include <iostream>
+#include <fstream>
 using namespace std;
 Product::Product(const String &id, const String &n, const String &xs)
 	:ID(id), Name(n), XS(xs), isDeleted(false)
@@ -62,75 +63,78 @@ void InsertProduct(DList<Product *> &List, const String &id_p,const String &name
 		ptrP->AddDetailProduct(ptrDP);
 	}
 }
-void OutputTable(const DList<Product*> & list)
+void OutputTable(const DList<Product*> & list, std::ostream& out)
 {
 	if (list.GetFirstElement() == nullptr)
 	{
-		mnu::PadLeftPrint("Khong tim thay\n");
+		mnu::PadLeftPrint("Khong tim thay\n",mnu::LEFTSPACE,' ',out);
 		return;
 	}
 	const int w = 20;
-	cout << '+'; mnu::DrawLine(mnu::WIDTH - 2); cout << '+' << '\n';
-	cout << '|'; mnu::CenterPrint("STT", w);
-	cout << '|'; mnu::CenterPrint("ID", w);
-	cout << '|'; mnu::CenterPrint("TEN SAN PHAM", mnu::WIDTH - 5 - 4 * w);
-	cout << '|'; mnu::CenterPrint("XUAT XU", 2 * w); cout << '|' << '\n';
-	cout << '+'; mnu::DrawLine(mnu::WIDTH - 2); cout << '+' << '\n';
+	out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
+	out << '|'; mnu::CenterPrint("STT", w, ' ', out);
+	out << '|'; mnu::CenterPrint("ID", w, ' ', out);
+	out << '|'; mnu::CenterPrint("TEN SAN PHAM", mnu::WIDTH - 5 - 4 * w, ' ', out);
+	out << '|'; mnu::CenterPrint("XUAT XU", 2 * w, ' ', out); out << '|' << '\n';
+	out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
 	const DNode<Product*> *curPtr = list.GetFirstElement();
 	int i = 1;
 	while (curPtr != nullptr)
 	{
-		cout << '|'; mnu::CenterPrint(String::to_string(i), w);
-		cout << '|'; mnu::CenterPrint((curPtr->data)->ID, w);
-		cout << '|'; mnu::CenterPrint((curPtr->data)->Name, mnu::WIDTH - 5 - 4 * w);
-		cout << '|'; mnu::CenterPrint((curPtr->data)->XS, 2 * w); cout << '|' << '\n';
-		cout << '+'; mnu::DrawLine(mnu::WIDTH - 2); cout << '+' << '\n';
+		out << '|'; mnu::CenterPrint(String::to_string(i), w, ' ', out);
+		out << '|'; mnu::CenterPrint((curPtr->data)->ID, w, ' ', out);
+		out << '|'; mnu::CenterPrint((curPtr->data)->Name, mnu::WIDTH - 5 - 4 * w, ' ', out);
+		out << '|'; mnu::CenterPrint((curPtr->data)->XS, 2 * w, ' ', out); out << '|' << '\n';
+		out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
 		curPtr = curPtr->next; i++;
 	}
 }
-void OutputDetail(const Product * ptrP)
+void OutputDetail(const Product * ptrP, std::ostream& out)
 {
 	if (ptrP == nullptr)
 	{
-		mnu::PadLeftPrint("Khong tim thay\n");
+		mnu::PadLeftPrint("Khong tim thay\n",mnu::LEFTSPACE,' ',out);
 		return;
 	}
-	cout << "ID           :" << ptrP->ID << endl;
-	cout << "Ten san pham :" << ptrP->Name << endl;
-	cout << "Xuat xu      :" << ptrP->XS << endl;
-	OutputDetailProduct(ptrP->List);
+	out << "ID           :" << ptrP->ID << endl;
+	out << "Ten san pham :" << ptrP->Name << endl;
+	out << "Xuat xu      :" << ptrP->XS << endl;
+	OutputDetailProduct(ptrP->List,out);
 }
-void OutputDetailProduct(const DList<DetailProduct *>& List)
+void OutputDetailProduct(const DList<DetailProduct *>& List, std::ostream& out)
 {
 	const int w1 = 13, w2 = (mnu::WIDTH - 8 - 4 * w1) / 3, w3 = mnu::WIDTH - 8 - 4 * w1 - 2 * w2;
-	cout << '+'; mnu::DrawLine(mnu::WIDTH - 2); cout << '+' << '\n';
-	cout << '|'; mnu::CenterPrint("STT", w1);
-	cout << '|'; mnu::CenterPrint("ID Lo", w1);
-	cout << '|'; mnu::CenterPrint("Ngay nhap", w3);
-	cout << '|'; mnu::CenterPrint("NSX", w2);
-	cout << '|'; mnu::CenterPrint("HSD", w2);
-	cout << '|'; mnu::CenterPrint("Gia", w1);
-	cout << '|'; mnu::CenterPrint("So luong", w1); cout << '|' << '\n';
-	cout << '+'; mnu::DrawLine(mnu::WIDTH - 2); cout << '+' << '\n';
+	out << '+'; mnu::DrawLine(mnu::WIDTH - 2,'-',out); out << '+' << '\n';
+	out << '|'; mnu::CenterPrint("STT", w1, ' ', out);
+	out << '|'; mnu::CenterPrint("ID Lo", w1, ' ', out);
+	out << '|'; mnu::CenterPrint("Ngay nhap", w3, ' ', out);
+	out << '|'; mnu::CenterPrint("NSX", w2, ' ', out);
+	out << '|'; mnu::CenterPrint("HSD", w2, ' ', out);
+	out << '|'; mnu::CenterPrint("Gia", w1, ' ', out);
+	out << '|'; mnu::CenterPrint("So luong", w1, ' ', out); out << '|' << '\n';
+	out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
 	const DNode<DetailProduct *> *curPtr = (List).GetFirstElement();
 	int cnt = 1;
 	while (curPtr != nullptr)
 	{
-		cout << '|'; mnu::CenterPrint(String::to_string(cnt), w1);
-		cout << '|'; mnu::CenterPrint((curPtr->data)->GetID(), w1);
-		cout << '|'; mnu::CenterPrint((curPtr->data)->GetNN().to_string(), w2 + 1);
-		cout << '|'; mnu::CenterPrint((curPtr->data)->GetNSX().to_string(), w2);
-		cout << '|'; mnu::CenterPrint((curPtr->data)->GetHSD().to_string(), w2);
-		cout << '|'; mnu::CenterPrint(String::to_string((curPtr->data)->GetPrice()), w1);
-		cout << '|'; mnu::CenterPrint(String::to_string((curPtr->data)->GetSL()), w1); cout << '|' << '\n';
-		cout << '+'; mnu::DrawLine(mnu::WIDTH - 2); cout << '+' << '\n';
-		cnt++;
+		if (!((curPtr->data)->Deleted)())
+		{
+			out << '|'; mnu::CenterPrint(String::to_string(cnt), w1, ' ', out);
+			out << '|'; mnu::CenterPrint((curPtr->data)->GetID(), w1, ' ', out);
+			out << '|'; mnu::CenterPrint((curPtr->data)->GetNN().to_string(), w2 + 1, ' ', out);
+			out << '|'; mnu::CenterPrint((curPtr->data)->GetNSX().to_string(), w2, ' ', out);
+			out << '|'; mnu::CenterPrint((curPtr->data)->GetHSD().to_string(), w2, ' ', out);
+			out << '|'; mnu::CenterPrint(MoneyFormat(String::to_string((curPtr->data)->GetPrice())), w1, ' ', out);
+			out << '|'; mnu::CenterPrint(String::to_string((curPtr->data)->GetSL()), w1, ' ', out); out << '|' << '\n';
+			out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
+			cnt++;
+		}
 		curPtr = curPtr->next;
 	}
 	if (cnt == 1)
 	{
-		cout << "|"; mnu::CenterPrint("Danh sach rong", mnu::WIDTH - 2); cout << "|\n";
-		cout << '+'; mnu::DrawLine(mnu::WIDTH - 2); cout << '+' << '\n';
+		out << "|"; mnu::CenterPrint("Danh sach rong", mnu::WIDTH - 2, ' ', out); out << "|\n";
+		out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
 	}
 }
 DList<DetailProduct*> * OutOfExpiration(const DList<Product*>&List, const int &day)
@@ -163,8 +167,7 @@ DList<DetailProduct*> * OutOfExpiration(const DList<Product*>&List, const int &d
 }
 void OutputProductFile(const String &fname, const DList<Product*>& List)
 {
-	FILE *f_o;
-	freopen_s(&f_o, fname, "w", stdout);
+	ofstream out(fname);
 	const DNode<Product*> *curPtrP = List.GetFirstElement();
 	int i = 1;
 	while (curPtrP != nullptr)
@@ -172,42 +175,11 @@ void OutputProductFile(const String &fname, const DList<Product*>& List)
 		Product *ptrP = curPtrP->data;
 		if (!(ptrP->isDeleted))
 		{
-			cout << endl <<  i << endl;
-			cout << "ID           :" << ptrP->ID << endl;
-			cout << "Ten san pham :" << ptrP->Name << endl;
-			cout << "Xuat xu      :" << ptrP->XS << endl;
-			const int w1 = 13, w2 = (mnu::WIDTH - 8 - 4 * w1) / 3, w3 = mnu::WIDTH - 8 - 4 * w1 - 2 * w2;
-			cout << '+'; mnu::DrawLine(mnu::WIDTH - 2); cout << '+' << '\n';
-			cout << '|'; mnu::CenterPrint("STT", w1);
-			cout << '|'; mnu::CenterPrint("ID Lo", w1);
-			cout << '|'; mnu::CenterPrint("Ngay nhap", w3);
-			cout << '|'; mnu::CenterPrint("NSX", w2);
-			cout << '|'; mnu::CenterPrint("HSD", w2);
-			cout << '|'; mnu::CenterPrint("Gia", w1);
-			cout << '|'; mnu::CenterPrint("So luong", w1); cout << '|' << '\n';
-			cout << '+'; mnu::DrawLine(mnu::WIDTH - 2); cout << '+' << '\n';
-			DNode<DetailProduct*> *curPtrDP = (ptrP->List).GetFirstElement();
-			int cnt = 1;
-			while (curPtrDP != nullptr)
-			{
-				DetailProduct* ptrDP = curPtrDP->data;
-				if (!(ptrDP->Deleted()))
-				{
-					cout << '|'; mnu::CenterPrint(String::to_string(cnt), w1);
-					cout << '|'; mnu::CenterPrint(ptrDP->GetID(), w1);
-					cout << '|'; mnu::CenterPrint(ptrDP->GetNN().to_string(), w2 + 1);
-					cout << '|'; mnu::CenterPrint(ptrDP->GetNSX().to_string(), w2);
-					cout << '|'; mnu::CenterPrint(ptrDP->GetHSD().to_string(), w2);
-					cout << '|'; mnu::CenterPrint(String::to_string(ptrDP->GetPrice()), w1);
-					cout << '|'; mnu::CenterPrint(String::to_string(ptrDP->GetSL()), w1); cout << '|' << '\n';
-					cout << '+'; mnu::DrawLine(mnu::WIDTH - 2); cout << '+' << endl;
-					cnt++;
-				}
-				curPtrDP = curPtrDP->next;
-			}
+			out << endl <<  i << endl;
+			OutputDetailProduct(ptrP->List, out);
 			i++;
 		}
 		curPtrP = curPtrP->next;
 	}
-	fclose(f_o);
+	out.close();
 }

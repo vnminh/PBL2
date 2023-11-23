@@ -136,7 +136,7 @@ template <class T, typename K>
 T* FindFirstMatch(const DList <T*> &list, const K &data_lookup, K(T::*ptr)() const)
 {
 	DNode<T*> *curptr = list.Head;
-	while (curptr != nullptr && ((curptr->data)->*ptr)() != data_lookup)
+	while (curptr != nullptr && ( ((curptr->data)->Deleted)() || ((curptr->data)->*ptr)() != data_lookup ) )
 	{
 		curptr = curptr->next;
 	}
@@ -150,9 +150,9 @@ DList< T* >* FindAll(const DList <T*> &list, const K &data_lookup, K(T::*ptr)() 
 	DNode < T* >  *curptr = list.Head;
 	while (curptr != nullptr)
 	{
-		if (((curptr->data)->*ptr)() == data_lookup)
+		if (!((curptr->data)->Deleted()) &&  ((curptr->data)->*ptr)() == data_lookup)
 		{
-			ptrAnsList->InsertLast(new DNode < T* >  (curptr->data));
+			ptrAnsList->InsertLast(new DNode < T* >(curptr->data));
 			cnt++;
 		}
 		curptr = curptr->next;

@@ -58,7 +58,7 @@ int main()
 		}
 		catch (Exception ex)
 		{
-			mnu::LeftPrint(ex.What(),mnu::WIDTH);
+			mnu::LeftPrint(ex.What(),mnu::WIDTH,' ',cout);
 			Sleep(mnu::WAIT);
 			system("cls");
 		}

@@ -8,14 +8,15 @@ class Customer
 {
 	friend void OutputCustomerFile(const String &, const DList<Customer*>&);
 	friend Customer* InsertCustomer(DList<Customer*>&, const String &, const Phone &, const String &,bool&);
-	friend void OutputTable(const DList<Customer* >&);
-	friend void OutputDetail(Customer *);
+	friend void OutputTable(const DList<Customer* >&, std::ostream&);
+	friend void OutputDetail(Customer *, std::ostream&);
 private:
 	static long long NumCustomer;
 	String ID;
 	String Name;
 	Phone PhoneNumber;
 	String Address;
+	bool isDeleted;
 	DList<Bill*> List;
 public:
 	Customer(const String&,const Phone&, const String&);
@@ -24,8 +25,10 @@ public:
 	String GetName() const;
 	Phone GetPhone() const;
 	String GetAddress() const;
+	bool Deleted() const;
 	void SetPhone(const Phone &);
 	void SetName(const String &);
 	void SetAddress(const String&);
+	void Delete();
 };
 #endif

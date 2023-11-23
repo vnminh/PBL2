@@ -2,6 +2,7 @@
 #define MENU_MANAGE_H
 #include <iostream>
 #include <Windows.h>
+#include <conio.h>
 #include "String.h"
 #include "Exception.h"
 #include "Output.h"
@@ -14,16 +15,16 @@ namespace mnu
 		Date nn, nsx, hsd;
 		int calunit,price, sl;
 		const int w = 23;
-		LeftPrintForInput("Nhap ID mat hang", w); fflush(stdin); id_p.GetLine(cin);
+		LeftPrintForInput("Nhap ID mat hang", w, ' ', cout); fflush(stdin); id_p.GetLine(cin);
 		if (id_p == String("")) return false;
-		LeftPrintForInput("Nhap ten mat hang", w); fflush(stdin); name.GetLine(cin);
-		LeftPrintForInput("Nhap xuat su mat hang", w); fflush(stdin); xs.GetLine(cin);
-		LeftPrintForInput("Nhap ID lo hang", w); fflush(stdin); id_dp.GetLine(cin);
+		LeftPrintForInput("Nhap ten mat hang", w, ' ', cout); fflush(stdin); name.GetLine(cin);
+		LeftPrintForInput("Nhap xuat su mat hang", w, ' ', cout); fflush(stdin); xs.GetLine(cin);
+		LeftPrintForInput("Nhap ID lo hang", w, ' ', cout); fflush(stdin); id_dp.GetLine(cin);
 		InputAndCheck("Nhap ngay nhap hang", w, &mnu::LeftPrintForInput, nn);
 		InputAndCheck("Nhap ngay san xuat", w, &mnu::LeftPrintForInput, nsx);
 		InputAndCheck("Nhap han su dung", w, &mnu::LeftPrintForInput, hsd);
-		LeftPrintForInput("Nhap gia", w); cin >> price;
-		LeftPrintForInput("Nhap so luong", w); cin >> sl;
+		LeftPrintForInput("Nhap gia", w, ' ', cout); cin >> price;
+		LeftPrintForInput("Nhap so luong", w, ' ', cout); cin >> sl;
 		DetailProduct *ptrDP = nullptr;
 		if (id_p.SubStr(7,2) == String("01"))
 		{
@@ -41,10 +42,10 @@ namespace mnu
 		String name, add;
 		Phone phone;
 		const int w = 24;
-		LeftPrintForInput("Nhap ten khach hang", w); fflush(stdin); name.GetLine(cin);
+		LeftPrintForInput("Nhap ten khach hang", w, ' ', cout); fflush(stdin); name.GetLine(cin);
 		if (name == String("")) return false;
 		InputAndCheck("Nhap SDT khach mat hang", w, &mnu::LeftPrintForInput, phone);
-		LeftPrintForInput("Nhap dia chi khach hang", w); fflush(stdin); add.GetLine(cin);
+		LeftPrintForInput("Nhap dia chi khach hang", w, ' ', cout); fflush(stdin); add.GetLine(cin);
 		bool check;
 		InsertCustomer(List, name, phone, add, check);
 		if (!check)
@@ -121,11 +122,11 @@ namespace mnu
 	template<class T>
 	void Search_ID(const DList<T*>& List, int &choice)
 	{
-		DrawTitle();
+		DrawTitle(mnu::SubMenu);
 		String data_lookup;
-		PadLeftPrint("Nhap ID can tim kiem :");  fflush(stdin); data_lookup.GetLine(cin);
+		PadLeftPrint("Nhap ID can tim kiem :",mnu::LEFTSPACE,' ',cout);  fflush(stdin); data_lookup.GetLine(cin);
 		T *ptr = FindFirstMatch(List, data_lookup, &T::GetID);
-		OutputDetail(ptr);
+		OutputDetail(ptr,cout);
 		choice = 1;
 		system("pause");
 	}
@@ -135,7 +136,7 @@ namespace mnu
 	{
 		static DList<T*>* ptrAns_List_For_Search = nullptr;
 		static int cnt_Search = 0;
-		DrawTitle();
+		DrawTitle(mnu::SubMenu);
 		if (!search_mnu::stilluse)
 		{
 			if (ptrAns_List_For_Search != nullptr)
@@ -145,11 +146,11 @@ namespace mnu
 			ptrAns_List_For_Search = nullptr;
 			cnt_Search = 0;
 			String data_lookup;
-			PadLeftPrint("Nhap ten can tim kiem :"); fflush(stdin); data_lookup.GetLine(cin);
+			PadLeftPrint("Nhap ten can tim kiem :",mnu::LEFTSPACE,' ',cout); fflush(stdin); data_lookup.GetLine(cin);
 			ptrAns_List_For_Search = FindAll(List, data_lookup, &T::GetName, cnt_Search);
 			search_mnu::stilluse = true;
 		}
-		OutputTable(*ptrAns_List_For_Search);
+		OutputTable(*ptrAns_List_For_Search,cout);
 		if (cnt_Search == 0)
 		{
 			system("pause");
@@ -157,7 +158,7 @@ namespace mnu
 			choice = 2;
 			return;
 		}
-		PadLeftPrint("Nhap STT mat hang muon xem chi tiet (chon 0 de quay lai):", 0); cin >> choice; 
+		PadLeftPrint("Nhap STT mat hang muon xem chi tiet (chon 0 de quay lai):", 0,' ',cout); cin >> choice; 
 		if (choice<0 || choice>cnt_Search)
 		{
 			fflush(stdin);
@@ -173,7 +174,7 @@ namespace mnu
 		{
 			system("cls");
 			T * ptr = FindIndex(*ptrAns_List_For_Search, choice);
-			OutputDetail(ptr);
+			OutputDetail(ptr,cout);
 			system("pause");
 			choice = 1;
 		}
@@ -183,7 +184,7 @@ namespace mnu
 	{
 		static DList<Product*>* ptrAns_List_For_Search;
 		static int cnt_Search;
-		DrawTitle();
+		DrawTitle(mnu::SubMenu);
 		if (!search_mnu::stilluse)
 		{
 			if (ptrAns_List_For_Search != nullptr)
@@ -193,11 +194,11 @@ namespace mnu
 			ptrAns_List_For_Search = nullptr;
 			cnt_Search = 0;
 			String data_lookup;
-			PadLeftPrint("Nhap xuat su san phan can tim kiem :"); fflush(stdin); data_lookup.GetLine(cin);
+			PadLeftPrint("Nhap xuat su san phan can tim kiem :", mnu::LEFTSPACE, ' ', cout); fflush(stdin); data_lookup.GetLine(cin);
 			ptrAns_List_For_Search = FindAll(List, data_lookup, &Product::GetXS, cnt_Search);
 			search_mnu::stilluse = true;
 		}
-		OutputTable(*ptrAns_List_For_Search);
+		OutputTable(*ptrAns_List_For_Search,cout);
 		if (cnt_Search == 0)
 		{
 			system("pause");
@@ -205,7 +206,7 @@ namespace mnu
 			choice = 2;
 			return;
 		}
-		PadLeftPrint("Nhap STT mat hang muon xem chi tiet (chon 0 de quay lai):", 0); cin >> choice; 
+		PadLeftPrint("Nhap STT mat hang muon xem chi tiet (chon 0 de quay lai):", 0, ' ', cout); cin >> choice;
 		if (choice<0 || choice>cnt_Search)
 		{
 			fflush(stdin);
@@ -221,7 +222,7 @@ namespace mnu
 		{
 			system("cls");
 			Product * ptr = FindIndex(*ptrAns_List_For_Search, choice);
-			OutputDetail(ptr);
+			OutputDetail(ptr,cout);
 			system("pause");
 			choice = 1;
 		}
@@ -229,11 +230,11 @@ namespace mnu
 	//-----SDT----
 	void Search_Phone(const DList<Customer*>& List, int &choice)
 	{
-		DrawTitle();
+		DrawTitle(mnu::SubMenu);
 		Phone data_lookup;
 		InputAndCheck("Nhap SDT can tim kiem :", mnu::LEFTSPACE, &mnu::PadLeftPrint, data_lookup);
 		Customer *ptr = FindFirstMatch(List, data_lookup, &Customer::GetPhone);
-		OutputDetail(ptr);
+		OutputDetail(ptr,cout);
 		choice = 1;
 		system("pause");
 	}
@@ -242,7 +243,7 @@ namespace mnu
 	{
 		static DList<Bill*>* ptrAns_List_For_Search;
 		static int cnt_Search;
-		DrawTitle();
+		DrawTitle(mnu::SubMenu);
 		if (!search_mnu::stilluse)
 		{
 			if (ptrAns_List_For_Search != nullptr)
@@ -256,7 +257,7 @@ namespace mnu
 			ptrAns_List_For_Search = FindAll(List, data_lookup, &Bill::GetBuyDate, cnt_Search);
 			search_mnu::stilluse = true;
 		}
-		OutputTable(*ptrAns_List_For_Search);
+		OutputTable(*ptrAns_List_For_Search,cout);
 		if (cnt_Search == 0)
 		{
 			system("pause");
@@ -264,7 +265,7 @@ namespace mnu
 			choice = 2;
 			return;
 		}
-		PadLeftPrint("Nhap STT hoa don muon xem chi tiet (chon 0 de quay lai):", 0); cin >> choice;
+		PadLeftPrint("Nhap STT hoa don muon xem chi tiet (chon 0 de quay lai):", 0, ' ', cout); cin >> choice;
 		if (choice<0 || choice>cnt_Search)
 		{
 			fflush(stdin);
@@ -280,7 +281,7 @@ namespace mnu
 		{
 			system("cls");
 			Bill * ptr = FindIndex(*ptrAns_List_For_Search, choice);
-			OutputDetail(ptr);
+			OutputDetail(ptr,cout);
 			system("pause");
 			choice = 1;
 		}
@@ -290,7 +291,7 @@ namespace mnu
 	{
 		static DList<Bill*>* ptrAns_List_For_Search;
 		static int cnt_Search;
-		DrawTitle();
+		DrawTitle(mnu::SubMenu);
 		if (!search_mnu::stilluse)
 		{
 			if (ptrAns_List_For_Search != nullptr)
@@ -304,7 +305,7 @@ namespace mnu
 			ptrAns_List_For_Search = FindAll(List, data_lookup, &Bill::GetCustomerPhone, cnt_Search);
 			search_mnu::stilluse = true;
 		}
-		OutputTable(*ptrAns_List_For_Search);
+		OutputTable(*ptrAns_List_For_Search,cout);
 		if (cnt_Search == 0)
 		{
 			system("pause");
@@ -312,7 +313,7 @@ namespace mnu
 			choice = 2;
 			return;
 		}
-		PadLeftPrint("Nhap STT hoa don muon xem chi tiet (chon 0 de quay lai):", 0); cin >> choice;
+		PadLeftPrint("Nhap STT hoa don muon xem chi tiet (chon 0 de quay lai):", 0, ' ', cout); cin >> choice;
 		if (choice<0 || choice>cnt_Search)
 		{
 			fflush(stdin);
@@ -328,7 +329,7 @@ namespace mnu
 		{
 			system("cls");
 			Bill * ptr = FindIndex(*ptrAns_List_For_Search, choice);
-			OutputDetail(ptr);
+			OutputDetail(ptr,cout);
 			system("pause");
 			choice = 1;
 		}
@@ -337,8 +338,8 @@ namespace mnu
 	template<class T>
 	void Nhap(DList<T*> & List, int & choice)
 	{
-		DrawTitle();
-		PadLeftPrint("Nhap ten file:");
+		DrawTitle(mnu::SubMenu);
+		PadLeftPrint("Nhap ten file:",mnu::LEFTSPACE,' ',cout);
 		String fname;
 		fflush(stdin); fname.GetLine(cin);
 		if (fname == String(""))
@@ -347,7 +348,7 @@ namespace mnu
 			return;
 		}
 		input(fname, List);
-		PadLeftPrint("Input thanh cong");
+		PadLeftPrint("Input thanh cong", mnu::LEFTSPACE, ' ', cout);
 		Sleep(mnu::WAIT);
 		choice = 1;
 	}
@@ -355,21 +356,22 @@ namespace mnu
 	template<class T>
 	void Nhap_kb(DList<T*> & List, int & choice)
 	{
-		DrawTitle();
-		if (input_kb(List))	PadLeftPrint("Input thanh cong"); 
+		DrawTitle(mnu::SubMenu);
+		if (input_kb(List))	PadLeftPrint("Input thanh cong", mnu::LEFTSPACE, ' ', cout);
 		Sleep(mnu::WAIT);
 		choice = 1;
 	}
 	//-----------------------------------MAIN MENU------------------------------------------------
 	void MainMenu(int& choice)
 	{
-		DrawTitle();
-		PadLeftPrint("1.Quan ly san pham"); std::cout << '\n';
-		PadLeftPrint("2.Quan ly khach hang"); std::cout << '\n';
-		PadLeftPrint("3.Quan ly hoa don"); std::cout << '\n';
-		PadLeftPrint("4.Tinh hoa don"); std::cout << '\n';
-		PadLeftPrint("0.Ket thuc"); std::cout << '\n';
-		PadLeftPrint("Lua chon cua ban :"); std::cin >> choice; 
+		mnu::SubMenu = -1;
+		DrawTitle(mnu::SubMenu);
+		PadLeftPrint("1.Quan ly san pham", mnu::LEFTSPACE, ' ', cout); std::cout << '\n';
+		PadLeftPrint("2.Quan ly khach hang", mnu::LEFTSPACE, ' ', cout); std::cout << '\n';
+		PadLeftPrint("3.Quan ly hoa don", mnu::LEFTSPACE, ' ', cout); std::cout << '\n';
+		PadLeftPrint("4.Tinh hoa don", mnu::LEFTSPACE, ' ', cout); std::cout << '\n';
+		PadLeftPrint("0.Ket thuc", mnu::LEFTSPACE, ' ', cout); std::cout << '\n';
+		PadLeftPrint("Lua chon cua ban :", mnu::LEFTSPACE, ' ', cout); std::cin >> choice; mnu::SubMenu = choice - 1;
 		if (choice < 0 || choice>4)
 		{
 			fflush(stdin);
@@ -381,7 +383,7 @@ namespace mnu
 	//---QUAN LY MAT HANG HET HSD----
 	void ManageExpiration(const DList<Product*>& List, int &choice)
 	{
-		DrawTitle();
+		DrawTitle(mnu::SubMenu);
 		static DList<DetailProduct *> *ptrAnsList = nullptr;
 		int day;
 		if (ptrAnsList == nullptr)
@@ -395,7 +397,7 @@ namespace mnu
 			}
 			ptrAnsList = OutOfExpiration(List, day);
 		}
-		OutputDetailProduct(*ptrAnsList);
+		OutputDetailProduct(*ptrAnsList,cout);
 		if (ptrAnsList->GetFirstElement() == nullptr)
 		{
 			Sleep(mnu::WAIT);
@@ -425,7 +427,7 @@ namespace mnu
 				(curPtr->data)->Delete();
 				curPtr = curPtr->next;
 			}
-			CenterPrint("DA XOA THANH CONG", mnu::WIDTH);
+			CenterPrint("DA XOA THANH CONG", mnu::WIDTH,' ',cout);
 			Sleep(mnu::WAIT);
 		}
 		if (ptrAnsList != nullptr)
@@ -438,12 +440,12 @@ namespace mnu
 	//------------------------------------MENU 1----------------------------------------------------
 	void Menu1(int &choice)
 	{
-		DrawTitle();
-		PadLeftPrint("1.Them san pham"); std::cout << '\n';
-		PadLeftPrint("2.Tim kiem san pham"); std::cout << '\n';
-		PadLeftPrint("3.Quan ly san pham het hang"); std::cout << '\n';
-		PadLeftPrint("0.Quay lai"); std::cout << '\n';
-		PadLeftPrint("Lua chon cua ban :"); std::cin >> choice;
+		DrawTitle(mnu::SubMenu);
+		PadLeftPrint("1.Them san pham", mnu::LEFTSPACE, ' ', cout); std::cout << '\n';
+		PadLeftPrint("2.Tim kiem san pham", mnu::LEFTSPACE, ' ', cout); std::cout << '\n';
+		PadLeftPrint("3.Quan ly san pham het hang", mnu::LEFTSPACE, ' ', cout); std::cout << '\n';
+		PadLeftPrint("0.Quay lai", mnu::LEFTSPACE, ' ', cout); std::cout << '\n';
+		PadLeftPrint("Lua chon cua ban :", mnu::LEFTSPACE, ' ', cout); std::cin >> choice;
 		if (choice < 0 || choice>3)
 		{
 			fflush(stdin);
@@ -454,11 +456,11 @@ namespace mnu
 	//----------------------------------MENU 1/2-1 ------------------------------------------------------
 	void Menu12_1(int &choice)
 	{
-		DrawTitle();
-		PadLeftPrint("1.Them bang file"); std::cout << '\n';
-		PadLeftPrint("2.Nhap tu ban phim"); std::cout << '\n';
-		PadLeftPrint("0.Quay lai"); std::cout << '\n';
-		PadLeftPrint("Lua chon cua ban :"); std::cin >> choice; 
+		DrawTitle(mnu::SubMenu);
+		PadLeftPrint("1.Them bang file", mnu::LEFTSPACE, ' ', cout); std::cout << '\n';
+		PadLeftPrint("2.Nhap tu ban phim", mnu::LEFTSPACE, ' ', cout); std::cout << '\n';
+		PadLeftPrint("0.Quay lai", mnu::LEFTSPACE, ' ', cout); std::cout << '\n';
+		PadLeftPrint("Lua chon cua ban :", mnu::LEFTSPACE, ' ', cout); std::cin >> choice;
 		if (choice < 0 || choice>2)
 		{
 			fflush(stdin);
@@ -470,12 +472,12 @@ namespace mnu
 	//----------------------------------MENU 1-2 ------------------------------------------------------
 	void Menu1_2(int& choice)
 	{
-		DrawTitle();
-		PadLeftPrint("1.Tim kiem theo ma mat hang"); cout << '\n';
-		PadLeftPrint("2.Tim kiem theo ten mat hang"); cout << '\n';
-		PadLeftPrint("3.Tim kiem theo xuat xu"); cout << '\n';
-		PadLeftPrint("0.Quay lai"); cout << '\n';
-		PadLeftPrint("Lua chon cua ban :"); cin >> choice;
+		DrawTitle(mnu::SubMenu);
+		PadLeftPrint("1.Tim kiem theo ma mat hang", mnu::LEFTSPACE, ' ', cout); cout << '\n';
+		PadLeftPrint("2.Tim kiem theo ten mat hang", mnu::LEFTSPACE, ' ', cout); cout << '\n';
+		PadLeftPrint("3.Tim kiem theo xuat xu", mnu::LEFTSPACE, ' ', cout); cout << '\n';
+		PadLeftPrint("0.Quay lai", mnu::LEFTSPACE, ' ', cout); cout << '\n';
+		PadLeftPrint("Lua chon cua ban :", mnu::LEFTSPACE, ' ', cout); cin >> choice;
 		if (choice < 0 || choice>3)
 		{
 			fflush(stdin);
@@ -487,13 +489,12 @@ namespace mnu
 	//----------------------------------MENU 2 --------------------------------------------------------
 	void Menu2(int &choice)
 	{
-		CenterPrint(TITLE, WIDTH);
-		cout << "\n\n" << '+'; DrawLine(WIDTH - 2, '='); cout << '+' << "\n\n";
-		PadLeftPrint("1.Them khach hang"); cout << '\n';
-		PadLeftPrint("2.Tim kiem khach hang"); cout << '\n';
-		PadLeftPrint("3.Chinh sua thong tin khach hang"); cout << '\n';
-		PadLeftPrint("0.Quay lai"); cout << '\n';
-		PadLeftPrint("Lua chon cua ban :"); cin >> choice;
+		DrawTitle(mnu::SubMenu);
+		PadLeftPrint("1.Them khach hang", mnu::LEFTSPACE, ' ', cout); cout << '\n';
+		PadLeftPrint("2.Tim kiem khach hang", mnu::LEFTSPACE, ' ', cout); cout << '\n';
+		PadLeftPrint("3.Chinh sua thong tin khach hang", mnu::LEFTSPACE, ' ', cout); cout << '\n';
+		PadLeftPrint("0.Quay lai", mnu::LEFTSPACE, ' ', cout); cout << '\n';
+		PadLeftPrint("Lua chon cua ban :", mnu::LEFTSPACE, ' ', cout); cin >> choice;
 		if (choice < 0 || choice>3)
 		{
 			fflush(stdin);
@@ -506,11 +507,11 @@ namespace mnu
 	//----------------------------------MENU 2-2 ------------------------------------------------------
 	void Menu2_2(int& choice)
 	{
-		DrawTitle();
-		PadLeftPrint("1.Tim kiem theo SDT Khach hang"); cout << '\n';
-		PadLeftPrint("2.Tim kiem theo ten Khach hang"); cout << '\n';
-		PadLeftPrint("0.Quay lai"); cout << '\n';
-		PadLeftPrint("Lua chon cua ban :"); cin >> choice; 
+		DrawTitle(mnu::SubMenu);
+		PadLeftPrint("1.Tim kiem theo SDT Khach hang", mnu::LEFTSPACE, ' ', cout); cout << '\n';
+		PadLeftPrint("2.Tim kiem theo ten Khach hang", mnu::LEFTSPACE, ' ', cout); cout << '\n';
+		PadLeftPrint("0.Quay lai", mnu::LEFTSPACE, ' ', cout); cout << '\n';
+		PadLeftPrint("Lua chon cua ban :", mnu::LEFTSPACE, ' ', cout); cin >> choice;
 		if (choice < 0 || choice>2)
 		{
 			fflush(stdin);
@@ -521,26 +522,26 @@ namespace mnu
 	//----Update thong tin khach hang---------
 	void ChangeCustomerInfo(DList<Customer*>& List, int & choice)
 	{
-		DrawTitle();
+		DrawTitle(mnu::SubMenu);
 		Phone phone;
 		InputAndCheck("Nhap SDT cua khach hang can cap nhat : ", mnu::LEFTSPACE, &mnu::PadLeftPrint, phone);
 		Customer * ptrC = FindFirstMatch(List, phone, &Customer::GetPhone);
 		if (ptrC == nullptr)
 		{
-			OutputDetail(ptrC);
+			OutputDetail(ptrC,cout);
 			Sleep(mnu::WAIT);
 			choice = 1;
 			return;
 		}
 		system("cls");
-		DrawTitle();
-		OutputDetail(ptrC);
-		PadLeftPrint("Chon muc thong tin muon cap nhat"); cout << '\n';
-		PadLeftPrint("1.Ten"); cout << '\n';
-		PadLeftPrint("2.So dien thoai"); cout << '\n';
-		PadLeftPrint("3.Dia chi"); cout << '\n';
-		PadLeftPrint("0.Quay lai"); cout << '\n';
-		PadLeftPrint("Lua chon cua ban :"); cin >> choice; 
+		DrawTitle(mnu::SubMenu);
+		OutputDetail(ptrC,cout);
+		PadLeftPrint("Chon muc thong tin muon cap nhat", mnu::LEFTSPACE, ' ', cout); cout << '\n';
+		PadLeftPrint("1.Ten", mnu::LEFTSPACE, ' ', cout); cout << '\n';
+		PadLeftPrint("2.So dien thoai", mnu::LEFTSPACE, ' ', cout); cout << '\n';
+		PadLeftPrint("3.Dia chi", mnu::LEFTSPACE, ' ', cout); cout << '\n';
+		PadLeftPrint("0.Quay lai", mnu::LEFTSPACE, ' ', cout); cout << '\n';
+		PadLeftPrint("Lua chon cua ban :", mnu::LEFTSPACE, ' ', cout); cin >> choice;
 		if (choice < 0 || choice>3)
 		{
 			fflush(stdin);
@@ -552,7 +553,7 @@ namespace mnu
 			return;
 		}
 		system("cls");
-		DrawTitle();
+		DrawTitle(mnu::SubMenu);
 		switch (choice)
 		{
 		case 1:
@@ -584,14 +585,14 @@ namespace mnu
 	//----------------------------------QUAN LY HOA DON--------------------------------------
 	void BillCalculate(DList<Bill*>& BList, DList<Product*>& PList, DList<Customer*>& CList, int &choice)
 	{
-		DrawTitle();
+		DrawTitle(mnu::SubMenu);
 		int w = 30;
-		String c_name,address;
+		String c_name="",address="";
 		Phone phone;
 		Date buydate=Today();
 		Time buytime=Now();
-		LeftPrintForInput("Ngay", w); cout << buydate << endl;
-		LeftPrintForInput("Thoi gian", w); cout << buytime << endl;
+		LeftPrintForInput("Ngay", w, ' ', cout); cout << buydate << endl;
+		LeftPrintForInput("Thoi gian", w, ' ', cout); cout << buytime << endl;
 		InputAndCheck("Nhap SDT khach hang", w, &mnu::LeftPrintForInput, phone);
 		Customer* ptrC = nullptr; bool inserted=false;
 		if (phone != Phone("0000000000")) // Khach hang muon luu thong tin hay ko
@@ -599,15 +600,15 @@ namespace mnu
 			ptrC = InsertCustomer(CList, c_name, phone, address, inserted);
 			if (inserted)
 			{
-				LeftPrintForInput("Ten khach hang", w); fflush(stdin); c_name.GetLine(cin);
-				LeftPrintForInput("Dia chi khach hang", w); fflush(stdin); address.GetLine(cin);
+				LeftPrintForInput("Ten khach hang", w, ' ', cout); fflush(stdin); c_name.GetLine(cin);
+				LeftPrintForInput("Dia chi khach hang", w, ' ', cout); fflush(stdin); address.GetLine(cin);
 				ptrC->SetName(c_name);
 				ptrC->SetAddress(address);
 			}
 			else
 			{
-				LeftPrintForInput("Ten khach hang", w); cout << ptrC->GetName() << endl;
-				LeftPrintForInput("Dia chi khach hang", w); cout << ptrC->GetAddress() << endl;
+				LeftPrintForInput("Ten khach hang", w, ' ', cout); cout << ptrC->GetName() << endl;
+				LeftPrintForInput("Dia chi khach hang", w, ' ', cout); cout << ptrC->GetAddress() << endl;
 			}
 		}	
 		int cnt = 0;
@@ -615,26 +616,36 @@ namespace mnu
 		Bill *ptrB = new Bill(buydate,buytime);
 		do
 		{
-			std::cout << "\n\n" << '+'; DrawLine(mnu::WIDTH - 2, '='); std::cout << '+' << "\n\n";
+			std::cout << "\n\n" << '+'; DrawLine(mnu::WIDTH - 2, '=',cout); std::cout << '+' << "\n\n";
 			String id_p; int sl;
-			LeftPrintForInput("Nhap ma mat hang", w); fflush(stdin); id_p.GetLine(cin);
+			LeftPrintForInput("Nhap ma mat hang", w, ' ', cout); fflush(stdin); id_p.GetLine(cin);
 			if (id_p == String("")) break;
-			cnt++;
-			String type = id_p.SubStr(7, 2);
-			if (type == String("01"))
-			{
-				LeftPrintForInput("Nhap khoi luong(don vi gam)", w);
-			}
-			else
-			{
-				LeftPrintForInput("Nhap so luong", w);
-			}
-			cin >> sl;
 			String p_id, dp_id;
 			p_id = id_p.SubStr(0, 9);
 			dp_id = id_p.SubStr(9, 4);
 			Product* ptrP = FindFirstMatch(PList, p_id, &Product::GetID);
+			if (ptrP == nullptr)
+			{
+				cout << "Khong tim thay san pham\n";
+				continue;
+			}
 			DetailProduct* ptrDP = ptrP->FindDetailProduct(dp_id);
+			if (ptrDP == nullptr)
+			{
+				cout << "Khong tim thay san pham\n";
+				continue;
+			}
+			cnt++;
+			String type = id_p.SubStr(7, 2);
+			if (type == String("01"))
+			{
+				LeftPrintForInput("Nhap khoi luong(don vi gam)", w, ' ', cout);
+			}
+			else
+			{
+				LeftPrintForInput("Nhap so luong", w, ' ', cout);
+			}
+			cin >> sl;
 			total += ptrDP->Calculate(sl);
 			DetailBill *ptrDB = new DetailBill(ptrDP, sl);
 			ptrDP->Deduct(sl);
@@ -659,15 +670,20 @@ namespace mnu
 		}
 		InsertBill(BList, ptrB);
 		system("cls");
-		DrawTitle();
-		OutputDetail(ptrB);
-		system("pause");
+		DrawTitle(mnu::SubMenu);
+		OutputDetail(ptrB,cout);
+		cout << "XUAT HOA DON ???\nNHAN p DE XUAT DON";
+		char p = _getch();
+		if (p == 'p' || p == 'P')
+		{
+			OutputBillFile(ptrB->GetID(), ptrB);
+		}
 		choice = 1;
 	}
 	//----------TINH DOANH THU-------------------
 	void Revenue(const DList<Bill*> &List, int &choice)
 	{
-		DrawTitle();
+		DrawTitle(mnu::SubMenu);
 		cout << "Nhap khoang thoi gian muon tinh doanh thu\n";
 		int w = 15;
 		Date s, f;
@@ -675,21 +691,21 @@ namespace mnu
 		InputAndCheck("Den ngay", w, &mnu::LeftPrintForInput, f);
 		DList<Bill*> AnsList;
 		int total_revenue = CalRevenue(List, s, f, AnsList);
-		OutputTable(AnsList);
-		cout << '|'; CenterPrint("TONG", w);
-		cout << '|'; CenterPrint(String::to_string(total_revenue), mnu::WIDTH - 3 - w); cout << '|' << endl;
-		cout << '+'; DrawLine(mnu::WIDTH - 2, '='); cout << '+' << endl;
+		OutputTable(AnsList,cout);
+		cout << '|'; CenterPrint("TONG", w,' ',cout);
+		cout << '|'; CenterPrint(String::to_string(total_revenue), mnu::WIDTH - 3 - w, ' ', cout); cout << '|' << endl;
+		cout << '+'; DrawLine(mnu::WIDTH - 2, '=',cout); cout << '+' << endl;
 		system("pause");
 		choice = 1;
 	}
 	//----------------------------------MENU3--------------------------------------------------
 	void Menu3(int &choice)
 	{
-		DrawTitle();
-		PadLeftPrint("1.Tinh doanh thu"); cout << '\n';
-		PadLeftPrint("2.Truy xuat hoa don"); cout << '\n';
-		PadLeftPrint("0.Quay lai"); cout << "\n";
-		PadLeftPrint("Lua chon cua ban :"); cin >> choice;
+		DrawTitle(mnu::SubMenu);
+		PadLeftPrint("1.Tinh doanh thu", mnu::LEFTSPACE, ' ', cout); cout << '\n';
+		PadLeftPrint("2.Truy xuat hoa don", mnu::LEFTSPACE, ' ', cout); cout << '\n';
+		PadLeftPrint("0.Quay lai", mnu::LEFTSPACE, ' ', cout); cout << "\n";
+		PadLeftPrint("Lua chon cua ban :", mnu::LEFTSPACE, ' ', cout); cin >> choice;
 		if (choice < 0 || choice>3)
 		{
 			fflush(stdin);
@@ -700,12 +716,12 @@ namespace mnu
 	//----------------------------------Menu3_3----------------------------------------------
 	void Menu3_2(int &choice)
 	{
-		DrawTitle();
-		PadLeftPrint("1.Truy xuat theo ID hoa don"); cout << '\n';
-		PadLeftPrint("2.Truy xuat theo SDT khach hang"); cout << '\n';
-		PadLeftPrint("3.Truy xuat theo ngay mua"); cout << '\n';
-		PadLeftPrint("0.Quay lai"); cout << "\n";
-		PadLeftPrint("Lua chon cua ban :"); cin >> choice;
+		DrawTitle(mnu::SubMenu);
+		PadLeftPrint("1.Truy xuat theo ID hoa don", mnu::LEFTSPACE, ' ', cout); cout << '\n';
+		PadLeftPrint("2.Truy xuat theo SDT khach hang", mnu::LEFTSPACE, ' ', cout); cout << '\n';
+		PadLeftPrint("3.Truy xuat theo ngay mua", mnu::LEFTSPACE, ' ', cout); cout << '\n';
+		PadLeftPrint("0.Quay lai", mnu::LEFTSPACE, ' ', cout); cout << "\n";
+		PadLeftPrint("Lua chon cua ban :", mnu::LEFTSPACE, ' ', cout); cin >> choice;
 		if (choice < 0 || choice>3)
 		{
 			fflush(stdin);
@@ -716,10 +732,10 @@ namespace mnu
 	//-----------------------------------MENU TT----------------------------------------------
 	void MenuTT(int &choice)
 	{
-		DrawTitle();
-		PadLeftPrint("1.Tiep tuc"); std::cout << '\n';
-		PadLeftPrint("0.Quay lai"); std::cout << '\n';
-		PadLeftPrint("Lua chon cua ban :"); std::cin >> choice;
+		DrawTitle(mnu::SubMenu);
+		PadLeftPrint("1.Tiep tuc", mnu::LEFTSPACE, ' ', cout); std::cout << '\n';
+		PadLeftPrint("0.Quay lai", mnu::LEFTSPACE, ' ', cout); std::cout << '\n';
+		PadLeftPrint("Lua chon cua ban :", mnu::LEFTSPACE, ' ', cout); std::cin >> choice;
 		if (choice < 0 || choice>1)
 		{
 			fflush(stdin);
@@ -730,12 +746,12 @@ namespace mnu
 	//-------------------------------------MENU TT CHO TM KIEM ----------------------------------
 	void MenuTTTK(int &choice)
 	{
-		DrawTitle();
-		PadLeftPrint("Ban muon tiep tuc"); std::cout << '\n';
-		PadLeftPrint("1.Tiep tuc voi truy xuat cu"); std::cout << '\n';
-		PadLeftPrint("2.Tiep tuc voi truy xuat moi"); std::cout << '\n';
-		PadLeftPrint("0.Quay lai"); std::cout << '\n';
-		PadLeftPrint("Lua chon cua ban :"); std::cin >> choice; 
+		DrawTitle(mnu::SubMenu);
+		PadLeftPrint("Ban muon tiep tuc", mnu::LEFTSPACE, ' ', cout); std::cout << '\n';
+		PadLeftPrint("1.Tiep tuc voi truy xuat cu", mnu::LEFTSPACE, ' ', cout); std::cout << '\n';
+		PadLeftPrint("2.Tiep tuc voi truy xuat moi", mnu::LEFTSPACE, ' ', cout); std::cout << '\n';
+		PadLeftPrint("0.Quay lai", mnu::LEFTSPACE, ' ', cout); std::cout << '\n';
+		PadLeftPrint("Lua chon cua ban :", mnu::LEFTSPACE, ' ', cout); std::cin >> choice;
 		if (choice < 0 || choice>2)
 		{
 			fflush(stdin);
