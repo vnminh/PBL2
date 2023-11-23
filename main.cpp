@@ -16,6 +16,7 @@ int main()
 	DList<Product*> PList;
 	DList<Customer*> CList;
 	DList<Bill*> BList;
+	//mnu::InputBill("Bill.txt", BList, PList, CList);
 	mnu::InitMenu();
 	int choice;
 	mnu::Node *Mptr = mnu::TMainMenu;

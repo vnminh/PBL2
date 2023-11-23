@@ -34,7 +34,10 @@ namespace mnu
 		{
 			ptrDP = new DetailProduct(id_dp, nn, nsx, hsd, price, sl);
 		}
-		InsertProduct(List, id_p, name, xs, ptrDP);
+		if (!InsertProduct(List, id_p, name, xs, ptrDP))
+		{
+			throw Exception(String("PRODUCT WITH ID ") + id_p + id_dp + String(" EXISTED!!!!!"));
+		}
 		return true;
 	}
 	bool input_kb(DList<Customer *>& List)
@@ -42,15 +45,15 @@ namespace mnu
 		String name, add;
 		Phone phone;
 		const int w = 24;
-		LeftPrintForInput("Nhap ten khach hang", w, ' ', cout); fflush(stdin); name.GetLine(cin);
-		if (name == String("")) return false;
 		InputAndCheck("Nhap SDT khach mat hang", w, &mnu::LeftPrintForInput, phone);
+		if (phone == Phone("0000000000")) return false;
+		LeftPrintForInput("Nhap ten khach hang", w, ' ', cout); fflush(stdin); name.GetLine(cin);
 		LeftPrintForInput("Nhap dia chi khach hang", w, ' ', cout); fflush(stdin); add.GetLine(cin);
 		bool check;
 		InsertCustomer(List, name, phone, add, check);
 		if (!check)
 		{
-			throw Exception("Khach hang nay da ton tai");
+			throw Exception(String("CUSTOMER WITH PHONE NUMBER ") + phone.to_string() + String(" EXISTED!!!!!"));
 		}
 		return true;
 	}
@@ -64,7 +67,9 @@ namespace mnu
 			throw Exception("FILE NOT EXIST");
 		}
 		Date nn (fname,".");
-		while (!inp.eof()){
+		int cnt = 0;
+		while (!inp.eof())
+		{
 			String temp;
 			fflush(stdin); temp.GetLine(inp);
 			char *ptr;
@@ -89,8 +94,21 @@ namespace mnu
 			{
 				ptrDP = new DetailProduct(id_dp, nn, nsx, hsd, price, sl);
 			}
-			InsertProduct(List, id_p, name, xs, ptrDP);
+			if (!InsertProduct(List, id_p, name, xs, ptrDP))
+			{
+				cnt++;
+				String mess = String("PRODUCT WITH ID ") + id_p + id_dp + String(" EXISTED!!!!!");
+				PadLeftPrint(mess, mnu::LEFTSPACE, ' ', cout);
+				cout << endl;
+			}
 		}
+		if (cnt != 0)
+		{
+			String mess = String::to_string(cnt) + String(" EXISTED PRODUCT(S)");
+			PadLeftPrint(mess, mnu::LEFTSPACE, ' ', cout);
+			cout << endl;
+		}
+		
 		inp.close();
 	}
 	void input(const String &fname, DList<Customer*>& List)
@@ -101,7 +119,9 @@ namespace mnu
 		{
 			throw Exception("FILE NOT EXIST");
 		}
-		while (!inp.eof()){
+		int cnt = 0;
+		while (!inp.eof())
+		{
 			String temp;
 			fflush(stdin); temp.GetLine(inp);
 			char *ptr;
@@ -110,8 +130,72 @@ namespace mnu
 			String add = strtok_s(nullptr, ",", &ptr);
 			bool check;
 			InsertCustomer(List, name,phone,add,check);
+			if (!check)
+			{
+				cnt++;
+				String mess = String("CUSTOMER WITH PHONE NUMBER ")+ phone + String(" EXISTED!!!!!");
+				PadLeftPrint(mess, mnu::LEFTSPACE, ' ', cout);
+				cout << endl;
+			}
+		}
+		if (cnt != 0)
+		{
+			String mess = String::to_string(cnt) + String(" EXISTED CUSTOMER(S)");
+			PadLeftPrint(mess, mnu::LEFTSPACE, ' ', cout);
+			cout << endl;
 		}
 		inp.close();
+	}
+	//---------------------------------INPUT BILL HIDEN FUNC----------------------------------------
+	void InputBill(const String &fname, DList<Bill*> &BList, DList<Product*> PList, DList<Customer*>CList)
+	{
+		ifstream f_i(fname);
+		String c_name = "", address = "";
+		Phone phone;
+		Date buydate;
+		Time buytime;
+		while (!f_i.eof())
+		{
+			f_i >> buydate;
+			f_i >> buytime;
+			f_i >> phone;
+			Customer* ptrC = nullptr; bool inserted = false;
+			c_name.GetLine(f_i);
+			address.GetLine(f_i);
+			if (phone != Phone("0000000000")) // Khach hang muon luu thong tin hay ko
+			{
+				ptrC = InsertCustomer(CList, c_name, phone, address, inserted);
+			}
+			int numOfProduct;
+			f_i >> numOfProduct;
+			int cnt = 0;
+			int total = 0;
+			Bill *ptrB = new Bill(buydate, buytime);
+			do
+			{
+				String id_p; int sl;
+				id_p.GetLine(f_i);
+				String p_id, dp_id;
+				p_id = id_p.SubStr(0, 9);
+				dp_id = id_p.SubStr(9, 4);
+				Product* ptrP = FindFirstMatch(PList, p_id, &Product::GetID);
+				DetailProduct* ptrDP = ptrP->FindDetailProduct(dp_id);
+				cnt++;
+				cin >> sl;
+				total += ptrDP->Calculate(sl);
+				DetailBill *ptrDB = new DetailBill(ptrDP, sl);
+				ptrDP->Deduct(sl);
+				ptrDP->AddDetailBill(ptrDB);
+				ptrB->AddDetailBill(ptrDB);
+			} while (cnt < numOfProduct);
+			ptrB->SetTotal(total);
+			ptrB->SetNumDetailBill(cnt);
+			if (ptrC != nullptr)
+			{
+				ptrC->AddBill(ptrB);
+			}
+			InsertBill(BList, ptrB);
+		}	
 	}
 	//---------------------------------Chuc nang TKSP-----------------------------------------------
 	namespace search_mnu

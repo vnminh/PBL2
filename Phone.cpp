@@ -1,7 +1,7 @@
 #include "Phone.h"
 #include "Exception.h"
 using namespace std;
-Phone::Phone(const String num)
+Phone::Phone(String num)
 	:number(num)
 {
 }

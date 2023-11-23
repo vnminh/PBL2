@@ -49,7 +49,7 @@ void Product::Deduct(const int num)
 		this->isDeleted = true;
 	}
 }
-void InsertProduct(DList<Product *> &List, const String &id_p,const String &name,const String &xs,  DetailProduct *ptrDP )
+bool InsertProduct(DList<Product *> &List, const String &id_p,const String &name,const String &xs,  DetailProduct *ptrDP )
 {
 	Product *ptrP = FindFirstMatch(List, id_p, &Product::GetID);
 	if (ptrP == nullptr)
@@ -57,11 +57,18 @@ void InsertProduct(DList<Product *> &List, const String &id_p,const String &name
 		DNode<Product *> * Newptr = new DNode<Product *>(new Product(id_p, name, xs));
 		(Newptr->data)->AddDetailProduct(ptrDP);
 		List.InsertLast(Newptr);
+		return true;
 	}
 	else
 	{
-		ptrP->AddDetailProduct(ptrDP);
+		DetailProduct *ptr = FindFirstMatch(ptrP->List, ptrDP->GetID(), &DetailProduct::GetID);
+		if (ptr == nullptr)
+		{
+			ptrP->AddDetailProduct(ptrDP);
+			return true;
+		}
 	}
+	return false;
 }
 void OutputTable(const DList<Product*> & list, std::ostream& out)
 {
