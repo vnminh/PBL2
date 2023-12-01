@@ -28,6 +28,7 @@ private:
 	void ConnectCustomer(Customer *);
 public:
 	Bill(const Date&, const Time&);
+	~Bill();
 	void AddDetailBill(DetailBill*);
 	String GetID() const;
 	int GetTotal() const;

@@ -123,11 +123,12 @@ DNode<T> * DList<T>::GetLastElement() const
 template <class T>
 T* FindIndex(const DList<T*>&list, const int &index)
 {
-	int i = 1;
+	int i = 0;
 	DNode <T*>* curptr = list.Head;
-	while (i != index)
+	while (curptr!=nullptr)
 	{
-		i++;
+		if (!((curptr->data)->Deleted())) i++;
+		if (i == index) break;
 		curptr = curptr->next;
 	}
 	return curptr->data;

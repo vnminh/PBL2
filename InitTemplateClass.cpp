@@ -17,3 +17,4 @@ template class DList < Bill* >;
 template class DNode < DetailBill* >;
 template class DList < DetailBill* >;
 template  DetailProduct* FindFirstMatch<DetailProduct, String>(const DList<DetailProduct*>&, const String&, String(DetailProduct::*)()const);
+template  DetailProduct* FindIndex<DetailProduct>(const DList<DetailProduct*>&, const int&);

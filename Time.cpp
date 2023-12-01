@@ -5,6 +5,22 @@ using namespace std;
 Time::Time(int s, int m, int h)
 	:Sec(s), Min(m), Hour(h)
 {}
+Time::Time (const String & s, const String &delim)
+{
+	String temp = s;
+	char *ptr;
+	String h, m, sec;
+	h = strtok_s(temp, delim, &ptr);
+	m = strtok_s(nullptr, delim, &ptr);
+	sec = strtok_s(nullptr, delim, &ptr);
+	h.DeleteFirstSpace();
+	h.DeleteLastSpace();
+	m.DeleteFirstSpace();
+	m.DeleteLastSpace();
+	sec.DeleteFirstSpace();
+	sec.DeleteLastSpace();
+	SetTime(atoi(sec), atoi(m), atoi(h));
+}
 Time::~Time()
 {}
 void Time::SetSec(int s)

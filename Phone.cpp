@@ -2,8 +2,8 @@
 #include "Exception.h"
 using namespace std;
 Phone::Phone(String num)
-	:number(num)
 {
+	this->SetNumber(num);
 }
 Phone::~Phone()
 {
@@ -13,6 +13,13 @@ void Phone::SetNumber(const String & num)
 	if (num.GetLength() != 10)
 	{
 		throw Exception("INVALID PHONE NUMBER - EXPECTED 10 NUMBERS");
+	}
+	for (int i = 0; i < 10; i++)
+	{
+		if (num[i]<'0' || num[i]>'9')
+		{
+			throw Exception("INVALID PHONE NUMBER");
+		}
 	}
 	this->number = num;
 }
@@ -51,4 +58,18 @@ istream& operator>>(istream& inp, Phone& p)
 		p.SetNumber(temp);
 	}
 	return inp;
+}
+void CheckPhone(const String& num)
+{
+	if (num.GetLength() != 10)
+	{
+		throw Exception("INVALID PHONE NUMBER - EXPECTED 10 NUMBERS");
+	}
+	for (int i = 0; i < 10; i++)
+	{
+		if (num[i]<'0' || num[i]>'9')
+		{
+			throw Exception("INVALID PHONE NUMBER");
+		}
+	}
 }

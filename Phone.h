@@ -6,6 +6,7 @@ class Phone
 {
 	friend std::ostream& operator<< (std::ostream&, const Phone &);
 	friend std::istream& operator>> (std::istream&, Phone &);
+	friend void CheckPhone(const String&);
 private:
 	String number;
 public:

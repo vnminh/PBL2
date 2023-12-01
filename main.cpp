@@ -2,6 +2,7 @@
 #include <cmath>
 #include <fstream>
 #include <Windows.h>
+#include <iomanip>
 #include "String.h"
 #include "Date.h"
 #include "Time.h"
@@ -15,8 +16,11 @@ int main()
 {
 	DList<Product*> PList;
 	DList<Customer*> CList;
+	CList.InsertFirst(new DNode<Customer*>(new Customer("", Phone("0000000000"), "")));
 	DList<Bill*> BList;
-	//mnu::InputBill("Bill.txt", BList, PList, CList);
+	//mnu::input("khachhang.txt", CList);
+	mnu::input("23.10.2023", PList);
+	mnu::InputBill("bill.txt", BList, PList, CList);
 	mnu::InitMenu();
 	int choice;
 	mnu::Node *Mptr = mnu::TMainMenu;

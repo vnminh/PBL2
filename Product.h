@@ -10,13 +10,13 @@ class Product
 	friend DList<DetailProduct*>* OutOfExpiration(const DList<Product*>&, const int&);
 	friend void OutputTable(const DList<Product *> &, std::ostream&);
 	friend void OutputDetail(const Product *, std::ostream&);
-	friend bool InsertProduct(DList<Product *> &, const String &, const String &, const String&, DetailProduct *);
+	friend bool InsertProduct(DList<Product *> &, Product *, DetailProduct *);
 	friend void OutputDetailProduct(const DList<DetailProduct *>&, std::ostream&);
 	private:
 		String ID;
 		String Name;
 		String XS;
-		int SL;
+		int NumDP;
 		bool isDeleted;
 		DList<DetailProduct*> List;
 	public:
@@ -24,11 +24,13 @@ class Product
 		~Product();
 		void AddDetailProduct(DetailProduct*);
 		DetailProduct* FindDetailProduct(const String&) const;
-		int GetSL() const;
+		int GetNumDP() const;
 		String GetID() const;
 		String GetName() const;
 		String GetXS() const;
+		const DList<DetailProduct*>& GetDPList() const;
+		void Delete();
 		bool Deleted() const;
-		void Deduct(const int);
+		void DeleteDP();
 };
 #endif

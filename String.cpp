@@ -177,6 +177,14 @@ ostream& operator<<(ostream& out, const String& s)
 String String::to_string(int num, int width)
 {
 	char temp[MAX]{};
+	if (num == 0)
+	{
+		for (int i = 0; i < width; i++)
+		{
+			temp[i] = '0';
+		}
+		return String(temp);
+	}
 	int cnt = 0;
 	while (num != 0)
 	{

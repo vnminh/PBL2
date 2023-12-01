@@ -2,6 +2,7 @@
 #include "Exception.h"
 #include "Phone.h"
 #include "Date.h"
+#include "Customer.h"
 #include <conio.h>
 #include <Windows.h>
 void mnu::DrawTitle(int type, int w, const String t) // type = 0 1 2 3
@@ -15,12 +16,12 @@ void mnu::DrawTitle(int type, int w, const String t) // type = 0 1 2 3
 		if (i == type)
 		{
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
-			std::cout << '|'; CenterPrint(title[0], subw, ' ', std::cout); std::cout << '|';
+			std::cout << '|'; CenterPrint(title[i], subw, ' ', std::cout); std::cout << '|';
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 		}
 		else
 		{
-			std::cout << '|'; CenterPrint(title[0], subw, ' ', std::cout); std::cout << '|';
+			std::cout << '|'; CenterPrint(title[i], subw, ' ', std::cout); std::cout << '|';
 		}
 	}
 	std::cout << std::endl << '+'; DrawLine(w - 2, '=', std::cout); std::cout << '+' << "\n\n";
@@ -70,6 +71,11 @@ void mnu::PadLeftPrint(const String &s, int padlen, char pad, std::ostream& out)
 	DrawLine(padlen, pad,out);
 	out << s;
 }
+void mnu::Pause()
+{
+	mnu::CenterPrint("Press ENTER to continue ...", mnu::WIDTH, ' ', std::cout);
+	_getch();
+}
 template <typename T>
 bool mnu::InputAndCheck(const String &mess, const int& width, void(*format)(const String&, int, char, std::ostream&), T& var)
 {
@@ -95,3 +101,123 @@ bool mnu::InputAndCheck(const String &mess, const int& width, void(*format)(cons
 }
 template bool mnu::InputAndCheck<Phone>(const String&, const int &, void(*)(const String&, int, char, std::ostream&), Phone&);
 template bool mnu::InputAndCheck<Date>(const String&, const int &, void(*)(const String&, int, char, std::ostream&), Date&);
+template <class T>
+void mnu::CheckID(const String&)
+{}
+template <>
+void mnu::CheckID<Product>(const String &id)
+{
+	if (id.GetLength() != 9)
+	{
+		throw Exception("WRONG FORMAT FOR PRODUCT ID");
+	}
+	if (id[0] != 'M' || id[1] != 'H')
+	{
+		throw Exception("WRONG FORMAT FOR PRODUCT ID");
+	}
+	String type = id.SubStr(7, 2);
+	if (type != String("01") && type != String("00"))
+	{
+		throw Exception("WRONG FORMAT FOR PRODUCT ID");
+	}
+	for (int i = 2; i <= 6; i++)
+	{
+		if (id[i]<'0' || id[i]>'9')
+		{
+			throw Exception("WRONG FORMAT FOR PRODUCT ID");
+		}
+	}
+}
+template <>
+void mnu::CheckID<DetailProduct>(const String &id)
+{
+	if (id.GetLength() != 4)
+	{
+		throw Exception("WRONG FORMAT FOR BATCH ID");
+	}
+	if (id[0] != 'L')
+	{
+		throw Exception("WRONG FORMAT FOR BATCH ID");
+	}
+	for (int i = 1; i <= 3; i++)
+	{
+		if (id[i]<'0' || id[i]>'9')
+		{
+			throw Exception("WRONG FORMAT FOR BATCH ID");
+		}
+	}
+}
+template <>
+void mnu::CheckID<Bill>(const String &id)
+{
+	if (id.GetLength() != 7)
+	{
+		throw Exception("WRONG FORMAT FOR BILL ID");
+	}
+	if (id[0] != 'H' || id[1] != 'D')
+	{
+		throw Exception("WRONG FORMAT FOR BILL ID");
+	}
+	for (int i = 2; i <= 6; i++)
+	{
+		if (id[i]<'0' || id[i]>'9')
+		{
+			throw Exception("WRONG FORMAT FOR BILL ID");
+		}
+	}
+}
+template void mnu::CheckID<Product>(const String&);
+template void mnu::CheckID<DetailProduct>(const String&);
+template void mnu::CheckID<Bill>(const String&);
+template <class T>
+void mnu::ProcessAfterSearch(T *ptr)
+{
+	std::cout << "PRESS d TO DELETE CUSTOMER" << std::endl;
+	char d = _getch();
+	if (d == 'd' || d == 'D')
+	{
+		ptr->Delete();
+	}
+}
+template <>
+void mnu::ProcessAfterSearch<Product>(Product *ptr)
+{
+	int choice;
+	do
+	{
+		std::cout << "Type ordinal number of entry to delete (Type '0' to continue and '-1' to clear all) : ";
+		std::cin >> choice;
+		if (choice >= -1 && choice <= ptr->GetNumDP()) break;
+		else
+		{
+			fflush(stdin);
+			std::cin.clear();
+			std::cout<<"INVALID VALUE\n";
+		}
+	} while (true);
+	if (choice == 0) return;
+	if (choice > 0)
+	{
+		DetailProduct *ptrDP = FindIndex(ptr->GetDPList(), choice);
+		ptrDP->Delete();
+		return;
+	}
+	if (choice == -1)
+	{
+		ptr->Delete();
+		return;
+	}
+}
+template <>
+void mnu::ProcessAfterSearch<Bill>(Bill *ptr)
+{
+	std::cout << "PRESS p TO PRINT BILL" << std::endl;
+	char p = _getch();
+	if (p == 'p' || p == 'P')
+	{
+		OutputBillFile(ptr->GetID(), ptr);
+	}
+}
+template void mnu::ProcessAfterSearch<Product>(Product *);
+template void mnu::ProcessAfterSearch<Customer>(Customer *);
+template void mnu::ProcessAfterSearch<Bill>(Bill *);

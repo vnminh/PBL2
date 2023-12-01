@@ -1,10 +1,35 @@
 #include "DetailProduct.h"
 #include "Product.h"
+#include "Exception.h"
 #include <iostream>
 using namespace std;
 DetailProduct::DetailProduct(const String& id, const Date& nn, const Date& nsx, const Date& hsd, const int& price, const int& sl)
 	:ID(id), NN(nn), NSX(nsx), HSD(hsd), Price(price), SL(sl),isDeleted(false), ptrP(nullptr)
-{}
+{
+	if (id.GetLength() != 4)
+	{
+		throw Exception("WRONG FORMAT FOR BATCH ID");
+	}
+	if (id[0] != 'L')
+	{
+		throw Exception("WRONG FORMAT FOR BATCH ID");
+	}
+	for (int i = 1; i <= 3; i++)
+	{
+		if (id[i]<'0' || id[i]>'9')
+		{
+			throw Exception("WRONG FORMAT FOR BATCH ID");
+		}
+	}
+	if (price <= 0)
+	{
+		throw Exception("INVALID VALUE FOR PRICE");
+	}
+	if (sl <= 0)
+	{
+		throw Exception("INVALID VALUE FOR QUANTITY");
+	}
+}
 DetailProduct::~DetailProduct()
 {}
 void DetailProduct::ConnectProduct(Product * ptr)
@@ -18,15 +43,10 @@ void DetailProduct::AddDetailBill(DetailBill *ptr)
 void DetailProduct::Deduct(const int num)
 {
 	(this->SL) -= num;
-	if (this->SL <= 0)
-	{
-		isDeleted = true;
-	}
-	(this->ptrP)->Deduct(num);
 }
 bool DetailProduct::SoldOut() const
 {
-	return (this->SL) == 0;
+	return (this->SL) <= 0;
 }
 String DetailProduct::GetID() const
 {
@@ -66,7 +86,8 @@ String DetailProduct::GetProductID() const
 }
 void DetailProduct::Delete()
 {
-	this->Deduct(this->SL);
+	this->isDeleted=true;
+	(this->ptrP)->DeleteDP();
 }
 int DetailProduct::Calculate(const int & num) const
 {

@@ -74,7 +74,6 @@ void Date::SetMonth(int m)
 		throw Exception("INVALID VALUE FOR MONTH");
 	}
 	this->Month = m;
-	
 }
 void Date::SetYear(int y)
 {

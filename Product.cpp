@@ -2,28 +2,58 @@
 #include "Output.h"
 #include "DList.h"
 #include "DetailProduct.h"
+#include "Exception.h"
 #include <iostream>
 #include <fstream>
 using namespace std;
 Product::Product(const String &id, const String &n, const String &xs)
-	:ID(id), Name(n), XS(xs), isDeleted(false)
-{}
+	:ID(id), Name(n), XS(xs), isDeleted(false), NumDP(0)
+{
+	if (id.GetLength() != 9)
+	{
+		throw Exception("WRONG FORMAT FOR PRODUCT ID");
+	}
+	if (id[0] != 'M' || id[1] != 'H')
+	{
+		throw Exception("WRONG FORMAT FOR PRODUCT ID");
+	}
+	String type = id.SubStr(7, 2);
+	if (type != String("01") && type != String("00"))
+	{
+		throw Exception("WRONG FORMAT FOR PRODUCT ID");
+	}
+	for (int i = 2; i <= 6; i++)
+	{
+		if (id[i]<'0' || id[i]>'9')
+		{
+			throw Exception("WRONG FORMAT FOR PRODUCT ID");
+		}
+	}
+	if (n == String(""))
+	{
+		throw Exception("NAME CAN'T BE EMPTY");
+	}
+	if (xs == String(""))
+	{
+		throw Exception("ORIGIN CAN'T BE EMPTY");
+	}
+}
 Product::~Product()
 {}
 void Product::AddDetailProduct( DetailProduct * ptr)
 {
 	ptr->ConnectProduct(this);
 	(this->List).InsertLast(new DNode<DetailProduct *>(ptr));
-	this->SL += ptr->GetSL();
+	this->NumDP++;
 }
 DetailProduct* Product::FindDetailProduct(const String&id) const
 {
 	DetailProduct* ptr = FindFirstMatch(this->List, id, &DetailProduct::GetID);
 	return ptr;
 } 
-int Product::GetSL() const
+int Product::GetNumDP() const
 {
-	return this->SL;
+	return this->NumDP;
 }
 String Product::GetID() const
 {
@@ -37,36 +67,47 @@ String Product::GetXS() const
 {
 	return this->XS;
 }
+const DList<DetailProduct*>& Product::GetDPList() const
+{
+	return this->List;
+}
+void Product::Delete()
+{
+	DNode<DetailProduct*>* curPtr = (this->List).GetFirstElement();
+	while (curPtr != nullptr)
+	{
+		if (!((curPtr->data)->Deleted()))	(curPtr->data)->Delete();
+		curPtr = curPtr->next;
+	}
+}
 bool Product::Deleted() const
 {
 	return this->isDeleted;
 }
-void Product::Deduct(const int num)
+void Product::DeleteDP()
 {
-	this->SL -= num;
-	if (this->SL <= 0)
-	{
-		this->isDeleted = true;
-	}
+	this->NumDP--;
 }
-bool InsertProduct(DList<Product *> &List, const String &id_p,const String &name,const String &xs,  DetailProduct *ptrDP )
+bool InsertProduct(DList<Product *> &List, Product *ptrP,  DetailProduct *ptrDP )
 {
-	Product *ptrP = FindFirstMatch(List, id_p, &Product::GetID);
-	if (ptrP == nullptr)
+	Product *lptrP = FindFirstMatch(List, ptrP->ID, &Product::GetID);
+	if (lptrP == nullptr)
 	{
-		DNode<Product *> * Newptr = new DNode<Product *>(new Product(id_p, name, xs));
+		DNode<Product *> * Newptr = new DNode<Product *>(ptrP);
 		(Newptr->data)->AddDetailProduct(ptrDP);
 		List.InsertLast(Newptr);
 		return true;
 	}
 	else
 	{
-		DetailProduct *ptr = FindFirstMatch(ptrP->List, ptrDP->GetID(), &DetailProduct::GetID);
-		if (ptr == nullptr)
+		delete ptrP;
+		DetailProduct *lptrDP = FindFirstMatch(lptrP->List, ptrDP->GetID(), &DetailProduct::GetID);
+		if (lptrDP == nullptr)
 		{
-			ptrP->AddDetailProduct(ptrDP);
+			lptrP->AddDetailProduct(ptrDP);
 			return true;
 		}
+		else delete ptrDP;
 	}
 	return false;
 }
@@ -79,10 +120,10 @@ void OutputTable(const DList<Product*> & list, std::ostream& out)
 	}
 	const int w = 20;
 	out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
-	out << '|'; mnu::CenterPrint("STT", w, ' ', out);
+	out << '|'; mnu::CenterPrint("ORDINAL NUMBER", w, ' ', out);
 	out << '|'; mnu::CenterPrint("ID", w, ' ', out);
-	out << '|'; mnu::CenterPrint("TEN SAN PHAM", mnu::WIDTH - 5 - 4 * w, ' ', out);
-	out << '|'; mnu::CenterPrint("XUAT XU", 2 * w, ' ', out); out << '|' << '\n';
+	out << '|'; mnu::CenterPrint("PRODUCT 'S NAME", mnu::WIDTH - 5 - 4 * w, ' ', out);
+	out << '|'; mnu::CenterPrint("ORIGIN", 2 * w, ' ', out); out << '|' << '\n';
 	out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
 	const DNode<Product*> *curPtr = list.GetFirstElement();
 	int i = 1;
@@ -100,25 +141,25 @@ void OutputDetail(const Product * ptrP, std::ostream& out)
 {
 	if (ptrP == nullptr)
 	{
-		mnu::PadLeftPrint("Khong tim thay\n",mnu::LEFTSPACE,' ',out);
+		mnu::PadLeftPrint("NOT FOUND\n",mnu::LEFTSPACE,' ',out);
 		return;
 	}
-	out << "ID           :" << ptrP->ID << endl;
-	out << "Ten san pham :" << ptrP->Name << endl;
-	out << "Xuat xu      :" << ptrP->XS << endl;
+	out << "ID              :" << ptrP->ID << endl;
+	out << "Product 's name :" << ptrP->Name << endl;
+	out << "Origin          :" << ptrP->XS << endl;
 	OutputDetailProduct(ptrP->List,out);
 }
 void OutputDetailProduct(const DList<DetailProduct *>& List, std::ostream& out)
 {
-	const int w1 = 13, w2 = (mnu::WIDTH - 8 - 4 * w1) / 3, w3 = mnu::WIDTH - 8 - 4 * w1 - 2 * w2;
+	const int w1 = 15, w2 = (mnu::WIDTH - 8 - 4 * w1) / 3, w3 = mnu::WIDTH - 8 - 4 * w1 - 2 * w2;
 	out << '+'; mnu::DrawLine(mnu::WIDTH - 2,'-',out); out << '+' << '\n';
-	out << '|'; mnu::CenterPrint("STT", w1, ' ', out);
-	out << '|'; mnu::CenterPrint("ID Lo", w1, ' ', out);
-	out << '|'; mnu::CenterPrint("Ngay nhap", w3, ' ', out);
-	out << '|'; mnu::CenterPrint("NSX", w2, ' ', out);
-	out << '|'; mnu::CenterPrint("HSD", w2, ' ', out);
-	out << '|'; mnu::CenterPrint("Gia", w1, ' ', out);
-	out << '|'; mnu::CenterPrint("So luong", w1, ' ', out); out << '|' << '\n';
+	out << '|'; mnu::CenterPrint("ORDINAL NUMBER", w1, ' ', out);
+	out << '|'; mnu::CenterPrint("BATCH ID", w1, ' ', out);
+	out << '|'; mnu::CenterPrint("RECEIPT DAY", w3, ' ', out);
+	out << '|'; mnu::CenterPrint("MFG", w2, ' ', out);
+	out << '|'; mnu::CenterPrint("EXP", w2, ' ', out);
+	out << '|'; mnu::CenterPrint("PRICE", w1, ' ', out);
+	out << '|'; mnu::CenterPrint("QUANTITY", w1, ' ', out); out << '|' << '\n';
 	out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
 	const DNode<DetailProduct *> *curPtr = (List).GetFirstElement();
 	int cnt = 1;
@@ -128,7 +169,7 @@ void OutputDetailProduct(const DList<DetailProduct *>& List, std::ostream& out)
 		{
 			out << '|'; mnu::CenterPrint(String::to_string(cnt), w1, ' ', out);
 			out << '|'; mnu::CenterPrint((curPtr->data)->GetID(), w1, ' ', out);
-			out << '|'; mnu::CenterPrint((curPtr->data)->GetNN().to_string(), w2 + 1, ' ', out);
+			out << '|'; mnu::CenterPrint((curPtr->data)->GetNN().to_string(), w3, ' ', out);
 			out << '|'; mnu::CenterPrint((curPtr->data)->GetNSX().to_string(), w2, ' ', out);
 			out << '|'; mnu::CenterPrint((curPtr->data)->GetHSD().to_string(), w2, ' ', out);
 			out << '|'; mnu::CenterPrint(MoneyFormat(String::to_string((curPtr->data)->GetPrice())), w1, ' ', out);
@@ -140,7 +181,7 @@ void OutputDetailProduct(const DList<DetailProduct *>& List, std::ostream& out)
 	}
 	if (cnt == 1)
 	{
-		out << "|"; mnu::CenterPrint("Danh sach rong", mnu::WIDTH - 2, ' ', out); out << "|\n";
+		out << "|"; mnu::CenterPrint("EMPTY LIST", mnu::WIDTH - 2, ' ', out); out << "|\n";
 		out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
 	}
 }
@@ -183,7 +224,7 @@ void OutputProductFile(const String &fname, const DList<Product*>& List)
 		if (!(ptrP->isDeleted))
 		{
 			out << endl <<  i << endl;
-			OutputDetailProduct(ptrP->List, out);
+			OutputDetail(ptrP, out);
 			i++;
 		}
 		curPtrP = curPtrP->next;

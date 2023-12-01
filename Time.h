@@ -1,6 +1,7 @@
 #ifndef TIME_H
 #define TIME_H
 #include <iostream>
+#include "String.h"
 class Time
 {
 	friend std::istream& operator>>(std::istream&, Time&);
@@ -10,6 +11,7 @@ private:
 	int Hour;
 public:
 	Time(int = 0, int = 0, int = 0);
+	Time(const String&, const String & = ":");
 	~Time();
 	void SetSec(int);
 	void SetMin(int);
