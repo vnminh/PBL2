@@ -4,7 +4,7 @@
 #include <iostream>
 using namespace std;
 DetailProduct::DetailProduct(const String& id, const Date& nn, const Date& nsx, const Date& hsd, const int& price, const int& sl)
-	:ID(id), NN(nn), NSX(nsx), HSD(hsd), Price(price), SL(sl),isDeleted(false), ptrP(nullptr)
+	:ID(id), NN(nn), NSX(nsx), HSD(hsd), SL(sl),isDeleted(false), ptrP(nullptr)
 {
 	if (id.GetLength() != 4)
 	{
@@ -43,10 +43,7 @@ void DetailProduct::AddDetailBill(DetailBill *ptr)
 void DetailProduct::Deduct(const int num)
 {
 	(this->SL) -= num;
-}
-bool DetailProduct::SoldOut() const
-{
-	return (this->SL) <= 0;
+	(this->ptrP)->Deduct(num);
 }
 String DetailProduct::GetID() const
 {
@@ -64,13 +61,13 @@ Date DetailProduct::GetHSD() const
 {
 	return this->HSD;
 }
-int DetailProduct::GetPrice() const
-{
-	return this->Price;
-}
 int DetailProduct::GetSL() const
 {
 	return this->SL;
+}
+int DetailProduct::GetPrice() const
+{
+	return this->ptrP->GetPrice();
 }
 bool DetailProduct::Deleted() const
 {
@@ -84,12 +81,20 @@ String DetailProduct::GetProductID() const
 {
 	return (this->ptrP)->GetID();
 }
+bool DetailProduct::SLWarn() const
+{
+	return this->ptrP->GetSL() <= 10;
+}
+bool DetailProduct::HSDWarn() const
+{
+	return Today() + 7 >= this->HSD;
+}
 void DetailProduct::Delete()
 {
 	this->isDeleted=true;
-	(this->ptrP)->DeleteDP();
+	(this->ptrP)->DeleteDP(this);
 }
 int DetailProduct::Calculate(const int & num) const
 {
-	return num*(this->Price);
+	return num*(this->GetPrice());
 }

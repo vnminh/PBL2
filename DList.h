@@ -23,6 +23,12 @@ class DList
 		friend T* FindFirstMatch(const DList <T*> &, const K&, K(T::*)() const);
 		template <class T, typename K>
 		friend DList< T* > * FindAll(const DList <T*> &, const K&, K(T::*)() const, int&);
+		template <class T, typename K>
+		friend void QuickSort(DNode<T*>*, DNode<T*>*, K(T::*)() const, int);
+		template <class T, typename K>
+		friend DNode<T*>* Partition(DNode<T*>*, DNode<T*>*, K(T::*)() const, int);
+		template <class T>
+		friend void SwapNode(DNode<T*>*, DNode<T*>*);
 		template<class T>
 		friend void ReleaseAll(DList<T*>&);
 	private:

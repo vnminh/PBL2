@@ -160,6 +160,53 @@ DList< T* >* FindAll(const DList <T*> &list, const K &data_lookup, K(T::*ptr)() 
 	}
 	return ptrAnsList;
 }
+template <class T, typename K>
+void QuickSort(DNode<T*> *Left, DNode<T*> *Right, K(T::*ptr)() const, int sign)
+{
+	if (Left == nullptr || Right == nullptr || Left == Right || Left->pre == Right || Right->next == Left) return;
+	else
+	{
+		DNode<T*>* p = Partition(Left, Right, ptr,sign);
+		QuickSort(Left, p->pre, ptr,sign);
+		QuickSort(p->next, Right, ptr,sign);
+	}
+}
+template <class T, typename K>
+DNode<T*>* Partition(DNode<T*> *Left, DNode<T*> *Right, K(T::*ptr)() const, int sign)
+{
+	DNode<T*> *pivot = Right;
+	K pivot_Data = ((pivot->data)->*ptr)();
+	DNode<T*> *cur = Left;
+	DNode<T*> *bound = nullptr;
+	while (cur != Right)
+	{
+		if (((cur->data)->*ptr)()*sign <= pivot_Data*sign)
+		{
+			if (bound != nullptr)
+				bound = bound->next;
+			else bound = Left;
+			SwapNode(bound, cur);
+		}
+		cur = cur->next;
+	}
+	if (bound == nullptr)
+	{
+		SwapNode(Left, pivot);
+		return Left;
+	}
+	else
+	{
+		SwapNode(bound->next, pivot);
+		return bound->next;
+	}
+}
+template <class T>
+void SwapNode(DNode<T*>* a, DNode<T*>* b)
+{
+	T* temp = a->data;
+	a->data = b->data;
+	b->data = temp;
+}
 template<class T>
 void ReleaseAll(DList<T*>&List)
 {

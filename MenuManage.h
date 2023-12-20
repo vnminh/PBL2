@@ -4,6 +4,7 @@
 #include <Windows.h>
 #include <conio.h>
 #include <fstream>
+#include <exception>
 #include "String.h"
 #include "Exception.h"
 #include "Output.h"
@@ -16,7 +17,7 @@ namespace mnu
 		String id_p, name, xs, id_dp;
 		Date nn, nsx, hsd;
 		int calunit,price, sl;
-		const int w = 35;
+		const int w = 47;
 		do
 		{
 			try
@@ -36,14 +37,16 @@ namespace mnu
 		if (ptrP == nullptr)
 		{
 			LeftPrintForInput("Type name of product", w, ' ', cout); fflush(stdin); name.GetLine(cin);
-			LeftPrintForInput("Type the Origin of Product", w, ' ', cout); fflush(stdin); xs.GetLine(cin);
-			ptrP = new Product(id_p, name, xs);
+			LeftPrintForInput("Type the origin of Product", w, ' ', cout); fflush(stdin); xs.GetLine(cin);
+			LeftPrintForInput("Type the cost of Product", w, ' ', cout); cin >> price;			
+			ptrP = new Product(id_p, name, xs,price);
 			List.InsertLast(new DNode<Product*>(ptrP));
 		}
 		else
 		{
 			LeftPrintForInput("Type name of product", w, ' ', cout); cout << ptrP->GetName() << endl;
-			LeftPrintForInput("Type the Origin of Product", w, ' ', cout); cout << ptrP->GetXS() << endl;
+			LeftPrintForInput("Type the origin of Product", w, ' ', cout); cout << ptrP->GetXS() << endl;
+			LeftPrintForInput("Type the cost of Product", w, ' ', cout); cout << ptrP->GetPrice() << endl;
 		}
 		do
 		{
@@ -62,10 +65,9 @@ namespace mnu
 		ptrDP = ptrP->FindDetailProduct(id_dp);
 		if (ptrDP == nullptr)
 		{
-			InputAndCheck("Type the Day of Receipt Product", w, &mnu::LeftPrintForInput, nn);	//ngay nhap san pham
-			InputAndCheck("Type the Manufacturing Date", w, &mnu::LeftPrintForInput, nsx);		//nhap nha san xuat
-			InputAndCheck("Type the Expiration Date", w, &mnu::LeftPrintForInput, hsd);			//nhap han su dung
-			LeftPrintForInput("Type the cost of Product", w, ' ', cout); cin >> price;			//nhap gia sp
+			InputAndCheck("Type the Day of Receipt Product (dd/mm/yyyy)", w, &mnu::LeftPrintForInput, nn);	//ngay nhap san pham
+			InputAndCheck("Type the Manufacturing Date (dd/mm/yyyy)", w, &mnu::LeftPrintForInput, nsx);		//nhap nha san xuat
+			InputAndCheck("Type the Expiration Date (dd/mm/yyyy)", w, &mnu::LeftPrintForInput, hsd);			//nhap han su dung
 			LeftPrintForInput("Type the quantity of Product", w, ' ', cout); cin >> sl;          //nhap so luong hang hoa
 			if (id_p.SubStr(7, 2) == String("01"))
 			{
@@ -106,6 +108,13 @@ namespace mnu
 		return true;
 	}
 	//---------------------------------INPUT PRODUCT--------------------------------------
+	void checkformatfile(char *ptr)
+	{
+		if (!strcmp(ptr,""))
+		{
+			throw Exception("WRONG FORMAT");
+		}
+	}
 	void input(const String &fname, DList<Product*>& List)
 	{
 		ifstream inp;
@@ -115,27 +124,38 @@ namespace mnu
 			throw Exception("FILE NOT EXIST");
 		}
 		Date nn (fname,".");
+		{
+			String temp;
+			temp.GetLine(inp);
+		}// Skip dong dau tien
 		int cnt = 0;
 		while (!inp.eof())
 		{
 			cnt++;
-			String temp;
-			fflush(stdin); temp.GetLine(inp);
-			char *ptr;
-			String id_p = strtok_s(temp, ",", &ptr);
-			String name = strtok_s(nullptr, ",", &ptr);
-			String xs = strtok_s(nullptr, ",", &ptr);
-			String id_dp = strtok_s(nullptr, ",", &ptr);
-			String nsx_str = strtok_s(nullptr, ",", &ptr);
-			String hsd_str = strtok_s(nullptr, ",", &ptr);
-			String price_str = strtok_s(nullptr, ",", &ptr); 
-			int price = atoi(price_str);
-			String sl_str = strtok_s(nullptr, ",", &ptr);
-			int sl = atoi(sl_str);
 			try
 			{
+				String temp;
+				temp.GetLine(inp);
+				char *ptr;
+				String id_p = strtok_s(temp, ",", &ptr);
+				checkformatfile(ptr);
+				String name = strtok_s(nullptr, ",", &ptr);
+				checkformatfile(ptr);
+				String xs = strtok_s(nullptr, ",", &ptr);
+				checkformatfile(ptr);
+				String id_dp = strtok_s(nullptr, ",", &ptr);
+				checkformatfile(ptr);
+				String nsx_str = strtok_s(nullptr, ",", &ptr);
+				checkformatfile(ptr);
+				String hsd_str = strtok_s(nullptr, ",", &ptr);
+				checkformatfile(ptr);
+				String price_str = strtok_s(nullptr, ",", &ptr);
+				int price = atoi(price_str);
+				String sl_str = strtok_s(nullptr, ",", &ptr);
+				int sl = atoi(sl_str);
+				// initialize new product
 				Product *ptrP = nullptr;
-				ptrP = new Product(id_p, name, xs);
+				ptrP = new Product(id_p, name, xs, price);
 				DetailProduct * ptrDP = nullptr;
 				if (id_p.SubStr(7, 2) == String("01"))
 				{
@@ -171,18 +191,24 @@ namespace mnu
 		{
 			throw Exception("FILE NOT EXIST");
 		}
+		{
+			String temp;
+			temp.GetLine(inp);
+		}// Skip dong dau tien
 		int cnt = 0;
 		while (!inp.eof())
 		{
 			cnt++;
-			String temp;
-			fflush(stdin); temp.GetLine(inp);
-			char *ptr;
-			String name = strtok_s(temp, ",", &ptr);
-			String phone_str = strtok_s(nullptr, ",", &ptr);
-			String add = strtok_s(nullptr, ",", &ptr);
-			try
+			try 
 			{
+				String temp;
+				fflush(stdin); temp.GetLine(inp);
+				char *ptr;
+				String name = strtok_s(temp, ",", &ptr);
+				checkformatfile(ptr);
+				String phone_str = strtok_s(nullptr, ",", &ptr);
+				checkformatfile(ptr);
+				String add = strtok_s(nullptr, ",", &ptr);
 				Customer *ptrC = new Customer(name, Phone(phone_str), add);
 				bool check;
 				InsertCustomer(List, ptrC, check);
@@ -205,53 +231,7 @@ namespace mnu
 	//---------------------------------INPUT BILL HIDEN FUNC----------------------------------------
 
 	//--------------------------------
-	//--------------------------------
-	/*void InputBill(const String &fname, DList<Bill*> &BList, DList<Product*> PList, DList<Customer*>CList)
-	{
-		fstream inp;
-		inp.open(fname, ios_base::in);
-		while (!inp.eof())
-		{
-			String temp;
-			temp.GetLine(inp);
-			Date buydate(temp);
-			temp.GetLine(inp);
-			Time buytime(temp);
-			temp.GetLine(inp);
-			Phone phone(temp);
-			String c_name = "", address = "";
-			c_name.GetLine(inp);
-			address.GetLine(inp);
-			Customer* ptrC = nullptr; bool inserted = false;
-			ptrC = InsertCustomer(CList, new Customer(c_name, phone, address), inserted);
-			temp.GetLine(inp);
-			int numOfProduct=atoi(temp);
-			int cnt = 0;
-			int total = 0;
-			Bill *ptrB = new Bill(buydate, buytime);
-			for (int i = 0; i < numOfProduct; i++)
-			{
-				String id_p;
-				id_p.GetLine(inp);
-				String p_id, dp_id;
-				p_id = id_p.SubStr(0, 9);
-				dp_id = id_p.SubStr(9, 4);
-				Product* ptrP = FindFirstMatch(PList, p_id, &Product::GetID);
-				DetailProduct* ptrDP = ptrP->FindDetailProduct(dp_id);
-				temp.GetLine(inp);
-				int sl = atoi(temp);
-				total += ptrDP->Calculate(sl);
-				DetailBill *ptrDB = new DetailBill(ptrDP, sl);
-				ptrDP->Deduct(sl);
-				ptrDP->AddDetailBill(ptrDB);
-				ptrB->AddDetailBill(ptrDB);
-			}
-			ptrB->SetTotal(total);
-			ptrB->SetNumDetailBill(cnt);
-			ptrC->AddBill(ptrB);
-			InsertBill(BList, ptrB);
-		}
-	}*/
+	
 	void InputBill(const String &fname, DList<Bill*> &BList, DList<Product*> &PList, DList<Customer*> &CList)
 	{
 		ifstream f_i(fname);
@@ -360,6 +340,7 @@ namespace mnu
 			choice = 2;
 			return;
 		}
+		ProcessForSort<T>(ptrAns_List_For_Search);
 		PadLeftPrint("Type ordinal number of entry to view its Detail (Type '0' to return) : ", 0, ' ', cout); cin >> choice;
 		if (choice<0 || choice>cnt_Search)
 		{
@@ -410,6 +391,7 @@ namespace mnu
 			choice = 2;
 			return;
 		}
+		ProcessForSort<T>(ptrAns_List_For_Search);
 		PadLeftPrint("Type ordinal number of entry to view its Detail (Type '0' to return) : ", 0,' ',cout); cin >> choice; 
 		if (choice<0 || choice>cnt_Search)
 		{
@@ -460,7 +442,8 @@ namespace mnu
 			choice = 2;
 			return;
 		}
-		PadLeftPrint("Type ordinal number of entry to view its Detail (Type '0' to return) : ", 0, ' ', cout); cin >> choice;
+		ProcessForSort<Product>(ptrAns_List_For_Search);
+		PadLeftPrint("Type ordinal number of entry to view its Detail (Type '0' to return)\n", 0, ' ', cout); cin >> choice;
 		if (choice<0 || choice>cnt_Search)
 		{
 			fflush(stdin);
@@ -533,6 +516,8 @@ namespace mnu
 			ptrAns_List_For_Search = FindAll(List, false, &Customer::Deleted, cnt_Search);
 			search_mnu::stilluse = true;
 		}
+		system("cls");
+		DrawTitle(mnu::SubMenu);
 		OutputTable(*ptrAns_List_For_Search, cout);
 		if (cnt_Search == 0)
 		{
@@ -674,7 +659,15 @@ namespace mnu
 			choice = 0;
 			return;
 		}
-		input(fname, List);
+		try
+		{
+			input(fname, List);
+			CenterPrint("INPUT SUCCESSFULLY",mnu::WIDTH,' ',cout);
+		}
+		catch (Exception &ex)
+		{
+			CenterPrint(ex.What(), mnu::WIDTH, ' ', cout);
+		};
 		Pause();
 		choice = 1;
 	}
@@ -927,7 +920,11 @@ namespace mnu
 			if (inserted)
 			{
 				LeftPrintForInput("Name of Customer", w, ' ', cout); fflush(stdin); c_name.GetLine(cin);
-				LeftPrintForInput("Address of Customer", w, ' ', cout); fflush(stdin); address.GetLine(cin);
+				if (c_name != String(""))
+				{
+					LeftPrintForInput("Address of Customer", w, ' ', cout); fflush(stdin); address.GetLine(cin);
+				}
+				else 
 				ptrC->SetName(c_name);
 				ptrC->SetAddress(address);
 			}
@@ -999,11 +996,14 @@ namespace mnu
 					cout << ex.What()<<endl;
 				}
 			} while (true);
-			total += ptrDP->Calculate(sl);
-			DetailBill *ptrDB = new DetailBill(ptrDP, sl);
-			ptrDP->Deduct(sl);
-			ptrDP->AddDetailBill(ptrDB);
-			ptrB->AddDetailBill(ptrDB);
+			if (sl > 0)
+			{
+				total += ptrDP->Calculate(sl);
+				DetailBill *ptrDB = new DetailBill(ptrDP, sl);
+				ptrDP->Deduct(sl);
+				ptrDP->AddDetailBill(ptrDB);
+				ptrB->AddDetailBill(ptrDB);
+			}
 		} while (true);
 		if (cnt == 0)
 		{

@@ -9,7 +9,7 @@ void mnu::DrawTitle(int type, int w, const String t) // type = 0 1 2 3
 {
 	CenterPrint(t, w,' ',std::cout);
 	std::cout << "\n\n" << '+'; DrawLine(w - 2, '=', std::cout); std::cout << '+' << std::endl;
-	String title[4]{"PRODUCT MANAGEMENT", "CUSTOMER MANAGEMENT", "BILL MANAGEMENT", "BILL CALCULATE"};
+	String title[4]{"PRODUCT MANAGEMENT", "CUSTOMER MANAGEMENT", "BILL MANAGEMENT", "PAYMENT"};
 	int subw = (mnu::WIDTH - 8) / 4;
 	for (int i = 0; i < 4; i++)
 	{
@@ -221,3 +221,42 @@ void mnu::ProcessAfterSearch<Bill>(Bill *ptr)
 template void mnu::ProcessAfterSearch<Product>(Product *);
 template void mnu::ProcessAfterSearch<Customer>(Customer *);
 template void mnu::ProcessAfterSearch<Bill>(Bill *);
+template <class T>
+void mnu::ProcessForSort(DList<T*>*)
+{}
+template <>
+void mnu::ProcessForSort<Product>(DList<Product*>* ptr)
+{
+	do
+	{
+		int choice;
+		PadLeftPrint("1.Sort Product in ASCENDING order of price\n", 0, ' ', std::cout);
+		PadLeftPrint("2.Sort Product in DESCENDING order of price\n", 0, ' ', std::cout);
+		PadLeftPrint("0.Skip\n", 0, ' ', std::cout);
+		while (true)
+		{
+			PadLeftPrint("Type your choice : ", 0, ' ', std::cout); std::cin >> choice;
+			if (choice < 0 || choice>2)
+			{
+				PadLeftPrint("INVALID VALUE\n", 0, ' ', std::cout);
+				continue;
+			}
+			break;
+		}
+		if (choice == 1)
+		{
+			QuickSort<Product,int>(ptr->GetFirstElement(), ptr->GetLastElement(), &Product::GetPrice, 1);
+
+		}
+		else if (choice == 2)
+		{
+			QuickSort<Product, int>(ptr->GetFirstElement(), ptr->GetLastElement(), &Product::GetPrice, -1);
+		}
+		else break;
+		system("cls");
+		DrawTitle(mnu::SubMenu);
+		OutputTable(*ptr, std::cout);
+	} while (true);
+}
+template void mnu::ProcessForSort<Customer>(DList<Customer*>*);
+template void mnu::ProcessForSort<Bill>(DList<Bill*>*);

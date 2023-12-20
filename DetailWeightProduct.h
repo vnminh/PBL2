@@ -8,6 +8,7 @@ public:
 	DetailWeightProduct(const String&, const Date&, const Date&, const Date&, const int&, const int&);
 	~DetailWeightProduct();
 	int Calculate(const int &) const;
+	bool SLWarn() const;
 	static void SetCalUnit(const int &);
 };
 

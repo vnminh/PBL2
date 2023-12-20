@@ -1,7 +1,7 @@
 #include "String.h"
 #include "Exception.h"
 #include <iostream>
-#define MAX 100
+#define MAX 200
 using namespace std;
 String::String()
 	:length(0), ptr(nullptr)
@@ -179,6 +179,7 @@ String String::to_string(int num, int width)
 	char temp[MAX]{};
 	if (num == 0)
 	{
+		if (width == 0) return String("0");
 		for (int i = 0; i < width; i++)
 		{
 			temp[i] = '0';

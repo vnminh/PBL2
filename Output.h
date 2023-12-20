@@ -27,5 +27,7 @@ namespace mnu
 	void CheckID(const String&);
 	template <class T>
 	void ProcessAfterSearch(T *ptr);
+	template <class T>
+	void ProcessForSort(DList<T*>*);
 }
 #endif

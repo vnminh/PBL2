@@ -55,7 +55,7 @@ void Time::SetTime(int s, int m, int h)
 }
 ostream &operator<<(ostream& out, const Time& t)
 {
-	out << setw(2) << setfill('0') << t.Hour << ':' << setw(2) << setfill('0') << t.Min << ':' << t.Sec;
+	out << setw(2) << setfill('0') << t.Hour << ':' << setw(2) << setfill('0') << t.Min << ':' << setw(2) << setfill('0') << t.Sec;
 	return out;
 }
 Time Now()

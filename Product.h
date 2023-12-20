@@ -17,10 +17,12 @@ class Product
 		String Name;
 		String XS;
 		int NumDP;
+		int SL;
+		int Price;
 		bool isDeleted;
 		DList<DetailProduct*> List;
 	public:
-		Product(const String&, const String&, const String&);
+		Product(const String&, const String&, const String&, const int&);
 		~Product();
 		void AddDetailProduct(DetailProduct*);
 		DetailProduct* FindDetailProduct(const String&) const;
@@ -28,9 +30,13 @@ class Product
 		String GetID() const;
 		String GetName() const;
 		String GetXS() const;
+		int GetSL() const;
+		int GetPrice() const;
+		bool SLWarn() const;
 		const DList<DetailProduct*>& GetDPList() const;
+		void Deduct(const int);
 		void Delete();
 		bool Deleted() const;
-		void DeleteDP();
+		void DeleteDP(DetailProduct*);
 };
 #endif

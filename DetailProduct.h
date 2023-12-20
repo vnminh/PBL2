@@ -9,12 +9,11 @@ class DetailBill;
 class DetailProduct
 {
 	friend class Product;
-	private:
+	protected:
 		String ID;
 		Date NN;
 		Date NSX;
 		Date HSD;
-		int Price;
 		int SL;
 		bool isDeleted;
 		Product *ptrP;
@@ -25,17 +24,18 @@ class DetailProduct
 		~DetailProduct();
 		void AddDetailBill(DetailBill *);
 		void Deduct(const int);
-		bool SoldOut() const;
 		String GetID() const;
 		Date GetNN() const;
 		Date GetNSX() const;
 		Date GetHSD() const;
-		int GetPrice() const;
 		int GetSL() const;
+		int GetPrice() const;
 		bool Deleted() const;
 		void Delete();
 		String GetProductName() const;
 		String GetProductID() const;
+		virtual bool SLWarn() const;
+		bool HSDWarn() const;
 		virtual int Calculate(const int&) const;
 		friend class Product;
 };
