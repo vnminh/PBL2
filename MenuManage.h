@@ -24,6 +24,7 @@ namespace mnu
 			{
 				LeftPrintForInput("Type the ID of product", w, ' ', cout); fflush(stdin); id_p.GetLine(cin);
 				if (id_p == String("")) return false;
+				id_p.Upper();
 				CheckID<Product>(id_p);
 				break;
 			}
@@ -37,7 +38,7 @@ namespace mnu
 		if (ptrP == nullptr)
 		{
 			LeftPrintForInput("Type name of product", w, ' ', cout); fflush(stdin); name.GetLine(cin);
-			LeftPrintForInput("Type the origin of Product", w, ' ', cout); fflush(stdin); xs.GetLine(cin);
+			LeftPrintForInput("Type the origin of Product", w, ' ', cout); fflush(stdin); xs.GetLine(cin); xs.Upper();
 			LeftPrintForInput("Type the cost of Product", w, ' ', cout); cin >> price;			
 			ptrP = new Product(id_p, name, xs,price);
 			List.InsertLast(new DNode<Product*>(ptrP));
@@ -46,13 +47,14 @@ namespace mnu
 		{
 			LeftPrintForInput("Type name of product", w, ' ', cout); cout << ptrP->GetName() << endl;
 			LeftPrintForInput("Type the origin of Product", w, ' ', cout); cout << ptrP->GetXS() << endl;
-			LeftPrintForInput("Type the cost of Product", w, ' ', cout); cout << ptrP->GetPrice() << endl;
+			LeftPrintForInput("Type the cost of Product", w, ' ', cout); cout << MoneyFormat(String::to_string(ptrP->GetPrice())) << endl;
 		}
 		do
 		{
 			try
 			{
 				LeftPrintForInput("Type the ID of Batch of Product", w, ' ', cout); fflush(stdin); id_dp.GetLine(cin);	//nhap id lo hang
+				id_dp.Upper();
 				CheckID<DetailProduct>(id_dp);
 				break;
 			}
@@ -68,14 +70,15 @@ namespace mnu
 			InputAndCheck("Type the Day of Receipt Product (dd/mm/yyyy)", w, &mnu::LeftPrintForInput, nn);	//ngay nhap san pham
 			InputAndCheck("Type the Manufacturing Date (dd/mm/yyyy)", w, &mnu::LeftPrintForInput, nsx);		//nhap nha san xuat
 			InputAndCheck("Type the Expiration Date (dd/mm/yyyy)", w, &mnu::LeftPrintForInput, hsd);			//nhap han su dung
-			LeftPrintForInput("Type the quantity of Product", w, ' ', cout); cin >> sl;          //nhap so luong hang hoa
 			if (id_p.SubStr(7, 2) == String("01"))
 			{
-				ptrDP = new DetailWeightProduct(id_dp, nn, nsx, hsd, price, sl);
+				LeftPrintForInput("Type the weight of Product (gam)", w, ' ', cout); cin >> sl;          //nhap khoi luong hang hoa
+				ptrDP = new DetailWeightProduct(id_dp, nn, nsx, hsd, sl);				
 			}
 			else
 			{
-				ptrDP = new DetailProduct(id_dp, nn, nsx, hsd, price, sl);
+				LeftPrintForInput("Type the quantity of Product", w, ' ', cout); cin >> sl;          //nhap so luong hang hoa
+				ptrDP = new DetailProduct(id_dp, nn, nsx, hsd, sl);
 			}
 			ptrP->AddDetailProduct(ptrDP);
 		}
@@ -159,11 +162,11 @@ namespace mnu
 				DetailProduct * ptrDP = nullptr;
 				if (id_p.SubStr(7, 2) == String("01"))
 				{
-					ptrDP = new DetailWeightProduct(id_dp, nn, Date(nsx_str), Date (hsd_str), price, sl);
+					ptrDP = new DetailWeightProduct(id_dp, nn, Date(nsx_str), Date (hsd_str), sl);
 				}
 				else
 				{
-					ptrDP = new DetailProduct(id_dp, nn, Date(nsx_str), Date(hsd_str), price, sl);
+					ptrDP = new DetailProduct(id_dp, nn, Date(nsx_str), Date(hsd_str), sl);
 				}
 
 				if (!InsertProduct(List, ptrP, ptrDP))
@@ -311,6 +314,7 @@ namespace mnu
 						all = true;
 						break;
 					}
+					data_lookup.Upper();
 					CheckID<T>(data_lookup);
 					break;
 				}
@@ -430,7 +434,7 @@ namespace mnu
 			ptrAns_List_For_Search = nullptr;
 			cnt_Search = 0;
 			String data_lookup;
-			PadLeftPrint("Type origin for searching :", mnu::LEFTSPACE, ' ', cout); fflush(stdin); data_lookup.GetLine(cin);
+			PadLeftPrint("Type origin for searching :", mnu::LEFTSPACE, ' ', cout); fflush(stdin); data_lookup.GetLine(cin); data_lookup.Upper();
 			ptrAns_List_For_Search = FindAll(List, data_lookup, &Product::GetXS, cnt_Search);
 			search_mnu::stilluse = true;
 		}
@@ -688,7 +692,7 @@ namespace mnu
 		PadLeftPrint("1.Product Management", mnu::LEFTSPACE, ' ', cout); std::cout << '\n';
 		PadLeftPrint("2.Customer Management", mnu::LEFTSPACE, ' ', cout); std::cout << '\n';
 		PadLeftPrint("3.Bill Management", mnu::LEFTSPACE, ' ', cout); std::cout << '\n';
-		PadLeftPrint("4.Calculate Bill", mnu::LEFTSPACE, ' ', cout); std::cout << '\n';
+		PadLeftPrint("4.PAYMENT", mnu::LEFTSPACE, ' ', cout); std::cout << '\n';
 		PadLeftPrint("0.Quit", mnu::LEFTSPACE, ' ', cout); std::cout << '\n';
 		PadLeftPrint("Type your choice :", mnu::LEFTSPACE, ' ', cout); std::cin >> choice; mnu::SubMenu = choice - 1;
 		if (choice < 0 || choice>4)
@@ -942,6 +946,7 @@ namespace mnu
 			std::cout << "\n\n" << '+'; DrawLine(mnu::WIDTH - 2, '=',cout); std::cout << '+' << "\n\n";
 			String id_p; int sl;
 			LeftPrintForInput("Type the ID of the product", w, ' ', cout); fflush(stdin); id_p.GetLine(cin);
+			id_p.Upper();
 			if (id_p == String("")) break;
 			String p_id, dp_id;
 			if (id_p.GetLength() != 13)
@@ -1035,7 +1040,7 @@ namespace mnu
 	{
 		DrawTitle(mnu::SubMenu);
 		cout << "Type the period of time you want to calculate Revenue\n";
-		int w = 15;
+		int w = 20;
 		Date s, f;
 		InputAndCheck("From date", w, &mnu::LeftPrintForInput, s);
 		InputAndCheck("To date", w, &mnu::LeftPrintForInput, f);
@@ -1043,7 +1048,7 @@ namespace mnu
 		int total_revenue = CalRevenue(List, s, f, AnsList);
 		OutputTable(AnsList,cout);
 		cout << '|'; CenterPrint("TOTAL OF REVENUE", w,' ',cout);
-		cout << '|'; CenterPrint(String::to_string(total_revenue), mnu::WIDTH - 3 - w, ' ', cout); cout << '|' << endl;
+		cout << '|'; CenterPrint(MoneyFormat(String::to_string(total_revenue)), mnu::WIDTH - 3 - w, ' ', cout); cout << '|' << endl;
 		cout << '+'; DrawLine(mnu::WIDTH - 2, '=',cout); cout << '+' << endl;
 		system("pause");
 		choice = 1;

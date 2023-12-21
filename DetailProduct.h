@@ -20,7 +20,7 @@ class DetailProduct
 		DList<DetailBill*> List;
 		void ConnectProduct(Product *);
 	public:
-		DetailProduct(const String&, const Date&, const Date&, const Date&, const int&, const int&);
+		DetailProduct(const String&, const Date&, const Date&, const Date&, const int&);
 		~DetailProduct();
 		void AddDetailBill(DetailBill *);
 		void Deduct(const int);
@@ -37,6 +37,7 @@ class DetailProduct
 		virtual bool SLWarn() const;
 		bool HSDWarn() const;
 		virtual int Calculate(const int&) const;
+		virtual String GetSL_str() const;
 		friend class Product;
 };
 #endif

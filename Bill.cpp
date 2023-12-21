@@ -73,14 +73,10 @@ void OutputDetail(const Bill * ptrB, std::ostream& out)
 		mnu::PadLeftPrint("Khong tim thay\n", mnu::LEFTSPACE,' ',out);
 		return;
 	}
-	out << "ID               : " << ptrB->ID << endl;
-	out << "Name of customer : ";
-	if (ptrB->ptrC != nullptr)
-	{
-		out << (ptrB->ptrC)->GetName();
-	}
-	out << endl;
-	out << "Buy date         : " << ptrB->BuyTime << ' ' << ptrB->BuyDate << endl;
+	out << "ID                : " << ptrB->ID << endl;
+	out << "Name of customer  : " << (ptrB->ptrC)->GetName() << endl;
+	out << "Phone of customer : " << (ptrB->ptrC)->GetPhone() << endl;
+	out << "Buy date          : " << ptrB->BuyTime << ' ' << ptrB->BuyDate << endl;
 	const int w1 = 15;
 	out << '+'; mnu::DrawLine(mnu::WIDTH - 2,'-',out); out << '+' << '\n';
 	out << '|'; mnu::CenterPrint("ORDINAL NUMBER", w1, ' ', out);
@@ -141,7 +137,7 @@ void OutputTable(const DList<Bill*>& list, std::ostream& out)
 		{
 			mnu::DrawLine(mnu::WIDTH - 5 - 4 * w, ' ',out);
 		}
-		out << '|'; mnu::CenterPrint(String::to_string((curPtr->data)->Total), 2 * w, ' ', out); out << '|' << '\n';
+		out << '|'; mnu::CenterPrint(MoneyFormat(String::to_string((curPtr->data)->Total)), 2 * w, ' ', out); out << '|' << '\n';
 		out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
 		curPtr = curPtr->next; i++;
 	}

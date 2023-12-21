@@ -1,8 +1,8 @@
 #include "DetailWeightProduct.h"
 #include "Product.h"
 int DetailWeightProduct::CalUnit = 100;
-DetailWeightProduct::DetailWeightProduct(const String& id, const Date& nn, const Date& nsx, const Date& hsd, const int& price, const int& sl)
-	:DetailProduct(id, nn, nsx, hsd, price, sl)
+DetailWeightProduct::DetailWeightProduct(const String& id, const Date& nn, const Date& nsx, const Date& hsd, const int& sl)
+	:DetailProduct(id, nn, nsx, hsd, sl)
 {}
 DetailWeightProduct::~DetailWeightProduct()
 {}
@@ -17,4 +17,8 @@ bool DetailWeightProduct::SLWarn() const
 void DetailWeightProduct::SetCalUnit(const int &unit)
 {
 	DetailWeightProduct::CalUnit = unit;
+}
+String DetailWeightProduct::GetSL_str() const
+{
+	return String::to_string(this->SL) + String(" gam");
 }

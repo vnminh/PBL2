@@ -17,7 +17,9 @@ Date::Date(const String & s, const String &delim)
 	char *ptr;
 	String d, m, y;
 	d = strtok_s(temp, delim, &ptr);
+	if (!strcmp(ptr, "")) throw Exception("WRONG DATE FORMAT");
 	m = strtok_s(nullptr, delim, &ptr);
+	if (!strcmp(ptr, "")) throw Exception("WRONG DATE FORMAT");
 	y = strtok_s(nullptr, delim, &ptr);
 	d.DeleteFirstSpace();
 	d.DeleteLastSpace();

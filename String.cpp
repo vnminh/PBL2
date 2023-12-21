@@ -150,6 +150,13 @@ void String::Insert(const int &pos, const char &c)
 	this->ptr = new char[this->length + 1];
 	strcpy_s(this->ptr, this->length + 1, temp);
 }
+void String::Upper()
+{
+	for (int i = 0; i < this->length; i++)
+	{
+		(*this)[i] = toupper((*this)[i]);
+	}
+}
 String String::SubStr(const int &pos, const int&len) const
 {
 	char temp[MAX]{};

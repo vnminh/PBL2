@@ -163,7 +163,11 @@ void OutputTable(const DList<Product*> & list, std::ostream& out)
 			out << '|'; mnu::CenterPrint((curPtr->data)->Name, mnu::WIDTH - 5 - 4 * w - 7, ' ', out);
 			out << '|'; mnu::CenterPrint((curPtr->data)->XS, w, ' ', out);
 			out << '|'; mnu::CenterPrint(String::to_string((curPtr->data)->SL), w, ' ', out);
-			out << '|'; mnu::CenterPrint(MoneyFormat(String::to_string((curPtr->data)->Price)), w, ' ', out); out << '|' << '\n';
+			out << '|';
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
+			mnu::CenterPrint(MoneyFormat(String::to_string((curPtr->data)->Price)), w, ' ', out); 
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
+			out << '|' << '\n';
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 		}
 		else
@@ -216,8 +220,11 @@ void OutputDetailProduct(const DList<DetailProduct *>& List, std::ostream& out)
 				out << '|'; mnu::CenterPrint((curPtr->data)->GetID(), w1, ' ', out);
 				out << '|'; mnu::CenterPrint((curPtr->data)->GetNN().to_string(), w3, ' ', out);
 				out << '|'; mnu::CenterPrint((curPtr->data)->GetNSX().to_string(), w2, ' ', out);
-				out << '|'; mnu::CenterPrint((curPtr->data)->GetHSD().to_string(), w2, ' ', out);
-				out << '|'; mnu::CenterPrint(String::to_string((curPtr->data)->GetSL()), w1, ' ', out); out << '|' << '\n';
+				out << '|'; 
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14); 
+				mnu::CenterPrint((curPtr->data)->GetHSD().to_string(), w2, ' ', out);
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
+				out << '|'; mnu::CenterPrint((curPtr->data)->GetSL_str(), w1, ' ', out); out << '|' << '\n';
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 			}
 			else
@@ -227,7 +234,7 @@ void OutputDetailProduct(const DList<DetailProduct *>& List, std::ostream& out)
 				out << '|'; mnu::CenterPrint((curPtr->data)->GetNN().to_string(), w3, ' ', out);
 				out << '|'; mnu::CenterPrint((curPtr->data)->GetNSX().to_string(), w2, ' ', out);
 				out << '|'; mnu::CenterPrint((curPtr->data)->GetHSD().to_string(), w2, ' ', out);
-				out << '|'; mnu::CenterPrint(String::to_string((curPtr->data)->GetSL()), w1, ' ', out); out << '|' << '\n';
+				out << '|'; mnu::CenterPrint((curPtr->data)->GetSL_str(), w1, ' ', out); out << '|' << '\n';
 			}
 			out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
 			cnt++;

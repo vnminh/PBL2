@@ -5,10 +5,11 @@ class DetailWeightProduct :	public DetailProduct
 private:
 	static int CalUnit;
 public:
-	DetailWeightProduct(const String&, const Date&, const Date&, const Date&, const int&, const int&);
+	DetailWeightProduct(const String&, const Date&, const Date&, const Date&, const int&);
 	~DetailWeightProduct();
-	int Calculate(const int &) const;
-	bool SLWarn() const;
+	virtual  int Calculate(const int &) const;
+	virtual bool SLWarn() const;
+	virtual String GetSL_str() const;
 	static void SetCalUnit(const int &);
 };
 

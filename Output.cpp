@@ -172,6 +172,11 @@ template void mnu::CheckID<Bill>(const String&);
 template <class T>
 void mnu::ProcessAfterSearch(T *ptr)
 {
+	if (ptr->GetPhone() == Phone("0000000000"))
+	{
+		system("pause");
+		return;
+	}
 	std::cout << "PRESS d TO DELETE CUSTOMER" << std::endl;
 	char d = _getch();
 	if (d == 'd' || d == 'D')

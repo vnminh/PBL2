@@ -3,7 +3,7 @@
 #include "Exception.h"
 #include <iostream>
 using namespace std;
-DetailProduct::DetailProduct(const String& id, const Date& nn, const Date& nsx, const Date& hsd, const int& price, const int& sl)
+DetailProduct::DetailProduct(const String& id, const Date& nn, const Date& nsx, const Date& hsd, const int& sl)
 	:ID(id), NN(nn), NSX(nsx), HSD(hsd), SL(sl),isDeleted(false), ptrP(nullptr)
 {
 	if (id.GetLength() != 4)
@@ -20,10 +20,6 @@ DetailProduct::DetailProduct(const String& id, const Date& nn, const Date& nsx, 
 		{
 			throw Exception("WRONG FORMAT FOR BATCH ID");
 		}
-	}
-	if (price <= 0)
-	{
-		throw Exception("INVALID VALUE FOR PRICE");
 	}
 	if (sl <= 0)
 	{
@@ -97,4 +93,8 @@ void DetailProduct::Delete()
 int DetailProduct::Calculate(const int & num) const
 {
 	return num*(this->GetPrice());
+}
+String DetailProduct::GetSL_str() const
+{
+	return String::to_string(this->SL);
 }

@@ -29,6 +29,7 @@ class String
 		void DeleteFirstSpace();
 		void DeleteLastSpace();
 		void Insert(const int &, const char&);
+		void Upper();
 		String SubStr(const int&, const int &) const;
 	private:
 		char *ptr;
