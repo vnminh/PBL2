@@ -147,16 +147,11 @@ bool InsertProduct(DList<Product *> &List, Product *ptrP,  DetailProduct *ptrDP 
 }
 void OutputTable(const DList<Product*> & list, std::ostream& out)
 {
-	if (list.GetFirstElement() == nullptr)
-	{
-		mnu::PadLeftPrint("Khong tim thay\n",mnu::LEFTSPACE,' ',out);
-		return;
-	}
-	const int w = 20;
+	const int w = 20, wnum = 5;
 	out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
-	out << '|'; mnu::CenterPrint("NUM", 5, ' ', out);
+	out << '|'; mnu::CenterPrint("NUM", wnum, ' ', out);
 	out << '|'; mnu::CenterPrint("ID", w, ' ', out);
-	out << '|'; mnu::CenterPrint("PRODUCT 'S NAME", mnu::WIDTH - 5 - 4 * w - 7, ' ', out);
+	out << '|'; mnu::CenterPrint("PRODUCT 'S NAME", mnu::WIDTH - wnum - 4 * w - 7, ' ', out);
 	out << '|'; mnu::CenterPrint("ORIGIN", w, ' ', out);
 	out << '|'; mnu::CenterPrint("QUANTITY/WEIGHT", w, ' ', out);
 	out << '|'; mnu::CenterPrint("PRICE", w, ' ', out); out << '|' << '\n';
@@ -168,9 +163,9 @@ void OutputTable(const DList<Product*> & list, std::ostream& out)
 		if (curPtr->data->SLWarn())
 		{
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
-			out << '|'; mnu::CenterPrint(String::to_string(i), 5, ' ', out);
+			out << '|'; mnu::CenterPrint(String::to_string(i), wnum, ' ', out);
 			out << '|'; mnu::CenterPrint((curPtr->data)->ID, w, ' ', out);
-			out << '|'; mnu::CenterPrint((curPtr->data)->Name, mnu::WIDTH - 5 - 4 * w - 7, ' ', out);
+			out << '|'; mnu::CenterPrint((curPtr->data)->Name, mnu::WIDTH - wnum - 4 * w - 7, ' ', out);
 			out << '|'; mnu::CenterPrint((curPtr->data)->XS, w, ' ', out);
 			out << '|';
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
@@ -182,9 +177,9 @@ void OutputTable(const DList<Product*> & list, std::ostream& out)
 		}
 		else
 		{
-			out << '|'; mnu::CenterPrint(String::to_string(i), 5, ' ', out);
+			out << '|'; mnu::CenterPrint(String::to_string(i), wnum, ' ', out);
 			out << '|'; mnu::CenterPrint((curPtr->data)->ID, w, ' ', out);
-			out << '|'; mnu::CenterPrint((curPtr->data)->Name, mnu::WIDTH - 5 - 4 * w - 7, ' ', out);
+			out << '|'; mnu::CenterPrint((curPtr->data)->Name, mnu::WIDTH - wnum - 4 * w - 7, ' ', out);
 			out << '|'; mnu::CenterPrint((curPtr->data)->XS, w, ' ', out);
 			out << '|'; mnu::CenterPrint((curPtr->data)->GetSL_str(), w, ' ', out);
 			out << '|'; mnu::CenterPrint(MoneyFormat(String::to_string((curPtr->data)->Price)), w, ' ', out); out << '|' << '\n';
@@ -192,25 +187,36 @@ void OutputTable(const DList<Product*> & list, std::ostream& out)
 		out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
 		curPtr = curPtr->next; i++;
 	}
+	if (i == 1)
+	{
+		out << "|"; mnu::CenterPrint("EMPTY LIST", mnu::WIDTH - 2, ' ', out); out << "|\n";
+		out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
+	}
 }
 void OutputDetail(const Product * ptrP, std::ostream& out)
 {
 	if (ptrP == nullptr)
 	{
-		mnu::PadLeftPrint("NOT FOUND\n",mnu::LEFTSPACE,' ',out);
-		return;
+		out << "ID              : NOT FOUND" << endl;
+		out << "Product 's name :" << endl;
+		out << "Origin          :" << endl;
+		out << "Price           :" << endl;
+		OutputDetailProduct(DList<DetailProduct *>(), out);
 	}
-	out << "ID              :" << ptrP->ID << endl;
-	out << "Product 's name :" << ptrP->Name << endl;
-	out << "Origin          :" << ptrP->XS << endl;
-	out << "Price           :" << ptrP->Price << endl;
-	OutputDetailProduct(ptrP->List,out);
+	else
+	{
+		out << "ID              :" << ptrP->ID << endl;
+		out << "Product 's name :" << ptrP->Name << endl;
+		out << "Origin          :" << ptrP->XS << endl;
+		out << "Price           :" << ptrP->Price << endl;
+		OutputDetailProduct(ptrP->List, out);
+	}
 }
 void OutputDetailProduct(const DList<DetailProduct *>& List, std::ostream& out)
 {
-	const int w1 = 15, w2 = (mnu::WIDTH - 7 - 3 * w1) / 3, w3 = mnu::WIDTH - 7 - 3 * w1 - 2 * w2;
+	const int w1 = 15, wnum = 5, w2 = (mnu::WIDTH - 7 - wnum - 2 * w1) / 3, w3 = mnu::WIDTH - 7 - wnum - 2 * w1 - 2 * w2;
 	out << '+'; mnu::DrawLine(mnu::WIDTH - 2,'-',out); out << '+' << '\n';
-	out << '|'; mnu::CenterPrint("NUM", w1, ' ', out);
+	out << '|'; mnu::CenterPrint("NUM", wnum, ' ', out);
 	out << '|'; mnu::CenterPrint("BATCH ID", w1, ' ', out);
 	out << '|'; mnu::CenterPrint("RECEIPT DAY", w3, ' ', out);
 	out << '|'; mnu::CenterPrint("MFG", w2, ' ', out);
@@ -226,7 +232,7 @@ void OutputDetailProduct(const DList<DetailProduct *>& List, std::ostream& out)
 			if (curPtr->data->HSDWarn())
 			{
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
-				out << '|'; mnu::CenterPrint(String::to_string(cnt), w1, ' ', out);
+				out << '|'; mnu::CenterPrint(String::to_string(cnt), wnum, ' ', out);
 				out << '|'; mnu::CenterPrint((curPtr->data)->GetID(), w1, ' ', out);
 				out << '|'; mnu::CenterPrint((curPtr->data)->GetNN().to_string(), w3, ' ', out);
 				out << '|'; mnu::CenterPrint((curPtr->data)->GetNSX().to_string(), w2, ' ', out);
@@ -239,8 +245,60 @@ void OutputDetailProduct(const DList<DetailProduct *>& List, std::ostream& out)
 			}
 			else
 			{
-				out << '|'; mnu::CenterPrint(String::to_string(cnt), w1, ' ', out);
+				out << '|'; mnu::CenterPrint(String::to_string(cnt), wnum, ' ', out);
 				out << '|'; mnu::CenterPrint((curPtr->data)->GetID(), w1, ' ', out);
+				out << '|'; mnu::CenterPrint((curPtr->data)->GetNN().to_string(), w3, ' ', out);
+				out << '|'; mnu::CenterPrint((curPtr->data)->GetNSX().to_string(), w2, ' ', out);
+				out << '|'; mnu::CenterPrint((curPtr->data)->GetHSD().to_string(), w2, ' ', out);
+				out << '|'; mnu::CenterPrint((curPtr->data)->GetSL_str(), w1, ' ', out); out << '|' << '\n';
+			}
+			out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
+			cnt++;
+		}
+		curPtr = curPtr->next;
+	}
+	if (cnt == 1)
+	{
+		out << "|"; mnu::CenterPrint("EMPTY LIST", mnu::WIDTH - 2, ' ', out); out << "|\n";
+		out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
+	}
+}
+void OutputExpiredDetailProduct(const DList<DetailProduct *>& List, std::ostream& out)
+{
+	const int w1 = 20, wnum = 5, w2 = (mnu::WIDTH - 7 - wnum - 2 * w1) / 3, w3 = mnu::WIDTH - 7 - wnum - 2 * w1 - 2 * w2;
+	out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
+	out << '|'; mnu::CenterPrint("NUM", wnum, ' ', out);
+	out << '|'; mnu::CenterPrint("DETAIL PRODUCT ID", w1, ' ', out);
+	out << '|'; mnu::CenterPrint("RECEIPT DAY", w3, ' ', out);
+	out << '|'; mnu::CenterPrint("MFG", w2, ' ', out);
+	out << '|'; mnu::CenterPrint("EXP", w2, ' ', out);
+	out << '|'; mnu::CenterPrint("QUANTITY", w1, ' ', out); out << '|' << '\n';
+	out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
+	const DNode<DetailProduct *> *curPtr = (List).GetFirstElement();
+	int cnt = 1;
+	while (curPtr != nullptr)
+	{
+		if (!((curPtr->data)->Deleted)())
+		{
+			String ID = curPtr->data->GetProductID() + curPtr->data->GetID();
+			if (curPtr->data->HSDWarn())
+			{
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
+				out << '|'; mnu::CenterPrint(String::to_string(cnt), wnum, ' ', out);
+				out << '|'; mnu::CenterPrint(ID, w1, ' ', out);
+				out << '|'; mnu::CenterPrint((curPtr->data)->GetNN().to_string(), w3, ' ', out);
+				out << '|'; mnu::CenterPrint((curPtr->data)->GetNSX().to_string(), w2, ' ', out);
+				out << '|';
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
+				mnu::CenterPrint((curPtr->data)->GetHSD().to_string(), w2, ' ', out);
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
+				out << '|'; mnu::CenterPrint((curPtr->data)->GetSL_str(), w1, ' ', out); out << '|' << '\n';
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+			}
+			else
+			{
+				out << '|'; mnu::CenterPrint(String::to_string(cnt), wnum, ' ', out);
+				out << '|'; mnu::CenterPrint(ID, w1, ' ', out);
 				out << '|'; mnu::CenterPrint((curPtr->data)->GetNN().to_string(), w3, ' ', out);
 				out << '|'; mnu::CenterPrint((curPtr->data)->GetNSX().to_string(), w2, ' ', out);
 				out << '|'; mnu::CenterPrint((curPtr->data)->GetHSD().to_string(), w2, ' ', out);

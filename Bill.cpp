@@ -86,76 +86,97 @@ void OutputDetail(const Bill * ptrB, std::ostream& out)
 {
 	if (ptrB == nullptr)
 	{
-		mnu::PadLeftPrint("Khong tim thay\n", mnu::LEFTSPACE,' ',out);
-		return;
+		out << "ID                : NOT FOUND" << endl;
+		out << "Name of customer  : " << endl;
+		out << "Phone of customer : " << endl;
+		out << "Buy date          : " << endl;
 	}
-	out << "ID                : " << ptrB->ID << endl;
-	out << "Name of customer  : " << (ptrB->ptrC)->GetName() << endl;
-	out << "Phone of customer : " << (ptrB->ptrC)->GetPhone() << endl;
-	out << "Buy date          : " << ptrB->BuyTime << ' ' << ptrB->BuyDate << endl;
+	else
+	{
+		out << "ID                : " << ptrB->ID << endl;
+		out << "Name of customer  : " << (ptrB->ptrC)->GetName() << endl;
+		out << "Phone of customer : " << (ptrB->ptrC)->GetPhone() << endl;
+		out << "Buy date          : " << ptrB->BuyTime << ' ' << ptrB->BuyDate << endl;
+	}
 	const int w1 = 15;
 	out << '+'; mnu::DrawLine(mnu::WIDTH - 2,'-',out); out << '+' << '\n';
-	out << '|'; mnu::CenterPrint("ORDINAL NUMBER", w1, ' ', out);
+	out << '|'; mnu::CenterPrint("NUM", 5, ' ', out);
 	out << '|'; mnu::CenterPrint("PRODUCT ID", w1, ' ', out);
-	out << '|'; mnu::CenterPrint("NAME", mnu::WIDTH - 5 * w1 - 7, ' ', out);
+	out << '|'; mnu::CenterPrint("NAME", mnu::WIDTH - 5 - 4 * w1 - 7 , ' ', out);
 	out << '|'; mnu::CenterPrint("UNIT PRICE", w1, ' ', out);
 	out << '|'; mnu::CenterPrint("QUANTITY/WEIGHT", w1, ' ', out);
 	out << '|'; mnu::CenterPrint("TOTAL", w1, ' ', out); out << '|' << '\n';
 	out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
-	const DNode<DetailBill *> *curPtr = (ptrB->List).GetFirstElement();
 	int cnt = 1;
-	while (curPtr != nullptr)
+	if (ptrB != nullptr)
 	{
-		out << '|'; mnu::CenterPrint(String::to_string(cnt), w1, ' ', out);
-		out << '|'; mnu::CenterPrint((curPtr->data)->GetIDDetailProduct(), w1, ' ', out);
-		out << '|'; mnu::CenterPrint((curPtr->data)->GetNameProduct(), mnu::WIDTH - 5 * w1 - 7, ' ', out);
-		out << '|'; mnu::CenterPrint(MoneyFormat(String::to_string((curPtr->data)->GetPrice())), w1, ' ', out);
-		out << '|'; mnu::CenterPrint(String::to_string((curPtr->data)->GetSL()), w1, ' ', out);
-		out << '|'; mnu::CenterPrint(MoneyFormat(String::to_string((curPtr->data)->Pay())), w1, ' ', out); out << '|' << '\n';
-		out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
-		curPtr = curPtr->next;
-		cnt++;
+		const DNode<DetailBill *> *curPtr = (ptrB->List).GetFirstElement();
+		while (curPtr != nullptr)
+		{
+			out << '|'; mnu::CenterPrint(String::to_string(cnt), 5, ' ', out);
+			out << '|'; mnu::CenterPrint((curPtr->data)->GetIDDetailProduct(), w1, ' ', out);
+			out << '|'; mnu::CenterPrint((curPtr->data)->GetNameProduct(), mnu::WIDTH - 5 - 4 * w1 - 7, ' ', out);
+			out << '|'; mnu::CenterPrint(MoneyFormat(String::to_string((curPtr->data)->GetPrice())), w1, ' ', out);
+			out << '|'; mnu::CenterPrint(String::to_string((curPtr->data)->GetSL()), w1, ' ', out);
+			out << '|'; mnu::CenterPrint(MoneyFormat(String::to_string((curPtr->data)->Pay())), w1, ' ', out); out << '|' << '\n';
+			out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
+			curPtr = curPtr->next;
+			cnt++;
+		}
+		if (cnt != 1)
+		{
+			out << '|'; mnu::DrawLine(5, ' ', out);
+			out << '|'; mnu::DrawLine(w1, ' ', out);
+			out << '|'; mnu::DrawLine(mnu::WIDTH - 5 - 4 * w1 - 7, ' ', out);
+			out << '|'; mnu::DrawLine(w1, ' ', out);
+			out << '|'; mnu::DrawLine(w1, ' ', out);
+			out << '|'; mnu::CenterPrint(MoneyFormat(String::to_string(ptrB->Total)), w1, ' ', out); out << '|' << '\n';
+			out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
+		}
+		else
+		{
+			out << "|"; mnu::CenterPrint("EMPTY LIST", mnu::WIDTH - 2, ' ', out); out << "|\n";
+			out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
+		}
 	}
-	out << '|'; mnu::DrawLine(w1, ' ',out);
-	out << '|'; mnu::DrawLine(w1, ' ',out);
-	out << '|'; mnu::DrawLine(mnu::WIDTH - 5 * w1 - 7, ' ',out);
-	out << '|'; mnu::DrawLine(w1, ' ',out);
-	out << '|'; mnu::DrawLine(w1, ' ',out);
-	out << '|'; mnu::CenterPrint(MoneyFormat(String::to_string(ptrB->Total)), w1, ' ', out); out << '|' << '\n';
-	out << '+'; mnu::DrawLine(mnu::WIDTH - 2,'-',out); out << '+' << '\n';
+	else
+	{
+		out << "|"; mnu::CenterPrint("EMPTY LIST", mnu::WIDTH - 2, ' ', out); out << "|\n";
+		out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
+	}
 }
 void OutputTable(const DList<Bill*>& list, std::ostream& out)
 {
-	if (list.GetFirstElement() == nullptr)
-	{
-		mnu::PadLeftPrint("NOT FOUND\n",mnu::LEFTSPACE,' ',out);
-		return;
-	}
 	const int w = 15;
 	out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
-	out << '|'; mnu::CenterPrint("ORDINAL NUMBER", w, ' ', out);
+	out << '|'; mnu::CenterPrint("NUM", 5, ' ', out);
 	out << '|'; mnu::CenterPrint("BILL ID", w, ' ', out);
-	out << '|'; mnu::CenterPrint("CUSTOMER 'S NAME", mnu::WIDTH - 5 - 4 * w, ' ', out);
+	out << '|'; mnu::CenterPrint("CUSTOMER 'S NAME", mnu::WIDTH - 5 - 3 * w - 5, ' ', out);
 	out << '|'; mnu::CenterPrint("TOTAL", 2 * w, ' ', out); out << '|' << '\n';
 	out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
 	const DNode<Bill*> *curPtr = list.GetFirstElement();
 	int i = 1;
 	while (curPtr != nullptr)
 	{
-		out << '|'; mnu::CenterPrint(String::to_string(i), w, ' ', out);
+		out << '|'; mnu::CenterPrint(String::to_string(i), 5, ' ', out);
 		out << '|'; mnu::CenterPrint((curPtr->data)->ID, w, ' ', out);
 		out << '|';
 		if ((curPtr->data)->ptrC != nullptr)
 		{
-			mnu::CenterPrint(((curPtr->data)->ptrC)->GetName(), mnu::WIDTH - 5 - 4 * w, ' ', out);
+			mnu::CenterPrint(((curPtr->data)->ptrC)->GetName(), mnu::WIDTH - 5 - 3 * w - 5, ' ', out);
 		}
 		else
 		{
-			mnu::DrawLine(mnu::WIDTH - 5 - 4 * w, ' ',out);
+			mnu::DrawLine(mnu::WIDTH - 5 - 3 * w - 5, ' ',out);
 		}
 		out << '|'; mnu::CenterPrint(MoneyFormat(String::to_string((curPtr->data)->Total)), 2 * w, ' ', out); out << '|' << '\n';
 		out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
 		curPtr = curPtr->next; i++;
+	}
+	if (i == 1)
+	{
+		out << "|"; mnu::CenterPrint("EMPTY LIST", mnu::WIDTH - 2, ' ', out); out << "|\n";
+		out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
 	}
 }
 int CalRevenue(const DList<Bill*>& List, const Date &begin, const Date &end, DList<Bill*> &AnsList)

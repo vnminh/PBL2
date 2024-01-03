@@ -236,6 +236,7 @@ void mnu::ProcessForSort(DList<T*>*)
 template <>
 void mnu::ProcessForSort<Product>(DList<Product*>* ptr)
 {
+	int order = -1;
 	do
 	{
 		int choice;
@@ -254,12 +255,20 @@ void mnu::ProcessForSort<Product>(DList<Product*>* ptr)
 		}
 		if (choice == 1)
 		{
-			QuickSort<Product,int>(ptr->GetFirstElement(), ptr->GetLastElement(), &Product::GetPrice, 1);
+			if (choice != order)
+			{
+				QuickSort<Product, int>(ptr->GetFirstElement(), ptr->GetLastElement(), &Product::GetPrice, 1);
+				order = choice;
+			}
 
 		}
 		else if (choice == 2)
 		{
-			QuickSort<Product, int>(ptr->GetFirstElement(), ptr->GetLastElement(), &Product::GetPrice, -1);
+			if (choice != order)
+			{
+				QuickSort<Product, int>(ptr->GetFirstElement(), ptr->GetLastElement(), &Product::GetPrice, -1);
+				order = choice;
+			}
 		}
 		else break;
 		system("cls");

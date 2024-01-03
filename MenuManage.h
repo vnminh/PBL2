@@ -328,7 +328,10 @@ namespace mnu
 			{
 				T *ptr = FindFirstMatch(List, data_lookup, &T::GetID);
 				OutputDetail(ptr, cout);
-				ProcessAfterSearch<T>(ptr);
+				if (ptr != nullptr)
+				{
+					ProcessAfterSearch<T>(ptr);
+				}
 				choice = 2;
 				system("pause");
 				return;
@@ -512,7 +515,10 @@ namespace mnu
 				DrawTitle(mnu::SubMenu);
 				Customer *ptr = FindFirstMatch(List, phone, &Customer::GetPhone);
 				OutputDetail(ptr, cout);
-				ProcessAfterSearch<Customer>(ptr);
+				if (ptr != nullptr)
+				{
+					ProcessAfterSearch<Customer>(ptr);
+				}
 				choice = 2;
 				system("pause");
 				return;
@@ -720,7 +726,7 @@ namespace mnu
 			}
 			ptrAnsList = OutOfExpiration(List, day);
 		}
-		OutputDetailProduct(*ptrAnsList,cout);
+		OutputExpiredDetailProduct(*ptrAnsList,cout);
 		if (ptrAnsList->GetFirstElement() == nullptr)
 		{
 			Sleep(mnu::WAIT);
@@ -879,29 +885,32 @@ namespace mnu
 		DrawTitle(mnu::SubMenu);
 		switch (choice)
 		{
-		case 1:
-		{
-			String update_info;
-			cout << "Type the new name : ";
-			fflush(stdin); update_info.GetLine(cin);
-			ptrC->SetName(update_info);
-			break;
-		}
-		case 2:
-		{
-			Phone update_info;
-			InputAndCheck("Type the new phone number : ", 0, &mnu::LeftPrint, update_info);
-			ptrC->SetPhone(update_info);
-			break;
-		}
-		case 3:
-		{
-			String update_info;
-			cout << "Type the new address : ";
-			fflush(stdin); update_info.GetLine(cin);
-			ptrC->SetAddress(update_info);
-			break;
-		}
+			case 1:
+			{
+				String update_info;
+				cout << "Type the new name : ";
+				fflush(stdin); update_info.GetLine(cin);
+				if (update_info != String(""))
+					ptrC->SetName(update_info);
+				break;
+			}
+			case 2:
+			{
+				Phone update_info;
+				InputAndCheck("Type the new phone number : ", 0, &mnu::LeftPrint, update_info);
+				if (update_info != Phone("0000000000"))
+					ptrC->SetPhone(update_info);
+				break;
+			}
+			case 3:
+			{
+				String update_info;
+				cout << "Type the new address : ";
+				fflush(stdin); update_info.GetLine(cin);
+				if (update_info != String(""))
+					ptrC->SetAddress(update_info);
+				break;
+			}
 		}
 		choice = 1;
 	}

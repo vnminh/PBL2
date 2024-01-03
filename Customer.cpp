@@ -79,18 +79,13 @@ Customer* InsertCustomer(DList<Customer *>& list, Customer *ptrC, bool &check)
 }
 void OutputTable(const DList<Customer*> & list, std::ostream& out)
 {
-	if (list.GetFirstElement() == nullptr)
-	{
-		mnu::PadLeftPrint("NOT FOUND\n",mnu::LEFTSPACE,' ',out);
-		return;
-	}
-	const int w = 15;
+	const int w = 15, wnum = 5;
 	out << '+'; mnu::DrawLine(mnu::WIDTH - 2,'-',out); out << '+' << '\n';
-	out << '|'; mnu::CenterPrint("ORDINAL NUMBER", w,' ',out);
+	out << '|'; mnu::CenterPrint("NUM", wnum,' ',out);
 	out << '|'; mnu::CenterPrint("ID", w,' ',out);
-	out << '|'; mnu::CenterPrint("CUSTOMER 'S NAME", floor((mnu::WIDTH - 6 - 2 * w - (w + 2))*1.0 / 2),' ',out);
+	out << '|'; mnu::CenterPrint("CUSTOMER 'S NAME", floor((mnu::WIDTH - 6 - wnum - w - (w + 2))*1.0 / 2), ' ', out);
 	out << '|'; mnu::CenterPrint("PHONE NUMBER", w + 2,' ',out);
-	out << '|'; mnu::CenterPrint("ADDRESS", ceil((mnu::WIDTH - 6 - 2 * w - (w + 2))*1.0 / 2),' ',out);out << '|' << '\n';
+	out << '|'; mnu::CenterPrint("ADDRESS", ceil((mnu::WIDTH - 6 - wnum - w - (w + 2))*1.0 / 2), ' ', out); out << '|' << '\n';
 	out << '+'; mnu::DrawLine(mnu::WIDTH - 2,'-',out); out << '+' << '\n';
 	const DNode<Customer*> *curPtr = list.GetFirstElement();
 	int i = 1;
@@ -98,53 +93,72 @@ void OutputTable(const DList<Customer*> & list, std::ostream& out)
 	{
 		if (!((curPtr->data)->isDeleted))
 		{
-			out << '|'; mnu::CenterPrint(String::to_string(i), w, ' ', out);
+			out << '|'; mnu::CenterPrint(String::to_string(i), wnum, ' ', out);
 			out << '|'; mnu::CenterPrint((curPtr->data)->ID, w, ' ', out);
-			out << '|'; mnu::CenterPrint((curPtr->data)->Name, floor((mnu::WIDTH - 6 - 2 * w - (w + 2))*1.0 / 2), ' ', out);
+			out << '|'; mnu::CenterPrint((curPtr->data)->Name, floor((mnu::WIDTH - 6 - wnum - w - (w + 2))*1.0 / 2), ' ', out);
 			out << '|'; mnu::CenterPrint(((curPtr->data)->PhoneNumber).to_string(), w + 2, ' ', out);
-			out << '|'; mnu::CenterPrint((curPtr->data)->Address, ceil((mnu::WIDTH - 6 - 2 * w - (w + 2))*1.0 / 2), ' ', out); out << '|' << '\n';
+			out << '|'; mnu::CenterPrint((curPtr->data)->Address, ceil((mnu::WIDTH - 6 - wnum - w - (w + 2))*1.0 / 2), ' ', out); out << '|' << '\n';
 			out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
 			i++;
 		}
 		curPtr = curPtr->next; 
+	}
+	if (i == 1)
+	{
+		out << "|"; mnu::CenterPrint("EMPTY LIST", mnu::WIDTH - 2, ' ', out); out << "|\n";
+		out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
 	}
 }
 void OutputDetail(Customer * ptrC, std::ostream& out)
 {
 	if (ptrC == nullptr)
 	{
-		mnu::PadLeftPrint("Khong tim thay khach hang\n",mnu::LEFTSPACE,' ',out);
-		return;
+		out << "ID               : NOT FOUND" << endl;
+		out << "Customer 's name : " << endl;
+		out << "Phone number     : " << endl;
+		out << "Address          : " << endl;
 	}
-	out << "ID               : " << ptrC->ID << endl;
-	out << "Customer 's name : " << ptrC->Name << endl;
-	out << "Phone number     : " << ptrC->PhoneNumber << endl;
-	out << "Address          : " << ptrC->Address << endl;
-	const int w1 = 15;
+	else
+	{
+		out << "ID               : " << ptrC->ID << endl;
+		out << "Customer 's name : " << ptrC->Name << endl;
+		out << "Phone number     : " << ptrC->PhoneNumber << endl;
+		out << "Address          : " << ptrC->Address << endl;
+	}
+	const int w1 = 15, wnum = 5;
 	out << '+'; mnu::DrawLine(mnu::WIDTH - 2,'-',out); out << '+' << '\n';
-	out << '|'; mnu::CenterPrint("ORDINAL NUMBER", w1,' ',out);
+	out << '|'; mnu::CenterPrint("NUM", wnum, ' ', out);
 	out << '|'; mnu::CenterPrint("BILL ID", w1,' ', out);
-	out << '|'; mnu::CenterPrint("BUY DATE", floorl((mnu::WIDTH - 5 - 2 * w1)*1.0 / 2), ' ', out);
-	out << '|'; mnu::CenterPrint("TOTAL", ceill((mnu::WIDTH - 5 - 2 * w1)*1.0 / 2), ' ', out); out << '|' << '\n';
+	out << '|'; mnu::CenterPrint("BUY DATE", floorl((mnu::WIDTH - 5 - wnum - w1)*1.0 / 2), ' ', out);
+	out << '|'; mnu::CenterPrint("TOTAL", ceill((mnu::WIDTH - 5 - wnum - w1)*1.0 / 2), ' ', out); out << '|' << '\n';
 	out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
-	const DNode<Bill *> *curPtr = (ptrC->List).GetFirstElement();
+
 	int cnt = 1;
-	while (curPtr != nullptr)
+	if (ptrC != nullptr)
 	{
-		if (!((curPtr->data)->Deleted()))
+		const DNode<Bill *> *curPtr = (ptrC->List).GetFirstElement();
+		while (curPtr != nullptr)
 		{
-			out << '|'; mnu::CenterPrint(String::to_string(cnt), w1, ' ', out);
-			out << '|'; mnu::CenterPrint((curPtr->data)->GetID(), w1, ' ', out);
-			out << '|'; mnu::CenterPrint(((curPtr->data)->GetBuyDate()).to_string(), floorl((mnu::WIDTH - 5 - 2 * w1)*1.0 / 2), ' ', out);
-			out << '|'; mnu::CenterPrint(MoneyFormat(String::to_string((curPtr->data)->GetTotal())), ceill((mnu::WIDTH - 5 - 2 * w1)*1.0 / 2), ' ', out); out << '|' << '\n';
-			out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
-			cnt++;
+			if (!((curPtr->data)->Deleted()))
+			{
+				out << '|'; mnu::CenterPrint(String::to_string(cnt), wnum, ' ', out);
+				out << '|'; mnu::CenterPrint((curPtr->data)->GetID(), w1, ' ', out);
+				out << '|'; mnu::CenterPrint(((curPtr->data)->GetBuyDate()).to_string(), floorl((mnu::WIDTH - 5 - wnum - w1)*1.0 / 2), ' ', out);
+				out << '|'; mnu::CenterPrint(MoneyFormat(String::to_string((curPtr->data)->GetTotal())), ceill((mnu::WIDTH - 5 - wnum - w1)*1.0 / 2), ' ', out); out << '|' << '\n';
+				out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
+				cnt++;
+			}
+			curPtr = curPtr->next;
 		}
-		curPtr = curPtr->next;
+		if (cnt == 1)
+		{
+			out << "|"; mnu::CenterPrint("Customer have not had any bill yet", mnu::WIDTH - 2, ' ', out); out << "|\n";
+			out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
+		}
 	}
-	if (cnt == 1)
+	else
 	{
-		out << "|"; mnu::CenterPrint("Customer have not had any bill yet", mnu::WIDTH - 2, ' ', out); out << "|\n";
+		out << "|"; mnu::CenterPrint("EMPTY LIST", mnu::WIDTH - 2, ' ', out); out << "|\n";
 		out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';
 	}
 }

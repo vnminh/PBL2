@@ -12,6 +12,7 @@ class Product
 	friend void OutputDetail(const Product *, std::ostream&);
 	friend bool InsertProduct(DList<Product *> &, Product *, DetailProduct *);
 	friend void OutputDetailProduct(const DList<DetailProduct *>&, std::ostream&);
+	friend void OutputExpiredDetailProduct(const DList<DetailProduct *>&, std::ostream&);
 	private:
 		String ID;
 		String Name;
