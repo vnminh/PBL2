@@ -62,6 +62,22 @@ void Bill::Delete()
 {
 	this->isDeleted = true;
 }
+void Bill::Cancel()
+{
+	ReleaseAll(this->List);
+	(this->ptrC)->CancelCurrentBill();
+}
+void Bill::Confirm()
+{
+	DNode<DetailBill *> * curPtr = (this->List).GetFirstElement();
+	while (curPtr != nullptr)
+	{
+		DetailBill * ptrDB = curPtr->data; 
+		(ptrDB->ptrDP)->Deduct(ptrDB->SL);
+		(ptrDB->ptrDP)->AddDetailBill(ptrDB);
+		curPtr = curPtr->next;
+	}
+}
 void InsertBill(DList<Bill*> &BList, Bill * ptr)
 {
 	BList.InsertLast(new DNode<Bill*>(ptr));

@@ -30,6 +30,7 @@ public:
 	void SetPhone(const Phone &);
 	void SetName(const String &);
 	void SetAddress(const String&);
+	void CancelCurrentBill();
 	void Delete();
 };
 #endif

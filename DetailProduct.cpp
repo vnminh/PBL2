@@ -41,6 +41,11 @@ void DetailProduct::Deduct(const int num)
 	(this->SL) -= num;
 	(this->ptrP)->Deduct(num);
 }
+void DetailProduct::Add(const int num)
+{
+	(this->SL) += num;
+	(this->ptrP)->Add(num);
+}
 String DetailProduct::GetID() const
 {
 	return this->ID;
@@ -97,4 +102,8 @@ int DetailProduct::Calculate(const int & num) const
 String DetailProduct::GetSL_str() const
 {
 	return String::to_string(this->SL);
+}
+String DetailProduct::GetDonVi() const
+{
+	return String("");
 }

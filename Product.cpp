@@ -73,6 +73,12 @@ String Product::GetXS() const
 {
 	return this->XS;
 }
+String Product::GetSL_str() const
+{
+	String donvi = (this->List).GetFirstElement()->data->GetDonVi();
+	if (donvi == String("")) return String::to_string(this->SL);
+	else return String::to_string(this->SL) + String(" ") + donvi;
+}
 int Product::GetSL() const
 {
 	return this->SL;
@@ -93,6 +99,10 @@ const DList<DetailProduct*>& Product::GetDPList() const
 void Product::Deduct(const int sl)
 {
 	this->SL -= sl;
+}
+void Product::Add(const int sl)
+{
+	this->SL += sl;
 }
 void Product::Delete()
 {
@@ -162,12 +172,12 @@ void OutputTable(const DList<Product*> & list, std::ostream& out)
 			out << '|'; mnu::CenterPrint((curPtr->data)->ID, w, ' ', out);
 			out << '|'; mnu::CenterPrint((curPtr->data)->Name, mnu::WIDTH - 5 - 4 * w - 7, ' ', out);
 			out << '|'; mnu::CenterPrint((curPtr->data)->XS, w, ' ', out);
-			out << '|'; mnu::CenterPrint(String::to_string((curPtr->data)->SL), w, ' ', out);
 			out << '|';
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
-			mnu::CenterPrint(MoneyFormat(String::to_string((curPtr->data)->Price)), w, ' ', out); 
+			mnu::CenterPrint((curPtr->data)->GetSL_str(), w, ' ', out);
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
-			out << '|' << '\n';
+			out << '|';
+			mnu::CenterPrint(MoneyFormat(String::to_string((curPtr->data)->Price)), w, ' ', out); out << '|' << '\n';
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 		}
 		else
@@ -176,7 +186,7 @@ void OutputTable(const DList<Product*> & list, std::ostream& out)
 			out << '|'; mnu::CenterPrint((curPtr->data)->ID, w, ' ', out);
 			out << '|'; mnu::CenterPrint((curPtr->data)->Name, mnu::WIDTH - 5 - 4 * w - 7, ' ', out);
 			out << '|'; mnu::CenterPrint((curPtr->data)->XS, w, ' ', out);
-			out << '|'; mnu::CenterPrint(String::to_string((curPtr->data)->SL), w, ' ', out);
+			out << '|'; mnu::CenterPrint((curPtr->data)->GetSL_str(), w, ' ', out);
 			out << '|'; mnu::CenterPrint(MoneyFormat(String::to_string((curPtr->data)->Price)), w, ' ', out); out << '|' << '\n';
 		}
 		out << '+'; mnu::DrawLine(mnu::WIDTH - 2, '-', out); out << '+' << '\n';

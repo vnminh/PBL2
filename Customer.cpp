@@ -53,6 +53,10 @@ void Customer::SetPhone(const Phone &phone)
 {
 	this->PhoneNumber = phone;
 }
+void Customer::CancelCurrentBill()
+{
+	(this->List).RemoveLast();
+}
 void Customer::Delete()
 {
 	this->isDeleted = true;

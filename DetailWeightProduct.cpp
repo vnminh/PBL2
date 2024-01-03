@@ -22,3 +22,7 @@ String DetailWeightProduct::GetSL_str() const
 {
 	return String::to_string(this->SL) + String(" gam");
 }
+String DetailWeightProduct::GetDonVi() const
+{
+	return String("gam");
+}

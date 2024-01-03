@@ -692,7 +692,7 @@ namespace mnu
 		PadLeftPrint("1.Product Management", mnu::LEFTSPACE, ' ', cout); std::cout << '\n';
 		PadLeftPrint("2.Customer Management", mnu::LEFTSPACE, ' ', cout); std::cout << '\n';
 		PadLeftPrint("3.Bill Management", mnu::LEFTSPACE, ' ', cout); std::cout << '\n';
-		PadLeftPrint("4.PAYMENT", mnu::LEFTSPACE, ' ', cout); std::cout << '\n';
+		PadLeftPrint("4.Payment", mnu::LEFTSPACE, ' ', cout); std::cout << '\n';
 		PadLeftPrint("0.Quit", mnu::LEFTSPACE, ' ', cout); std::cout << '\n';
 		PadLeftPrint("Type your choice :", mnu::LEFTSPACE, ' ', cout); std::cin >> choice; mnu::SubMenu = choice - 1;
 		if (choice < 0 || choice>4)
@@ -1005,8 +1005,8 @@ namespace mnu
 			{
 				total += ptrDP->Calculate(sl);
 				DetailBill *ptrDB = new DetailBill(ptrDP, sl);
-				ptrDP->Deduct(sl);
-				ptrDP->AddDetailBill(ptrDB);
+				//ptrDP->Deduct(sl);
+				//ptrDP->AddDetailBill(ptrDB);
 				ptrB->AddDetailBill(ptrDB);
 			}
 		} while (true);
@@ -1023,15 +1023,26 @@ namespace mnu
 		ptrB->SetTotal(total);
 		ptrB->SetNumDetailBill(cnt);
 		ptrC->AddBill(ptrB);
-		InsertBill(BList, ptrB);
 		system("cls");
 		DrawTitle(mnu::SubMenu);
-		OutputDetail(ptrB,cout);
-		cout << "PRESS p TO PRINT BILL";
-		char p = _getch();
-		if (p == 'p' || p == 'P')
+		OutputDetail(ptrB, cout);
+		cout << "PRESS y TO CONFIRM BILL\n";
+		char y = _getch();
+		if (y == 'y' || y == 'Y')
 		{
-			OutputBillFile(ptrB->GetID(), ptrB);
+			ptrB->Confirm();
+			InsertBill(BList, ptrB);
+			cout << "PRESS p TO PRINT BILL";
+			char p = _getch();
+			if (p == 'p' || p == 'P')
+			{
+				OutputBillFile(ptrB->GetID(), ptrB);
+			}
+		}
+		else
+		{
+			ptrB->Cancel();
+			delete ptrB;
 		}
 		choice = 1;
 	}

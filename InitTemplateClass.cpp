@@ -20,3 +20,4 @@ template  DetailProduct* FindFirstMatch<DetailProduct, String>(const DList<Detai
 template  DetailProduct* FindIndex<DetailProduct>(const DList<DetailProduct*>&, const int&);
 template void QuickSort<Product, int>(DNode<Product*>*, DNode<Product*>*, int(Product::*)() const, int);
 template DNode<Product*>* Partition<Product, int>(DNode<Product*>*, DNode<Product*>*, int(Product::*)() const, int);
+template void ReleaseAll<DetailBill>(DList<DetailBill*> &);

@@ -10,6 +10,7 @@ public:
 	virtual  int Calculate(const int &) const;
 	virtual bool SLWarn() const;
 	virtual String GetSL_str() const;
+	virtual String GetDonVi() const;
 	static void SetCalUnit(const int &);
 };
 

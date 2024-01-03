@@ -24,6 +24,7 @@ class DetailProduct
 		~DetailProduct();
 		void AddDetailBill(DetailBill *);
 		void Deduct(const int);
+		void Add(const int);
 		String GetID() const;
 		Date GetNN() const;
 		Date GetNSX() const;
@@ -38,6 +39,7 @@ class DetailProduct
 		bool HSDWarn() const;
 		virtual int Calculate(const int&) const;
 		virtual String GetSL_str() const;
+		virtual String GetDonVi() const;
 		friend class Product;
 };
 #endif

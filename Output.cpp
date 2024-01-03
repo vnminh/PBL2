@@ -5,6 +5,10 @@
 #include "Customer.h"
 #include <conio.h>
 #include <Windows.h>
+namespace mnu
+{
+	int SubMenu = -1;
+}
 void mnu::DrawTitle(int type, int w, const String t) // type = 0 1 2 3
 {
 	CenterPrint(t, w,' ',std::cout);

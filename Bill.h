@@ -39,6 +39,8 @@ public:
 	void SetNumDetailBill(const int&);
 	void SetTotal(const int&);
 	void Delete();
+	void Cancel();
+	void Confirm();
 	friend class Customer;
 };
 #endif

@@ -30,11 +30,13 @@ class Product
 		String GetID() const;
 		String GetName() const;
 		String GetXS() const;
+		String GetSL_str() const;
 		int GetSL() const;
 		int GetPrice() const;
 		bool SLWarn() const;
 		const DList<DetailProduct*>& GetDPList() const;
 		void Deduct(const int);
+		void Add(const int);
 		void Delete();
 		bool Deleted() const;
 		void DeleteDP(DetailProduct*);

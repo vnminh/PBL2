@@ -13,7 +13,7 @@ namespace mnu
 	const String TITLE = "Minimart Management System";
 	const int WAIT = 1000;
 	const int LEFTSPACE = (WIDTH - TITLE.GetLength()) / 2;
-	static int SubMenu = -1;
+	extern int SubMenu;
 	void DrawTitle(int, int = WIDTH, const String = TITLE);
 	void DrawLine(int len, char c, std::ostream&);
 	void CenterPrint(const String &, int, char, std::ostream&);
