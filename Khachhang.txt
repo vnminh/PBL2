@@ -1,0 +1,51 @@
+NameOfCustomer,PhoneNumber(10character),AddressOfCustomer
+Dang Thai Thanh Lam,0500025096,K22/41 Nguyen Luong Bang
+Trinh Thai Quy Tien,0300032155,K119/20 Hoang Thi Loan
+Ho Nhat Quoc Le,0500016480,K119/20 Hoang Thi Loan
+Dang Phi Manh Quyen,0900019120,K14/36 Nguyen Luong Bang
+Tran Quy Quoc Tien,0300008909,55 Ton Duc Thang
+Ho Phi Ngoc Danh,0300002493,116 Ngo Si Lien
+Trinh Quy Ngoc Danh,0800008903,K14/36 Ngo Van So
+Vuong Thai Thanh Lam,0700004059,14 Nguyen Luong Bang
+Nguyen Thi Quyen,0800011945,K14/36 Nguyen Luong Bang
+Nguyen Van Ba,0500030711,K22/41 Ngo Si Lien
+Nguyen Thi Thanh Bao,0800030608,K14/36 Nam Cao
+Nguyen Phi Thanh Minh,0800025333,39 Ho Tung Mau
+Trinh Dinh Quoc Phuc,0800006455,K14/36 Ton Duc Thang
+Tran Ngoc Hai,0800014308,16 Nguyen Chanh
+Trinh Phi Ngoc Cuong,0900028356,K14/36 Ngo Van So
+Ly Van Ngoc Danh,0500020064,K14/36 Hoang Thi Loan
+Nguyen Huong Quyen,0800005355,K14/36 Ho Tung Mau
+Vuong Huong Thanh Nga,0300030330,K22/41 Ton Duc Thang
+Tran Van Quoc Tien,0700006179,K14/36 Nguyen Chanh
+Ho Phi Ngoc Danh,0300004970,K22/41 Nguyen Chanh
+Dang Dinh Lam,0500019964,11 Nam Cao
+Trinh Quoc Khoa,0800032623,K119/20 Ngo Thi Nham
+Dang Van Ba,0800011699,K14/36 Ton Duc Thang
+Ly Huu Quoc Khoa,0800004576,K22/41 Nguyen Chanh
+Ly Quoc Phuc,0500013661,107 Ngo Si Lien
+Tran Thi Quy Cuong,0300003293,K22/41 Nguyen Chanh
+Vuong Quy Thanh Nga,0800018123,K119/20 Hoang Thi Loan
+Dang Huong Thanh Nga,0300024246,K14/36 Nguyen Luong Bang
+Nguyen Thai Duyen,0500019039,116 Ton Duc Thang
+Vuong Huu Thanh Minh,0900009676,K119/20 Nguyen Luong Bang
+Ly Huong Quy Cuong,0300025800,K119/20 Hoang Thi Loan
+Trinh Thai Quy Tien,0700011166,K119/20 Ngo Thi Nham
+Vuong Vo Manh Lam,0300028512,112 Nam Cao
+Trinh Nhat Quoc Le,0500005043,62 Nguyen Luong Bang
+Trinh Van Quy Phuc,0300023325,K14/36 Nguyen Luong Bang
+Trinh Huu Quy Phuc,0500026716,K14/36 Ngo Si Lien
+Ly Van Ngoc Phuc,0900031318,K119/20 Nguyen Luong Bang
+Ho Quy Le,0900024975,K119/20 Nam Cao
+Le Quy Manh Minh,0300019847,K119/20 Ton Duc Thang
+Nguyen Huong Bao,0500007834,K22/41 Ho Tung Mau
+Nguyen Thai Manh Duyen,0700003877,10 Nguyen Chanh
+Nguyen Thi Ba,0500025320,107 Nguyen Luong Bang
+Vuong Thai Thanh Lam,0800020432,K119/20 Hoang Thi Loan
+Tran Dinh Quy Le,0300005200,K14/36 Ton Duc Thang
+Ly Thi Ngoc Cuong,0700010808,K22/41 Ngo Thi Nham
+Le Dinh Manh Duyen,0500005220,K14/36 Ho Tung Mau
+Le Quy Nga,0500014738,K14/36 Nguyen Chanh
+Tran Quy Quy Tien,0500024424,K119/20 Ngo Thi Nham
+Trinh Van Quy Cuong,0300022201,K14/36 Hoang Thi Loan
+Tran Huu Quoc Tien,0900015620,K22/41 Ngo Thi Nham
